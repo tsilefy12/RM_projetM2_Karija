@@ -1,0 +1,30 @@
+/* .tousInscription{
+    width: 800px;
+    display: 'flex';
+    background-image: url('/src/Pages/Page_Inscription/sary/téléchargement (1).jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 80vh;
+    margin-top: -10%;
+} */
+.inscription{
+    width: 450px;
+    margin-top: 20%;
+    margin-left: 20%;
+    height: 60vh;
+    text-align: center;
+    background-color: white;
+}
+.inscription-formulaires{
+    display: flex;
+    flex-direction: column;
+}
+.footer{
+    display: flex;
+    flex-direction: column;
+    width: 365px;
+    margin-left: 40px;
+    margin-top: 10px;
+    text-align: center;
+}

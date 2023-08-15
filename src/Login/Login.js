@@ -34,12 +34,13 @@ function Login() {
                 size='small'
                 type='password'
                 sx={{ input: { color: 'white' }, label: { color: 'white' }, outline: { color: 'white' } }}
+                autoComplete='off'
               />
             </div>
             <div className='action'>
               <Button className='btn btn-grey grow' 
               style={{ backgroundColor: 'grey', color: 'white', border: 'none' }}>Sign in</Button>
-              <Link to={'/accueil'} style={{ textDecoration: 'none', fontSize: '1.2em', float: 'right', color: 'white' }}>create account</Link>
+              <Link to={'/inscription'} style={{ textDecoration: 'none', fontSize: '1.2em', float: 'right', color: 'white' }}>create account</Link>
             </div>
           </div>
         </div>
