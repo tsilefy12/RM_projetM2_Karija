@@ -20,7 +20,7 @@ function Inscription() {
                 fullWidth
                 type='text'
                 autoComplete='off'
-                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'black' }, variant: { color: 'black' } }}
+                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'grey' }, variant: { color: 'black' } }}
               />
             </div>
 
@@ -30,7 +30,7 @@ function Inscription() {
                 fullWidth
                 type='email'
                 autoComplete='off'
-                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'black' }, variant: { color: 'black' } }}
+                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'grey' }, variant: { color: 'black' } }}
               />
             </div>
 
@@ -40,7 +40,7 @@ function Inscription() {
                 fullWidth
                 type='text'
                 autoComplete='off'
-                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'black' }, variant: { color: 'black' } }}
+                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'grey' }, variant: { color: 'black' } }}
               />
             </div>
 
@@ -50,7 +50,7 @@ function Inscription() {
                 fullWidth
                 type='text'
                 autoComplete='Off'
-                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'black' }, variant: { color: 'black' } }}
+                sx={{ input: { color: 'black', fontSize: '2em' }, label: { color: 'grey' }, variant: { color: 'black' } }}
               />
             </div>
             <div className='footer'>

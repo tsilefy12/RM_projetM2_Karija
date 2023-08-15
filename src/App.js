@@ -13,21 +13,21 @@ import Vols from './Pages/Vols/Vols';
 import Sieges from './Pages/Sieages/Sieges';
 function App() {
   return (
-   <>
-    <Router>
-      <Routes>
-        <Route path={'/'} element={<Login/>} />
-        <Route path='/inscription' element={<Inscription/>} />
-        <Route path='/avion' element={<Avion/>} />
-        <Route path='/tarification' element={<Tarification/>} />
-        <Route path='/reservation' element={<Reservation/>} />
-        <Route path='/venteBillet' element={<Vente/>} />
-        <Route path='/tableauDeBord' element={<Tableau/>}/>
-        <Route path='/vols' element={<Vols/>} />
-        <Route path='sieges' element={<Sieges/>} />
-      </Routes>
-    </Router>
-   </>
+    <>
+      <Router>
+        <Routes>
+          <Route path={'/'} element={<Login />} />
+          <Route path='/inscription' element={<Inscription />} />
+          <Route path='/avion' element={<Avion />} />
+          <Route path='/tarification' element={<Tarification />} />
+          <Route path='/reservation' element={<Reservation />} />
+          <Route path='/venteBillet' element={<Vente />} />
+          <Route path='/tableauDeBord' element={<Tableau />} />
+          <Route path='/vols' element={<Vols />} />
+          <Route path='sieges' element={<Sieges />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
