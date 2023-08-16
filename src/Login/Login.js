@@ -14,7 +14,7 @@ function Login() {
         </div>
         <div className='login'>
           <FormLabel className='text text-light' id='label'>Login</FormLabel>
-          <div className='form-group'>
+          <div className='loginPage'>
             <div>
               <TextField
                 id="standard-basic"

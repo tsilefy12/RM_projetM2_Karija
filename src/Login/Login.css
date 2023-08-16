@@ -35,7 +35,7 @@ body{
     font-size: 2em;
     margin: 10px;
 }
-.form-group{
+.loginPage{
     margin: 10px 20px 0px 35px;
     color: white;
 }
@@ -50,6 +50,6 @@ body{
 .action{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: 28px;
 }

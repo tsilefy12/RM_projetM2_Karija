@@ -9,12 +9,12 @@ function Inscription() {
       <div className='inscription'>
 
         <div className='container'>
-          <header className='header'>
+          <header className='header-inscription'>
             <h1 className='text-info'>PAGE D'INSCRIPTION</h1>
           </header>
           <div className='inscription-formulaires'>
 
-            <div className='form-group'>
+            <div className='formulaireInscription'>
               <TextField
                 label="Saisir votre nom"
                 fullWidth
@@ -24,7 +24,7 @@ function Inscription() {
               />
             </div>
 
-            <div className='form-group'>
+            <div className='formulaireInscription'>
               <TextField
                 label="Entrer l'adresse mail"
                 fullWidth
@@ -34,7 +34,7 @@ function Inscription() {
               />
             </div>
 
-            <div className='form-group'>
+            <div className='formulaireInscription'>
               <TextField
                 label="Entrer mot de passe"
                 fullWidth
@@ -44,7 +44,7 @@ function Inscription() {
               />
             </div>
 
-            <div className='form-group'>
+            <div className='formulaireInscription'>
               <TextField
                 label="Confirmer votre mot de passe"
                 fullWidth

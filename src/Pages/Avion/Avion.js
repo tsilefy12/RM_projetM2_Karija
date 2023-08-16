@@ -1,4 +1,4 @@
-import { FormLabel,InputAdornment,TextField } from '@mui/material'
+import { FormLabel, InputAdornment, TextField } from '@mui/material'
 import React from 'react'
 import '../Avion/Avion.css'
 import { Button } from 'react-bootstrap'
@@ -20,6 +20,7 @@ function Avion() {
               <TextField
                 label="Entrez le numéro d'avion"
                 type='text'
+                autoComplete='off'
                 sx={{ input: { fontSize: '1.8em' }, label: { color: 'darkgrey' } }}
               />
             </div>
@@ -27,6 +28,7 @@ function Avion() {
               <TextField
                 label="Entrer le modèle"
                 type='text'
+                autoComplete='off'
                 sx={{ input: { fontSize: '1.8em' }, label: { color: 'darkgrey' } }}
               />
             </div>
@@ -54,12 +56,14 @@ function Avion() {
                 <TextField
                   label="Rechercher"
                   type='text'
-                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey', fontSize : '1.1em' } }}
-                  InputProps={{startAdornment:(
-                    <InputAdornment position='start'>
-                      <AiIcons.AiOutlineSearch></AiIcons.AiOutlineSearch>
-                    </InputAdornment>
-                  )}}
+                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey', fontSize: '1.1em' } }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <AiIcons.AiOutlineSearch></AiIcons.AiOutlineSearch>
+                      </InputAdornment>
+                    )
+                  }}
                 /></div>
             </div>
             <div className='card-body'>
@@ -97,7 +101,7 @@ function Avion() {
                       <td className='capacite-avion'>dfgfdg</td>
                       <td className='operations-btn'>
                         <Link ><AiIcons.AiFillEdit style={{ width: '20px', height: '20px' }}>
-                        </AiIcons.AiFillEdit>
+                          </AiIcons.AiFillEdit>
                         </Link>
                         <button style={{ border: 'none', background: 'none' }}>
                           <AiIcons.AiFillDelete style={{ color: 'red' }}>
@@ -106,7 +110,7 @@ function Avion() {
                       </td>
                     </tr>
                     <tr>
-                      <td style={{maxWidth : '60px'}}>1000</td>
+                      <td style={{ maxWidth: '60px' }}>1000</td>
                       <td className='num-avion'>dfgd dfghfjggkh</td>
                       <td className='model-avion'>dfgdg ertrt</td>
                       <td className='capacite-avion'>dfgfdg</td>
@@ -126,7 +130,7 @@ function Avion() {
             </div>
             <div className='card-footer text-center'>
               <footer style={{ fontSize: '1.2em' }}>
-              Il y a 1000 avions enrégistrés dans la base de données des compagnies aériennes 
+                Il y a 1000 avions enrégistrés dans la base de données des compagnies aériennes
               </footer>
             </div>
           </div>
