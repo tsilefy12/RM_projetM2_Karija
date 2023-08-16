@@ -1,4 +1,4 @@
-import { FormLabel,Icon,InputAdornment,TextField } from '@mui/material'
+import { FormLabel,InputAdornment,TextField } from '@mui/material'
 import React from 'react'
 import '../Avion/Avion.css'
 import { Button } from 'react-bootstrap'
@@ -54,8 +54,7 @@ function Avion() {
                 <TextField
                   label="Rechercher"
                   type='text'
-                  placeholder='rechercher....'
-                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey' } }}
+                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey', fontSize : '1.1em' } }}
                   InputProps={{startAdornment:(
                     <InputAdornment position='start'>
                       <AiIcons.AiOutlineSearch></AiIcons.AiOutlineSearch>
