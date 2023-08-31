@@ -1,17 +1,19 @@
-.avion{
+.avion {
     /* border: 1px solid blue; */
     width: 1000px;
     height: 90vh;
     margin-top: 10%;
     margin-left: -25%;
 }
-.containere{
+
+.containere {
     /* border: 1px solid red; */
     width: 900px;
     margin: 0% 0% 0% -10%;
     margin: 5%;
 }
-.form-group{
+
+.form-group {
     /* border: 1px solid blue; */
     width: auto;
     height: auto;
@@ -21,57 +23,87 @@
     margin: 0;
     margin-top: -5%;
 }
-.TextField{
+
+.TextField {
     margin: 8px;
 }
-.card-header{
+
+.card-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.card{
+
+.card {
     margin: 8px;
 }
-.liste-avion{
+
+.liste-avion {
     /* border: 1px solid black; */
     float: left;
     width: 160px;
 }
-.liste-avion, .liste{
+
+.liste-avion,
+.liste {
     font-size: 1.3em;
 }
-.recherche-avion{
+
+.recherche-avion {
     /* border: 1px solid red; */
     float: right;
 }
-.card-body{
+
+.card-body {
     height: 330px;
     overflow: auto;
 }
-.table th{
+
+.table th {
     background-color: rgb(22, 68, 87);
     color: white;
 }
-.table .model-avion{
-   width: 400px; 
+
+.table .model-avion {
+    width: 400px;
 }
-.table .num-avion{
+
+.table .num-avion {
     width: 200px;
 }
-.table .capacite-avion{
+
+.table .capacite-avion {
     width: 160px;
 }
-.table .operations-btn{
+
+.table .operations-btn {
     width: 113px;
 }
-.table{
+
+.table {
     text-align: left;
 }
-.header{
-    /* border: 1px solid red; */
+
+.header {
     height: 8vh;
 }
-.operations-btn{
+
+.operations-btn {
     display: flex;
+    flex-direction: row;
     justify-content: space-evenly;
+}
+.edite-avion-formulaire{
+    display: flex;
+    flex-direction: column;
+    margin: 6px;
+}
+.label-avion{
+    margin-bottom: 6px;
+}
+.boutton-avion-update{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 6px;
 }
