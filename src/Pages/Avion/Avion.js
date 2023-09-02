@@ -7,7 +7,6 @@ import axios from 'axios'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import SA from 'sweetalert2';
-import { useParams } from 'react-router'
 function Avion() {
 
   //fenêtr modal
@@ -24,11 +23,11 @@ function Avion() {
   let [erreurMessageAPI, setErreurMessageAPI] = useState("");
   //input edit
   let [inputRecherche, setInputRecherche] = useState("");
-  let [inputEditNumAvion, setInputEditNumAvion] = useState("");
+
   let [inputEditModelAvion, setInputEditModelAvion] = useState("");
   let [inputEditCapacite, setInputEditCapacite] = useState(0);
   const [donneEditAvion, setDonneEditAvion] = useState([]);
-  const {num} = useParams();
+  const [idEdite, setIdEdite] = useState("");
 
   useEffect(() => {
     Affichage();
@@ -132,26 +131,34 @@ function Avion() {
     await axios.get(`http://localhost:5077/api/Avion/editer?NumeroAvion=${id}`).then(({ data }) => {
       setDonneEditAvion(data);
       console.log("donnes", data);
+     
     })
+    setIdEdite(id);
     handleOpen();
   }
   //fonction pour la modification avion
   const modificationAvion = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('numeroAvion', inputEditNumAvion);
+    const formData = new FormData(); 
+    formData.append('numeroAvion', idEdite);
     formData.append('modelAvion', inputEditModelAvion);
     formData.append('capacite', inputEditCapacite);
-  
-    await axios.post(`http://localhost:5077/api/Avion/modification?NumeroAvion=${num}`,
+
+    await axios.post(`http://localhost:5077/api/Avion/modification?NumeroAvion=${idEdite}`,
       formData, {
       headers: 
         { 'Content-Type': 'application/json'
      }, }).then(({ data }) => {
         console.log(data);
+        setInputEditModelAvion(''); 
+        setInputEditCapacite('');  
       }).catch(error => {
         console.error('Error:', error);
       });
+  }
+  function test(b) {
+    modificationAvion(b);
+    handleClose(true);
   }
   return (
     <>
@@ -282,7 +289,7 @@ function Avion() {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Form onSubmit={modificationAvion}>
+              <Form onSubmit={test}>
                 <div>
                   <div>
                     <header>
@@ -298,7 +305,8 @@ function Avion() {
                               <label className='label-avion'>Numéro d'avion</label>
                               <input type="text" className='form-control'
                                 readOnly style={{ backgroundColor: 'darkgrey' }} value={editItems.numeroAvion}
-                                onChange={(e) => setInputEditNumAvion(e.target.value)}
+                                onChange={(e) => setIdEdite(e.target.value)}
+                                autoComplete='off'
                               ></input>
                             </div>
                             <div className='edite-avion-formulaire'>
@@ -306,13 +314,14 @@ function Avion() {
                               <input type='text' className='form-control' defaultValue={editItems.modelAvion}
                                 onChange={ev => setInputEditModelAvion(
                                   ev.target.value
-                                )}
+                                )} autoComplete='off'
                               ></input>
                             </div>
                             <div className='edite-avion-formulaire'>
                               <label className='label-avion'>Capacité</label>
                               <input type='number' min={0} className='form-control' defaultValue={editItems.capacite}
                                 onChange={(ev) => setInputEditCapacite(ev.target.value)}
+                                autoComplete='off'
                               ></input>
                             </div>
                           </div>
