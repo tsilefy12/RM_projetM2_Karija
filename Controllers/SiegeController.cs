@@ -33,7 +33,7 @@ namespace apiWebCore.Controllers
             string ajout = "INSERT INTO siege(numerosiege, classetarif, statut) VALUES (@NumeroSiege, @ClasseTarif, @Statut)";
             using (var dbC = new AppDbContext())
             {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
                     using (var cmd = new NpgsqlCommand(ajout, connexion))
@@ -43,7 +43,7 @@ namespace apiWebCore.Controllers
                         cmd.Parameters.AddWithValue("Statut", siege.Statut);
 
                         await cmd.ExecuteNonQueryAsync();
-                        
+
                     }
                 }
             }
@@ -58,30 +58,30 @@ namespace apiWebCore.Controllers
             string select = "SELECT * FROM siege WHERE numerosiege LIKE @Numero";
             using (var dbC = new AppDbContext())
             {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
-                    using(var command = new NpgsqlCommand(select, connexion))
+                    using (var command = new NpgsqlCommand(select, connexion))
                     {
-                        command.Parameters.AddWithValue("Numero", "%"+Numero+"%");
+                        command.Parameters.AddWithValue("Numero", "%" + Numero + "%");
 
-                        using(var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
                             if (await reader.ReadAsync())
                             {
-                                int id=reader.GetInt32(reader.GetOrdinal("id"));
-                                string numerosiege=reader.GetString(reader.GetOrdinal("numerosiege"));
-                                string classetarif=reader.GetString(reader.GetOrdinal("classetarif"));
-                                string statut=reader.GetString(reader.GetOrdinal("statut"));
+                                int id = reader.GetInt32(reader.GetOrdinal("id"));
+                                string numerosiege = reader.GetString(reader.GetOrdinal("numerosiege"));
+                                string classetarif = reader.GetString(reader.GetOrdinal("classetarif"));
+                                string statut = reader.GetString(reader.GetOrdinal("statut"));
 
-                               var sieges = new Siege
-                               {
-                                  IdSiege = id,
-                                  NumeroSiege = numerosiege,
-                                  ClasseTarif = classetarif,
-                                  Statut = statut,
-                               };
-                                 return Ok(sieges);
+                                var sieges = new Siege
+                                {
+                                    IdSiege = id,
+                                    NumeroSiege = numerosiege,
+                                    ClasseTarif = classetarif,
+                                    Statut = statut,
+                                };
+                                return Ok(sieges);
                             }
                             return Ok("Siege n'existe pas");
                         }
@@ -96,9 +96,9 @@ namespace apiWebCore.Controllers
         public async Task<IActionResult> EditSiege(string Num)
         {
             string edit = "SELECT * FROM siege WHERE numerosiege=@Num";
-            using(var dbC = new AppDbContext())
+            using (var dbC = new AppDbContext())
             {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
                     using var command = new NpgsqlCommand(edit, connexion);
@@ -128,15 +128,15 @@ namespace apiWebCore.Controllers
         //fonction pour la modification siège
         [Route("modification/{Numero}")]
         [HttpPost]
-        public async Task<IActionResult> Modification([FromBody] Siege sieges , string Numero)
+        public async Task<IActionResult> Modification([FromBody] Siege sieges, string Numero)
         {
             string modifier = "UPDATE siege SET classetarif=@ClasseTarif, statut=@Statut WHERE numerosiege=@Numero";
-            using(var dbC = new AppDbContext())
+            using (var dbC = new AppDbContext())
             {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
-                    using(var command = new NpgsqlCommand(modifier, connexion))
+                    using (var command = new NpgsqlCommand(modifier, connexion))
                     {
                         command.Parameters.AddWithValue("Numero", Numero);
                         command.Parameters.AddWithValue("ClasseTarif", sieges.ClasseTarif);
@@ -154,22 +154,22 @@ namespace apiWebCore.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int Id)
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             string supprimer = "DELETE FROM siege WHERE id=@Id";
-            using(var dbC = new AppDbContext())
+            using (var dbC = new AppDbContext())
             {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
-                    using(var command = new NpgsqlCommand(supprimer, connexion))
-                {
-                    command.Parameters.AddWithValue("Id", Id);
-                    await command.ExecuteNonQueryAsync();
-                }
+                    using (var command = new NpgsqlCommand(supprimer, connexion))
+                    {
+                        command.Parameters.AddWithValue("Id", Id);
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
             }
             return Ok("Un siège est supprimé");
