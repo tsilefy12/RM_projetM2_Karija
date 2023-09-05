@@ -46,30 +46,8 @@ namespace apiWebCore.Controllers
             }
             return Ok("ajout du siège succès!!");
         }
-        [Route("supprimer-siege/{Id}")]
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int Id)
-        {
-             if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            string supprimer = "DELETE FROM siege WHERE id=@Id";
-            using(var dbC = new AppDbContext())
-            {
-                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
-                {
-                    connexion.Open();
-                    using(var command = new NpgsqlCommand(supprimer, connexion))
-                {
-                    command.Parameters.AddWithValue("Id", Id);
-                    await command.ExecuteNonQueryAsync();
-                }
-                }
-            }
-            return Ok("Un siège est supprimé");
-        }
+        //fonction recherche un siège
         [Route("recherche/{Numero}")]
         [HttpGet]
         public async Task<IActionResult> Recherche(string Numero)
@@ -109,6 +87,7 @@ namespace apiWebCore.Controllers
             }
         }
 
+        //fonction editer un siège
         [Route("editer/{Num}")]
         [HttpGet]
         public async Task<IActionResult> EditSiege(string Num)
@@ -165,6 +144,32 @@ namespace apiWebCore.Controllers
                 }
             }
             return Ok("La modifcation est succès!!");
+        }
+
+        //fonction supprimer un siège
+        [Route("supprimer-siege/{Id}")]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int Id)
+        {
+             if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string supprimer = "DELETE FROM siege WHERE id=@Id";
+            using(var dbC = new AppDbContext())
+            {
+                using(var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                {
+                    connexion.Open();
+                    using(var command = new NpgsqlCommand(supprimer, connexion))
+                {
+                    command.Parameters.AddWithValue("Id", Id);
+                    await command.ExecuteNonQueryAsync();
+                }
+                }
+            }
+            return Ok("Un siège est supprimé");
         }
     }
 }
