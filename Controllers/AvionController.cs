@@ -21,7 +21,7 @@ namespace apiWebCore.Controllers
         {
             using (var db = new AppDbContext())
             {
-                var avions = db.Avions.OrderBy(p =>p.NumeroAvion);
+                var avions = db.Avions.OrderBy(p => p.NumeroAvion);
                 return avions.ToList();
             }
 
@@ -53,7 +53,7 @@ namespace apiWebCore.Controllers
                         // Ajoutez d'autres paramètres si nécessaire
 
                         await command.ExecuteNonQueryAsync();
-                      
+
                     }
                 }
             }
@@ -66,10 +66,10 @@ namespace apiWebCore.Controllers
         [HttpGet("recherche")]
         public async Task<IActionResult> Search([FromQuery] Avion recherche)
         {
-            
-            
+
+
             using (var dbC = new AppDbContext())
-       {
+            {
                 var query = dbC.Avions.AsQueryable();
 
                 if (!string.IsNullOrEmpty(recherche.NumeroAvion))
@@ -93,58 +93,58 @@ namespace apiWebCore.Controllers
 
         //ceci est code pour affciher un avion qu'on veut éditer avant la modification
         [HttpGet("editer")]
-public async Task<IActionResult> Edit(int Id)
-{
-    try
-    {
-        using (var dbC = new AppDbContext())
+        public async Task<IActionResult> Edit(int Id)
         {
-            string select = "SELECT * FROM avion WHERE id=@Id";
-
-            using (NpgsqlConnection conex = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+            try
             {
-                await conex.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(select, conex))
+                using (var dbC = new AppDbContext())
                 {
-                    cmd.Parameters.AddWithValue("Id", Id);
+                    string select = "SELECT * FROM avion WHERE id=@Id";
 
-                    using (var reader = await cmd.ExecuteReaderAsync())
+                    using (NpgsqlConnection conex = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                     {
-                        if (await reader.ReadAsync())
-                        {
-                            // Récupérez les données de la base de données
-                            int id = reader.GetInt32(reader.GetOrdinal("id"));
-                            string numeroAvion = reader.GetString(reader.GetOrdinal("numavion"));
-                            string model = reader.GetString(reader.GetOrdinal("modelavion"));
-                            int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
+                        await conex.OpenAsync();
 
-                            var avion = new Avion
+                        using (NpgsqlCommand cmd = new NpgsqlCommand(select, conex))
+                        {
+                            cmd.Parameters.AddWithValue("Id", Id);
+
+                            using (var reader = await cmd.ExecuteReaderAsync())
                             {
-                                Id = id,
-                                NumeroAvion = numeroAvion,
-                                ModelAvion = model,
-                                Capacite = capacite
-                            };
+                                if (await reader.ReadAsync())
+                                {
+                                    // Récupérez les données de la base de données
+                                    int id = reader.GetInt32(reader.GetOrdinal("id"));
+                                    string numeroAvion = reader.GetString(reader.GetOrdinal("numavion"));
+                                    string model = reader.GetString(reader.GetOrdinal("modelavion"));
+                                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
 
-                            // Retournez les données de l'avion en réponse HTTP
-                            return Ok(avion);
-                        }
-                        else
-                        {
-                            return NotFound("Aucun avion trouvé avec l'ID spécifié.");
+                                    var avion = new Avion
+                                    {
+                                        Id = id,
+                                        NumeroAvion = numeroAvion,
+                                        ModelAvion = model,
+                                        Capacite = capacite
+                                    };
+
+                                    // Retournez les données de l'avion en réponse HTTP
+                                    return Ok(avion);
+                                }
+                                else
+                                {
+                                    return NotFound("Aucun avion trouvé avec l'ID spécifié.");
+                                }
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                // Gérez les exceptions appropriées ici
+                return StatusCode(500, "Une erreur s'est produite lors de la récupération des données : " + ex.Message);
+            }
         }
-    }
-    catch (Exception ex)
-    {
-        // Gérez les exceptions appropriées ici
-        return StatusCode(500, "Une erreur s'est produite lors de la récupération des données : " + ex.Message);
-    }
-}
 
         //fonction pour la modification d'un avion
         [HttpPost("modification")]
@@ -154,13 +154,13 @@ public async Task<IActionResult> Edit(int Id)
             {
                 return BadRequest(ModelState);
             }
-            using(var db = new AppDbContext())
+            using (var db = new AppDbContext())
             {
                 string modifierAvion = "UPDATE avion SET modelavion=@ModelAvion, capacite=@Capacite WHERE id=@Id";
-                using(NpgsqlConnection con= new NpgsqlConnection(db.Database.GetConnectionString()))
+                using (NpgsqlConnection con = new NpgsqlConnection(db.Database.GetConnectionString()))
                 {
                     con.OpenAsync();
-                    using(NpgsqlCommand commande = new NpgsqlCommand(modifierAvion, con))
+                    using (NpgsqlCommand commande = new NpgsqlCommand(modifierAvion, con))
                     {
                         if (string.IsNullOrEmpty(model.ModelAvion))
                         {
@@ -187,14 +187,14 @@ public async Task<IActionResult> Edit(int Id)
             {
                 return BadRequest(ModelState);
             }
-            using (var dbC = new AppDbContext() )
+            using (var dbC = new AppDbContext())
             {
 
                 string deleteAvion = "DELETE FROM avion WHERE id=@Id";
-                using(NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexion.Open();
-                    using(NpgsqlCommand cmd = new NpgsqlCommand(deleteAvion, connexion))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(deleteAvion, connexion))
                     {
                         cmd.Parameters.AddWithValue("Id", Id);
                         await cmd.ExecuteNonQueryAsync();
