@@ -9,6 +9,7 @@ namespace apiWebCore.Controllers
     [Route("api/[controller]")]
     public class SiegeController : Controller
     {
+        //fonction afficher tous les sièges enregistrés dans la base de données
         [HttpGet]
         public IEnumerable<Siege> Get()
         {
@@ -19,6 +20,8 @@ namespace apiWebCore.Controllers
 
             }
         }
+
+        //fonction ajout du siège
         [Route("ajout-siege")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Siege siege)
