@@ -67,6 +67,10 @@ namespace apiWebCore.Controllers
         public async Task<IActionResult> Search([FromQuery] Avion recherche)
         {
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             using (var dbC = new AppDbContext())
             {
@@ -159,7 +163,7 @@ namespace apiWebCore.Controllers
                 string modifierAvion = "UPDATE avion SET modelavion=@ModelAvion, capacite=@Capacite WHERE id=@Id";
                 using (NpgsqlConnection con = new NpgsqlConnection(db.Database.GetConnectionString()))
                 {
-                    con.OpenAsync();
+                    con.Open();
                     using (NpgsqlCommand commande = new NpgsqlCommand(modifierAvion, con))
                     {
                         if (string.IsNullOrEmpty(model.ModelAvion))
@@ -189,7 +193,6 @@ namespace apiWebCore.Controllers
             }
             using (var dbC = new AppDbContext())
             {
-
                 string deleteAvion = "DELETE FROM avion WHERE id=@Id";
                 using (NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
@@ -203,7 +206,5 @@ namespace apiWebCore.Controllers
             }
             return Ok("Vous avez suppimé  un avion");
         }
-
-
     }
 }
