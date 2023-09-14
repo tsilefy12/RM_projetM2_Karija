@@ -13,7 +13,7 @@ namespace apiWebCore.Models
 
         [Column("avionid")]
         public int AvionId { get; set; }
-        public Avion Avion { get; set; }
+        public Avion Avion { get; set; } = null!;
 
         [Column("numerovol")]
         public string NumeroVol { get; set; } = null!;

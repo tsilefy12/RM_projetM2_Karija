@@ -12,10 +12,10 @@ namespace apiWebCore.Models
         public int Id { get; set; }
         
         [Column("numavion")]
-        public string? NumeroAvion { get; set; }
+        public string NumeroAvion { get; set; } = null!;
 
         [Column("modelavion")]
-        public string? ModelAvion { get; set; }
+        public string ModelAvion { get; set; } =  null!;
 
         [Column("capacite")]
         public int Capacite { get; set; }

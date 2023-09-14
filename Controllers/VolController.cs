@@ -66,25 +66,33 @@ namespace apiWebCore.Controllers
 
             string ajoutvol = "INSERT INTO vol(avionid, numerovol, datedepart,heuredepart, capacitemax, lieudepart, lieuarrivee)" +
                 " VALUES(@AvionId, @NumeroVol, @DateDepart,@HeureDepart,@CapaciteMax, @LieuDepart, @LieuArrivee)";
-            using (var dbC = new AppDbContext())
+            using var dbC = new AppDbContext();
+            using var connexDb = new NpgsqlConnection(dbC.Database.GetConnectionString());
+            try
             {
-                using (var connexDb = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                connexDb.Open();
+                using var command = new NpgsqlCommand(ajoutvol, connexDb);
+                command.Parameters.AddWithValue("AvionId", vol.AvionId);
+                command.Parameters.AddWithValue("NumeroVol", vol.NumeroVol);
+                command.Parameters.AddWithValue("DateDepart", vol.DateDepart);
+                command.Parameters.AddWithValue("HeureDepart", vol.HeureDepart);
+                command.Parameters.AddWithValue("CapaciteMax", vol.CapaciteMax);
+                command.Parameters.AddWithValue("LieuDepart", vol.LieuDepart);
+                command.Parameters.AddWithValue("LieuArrivee", vol.LieuArrivee);
+
+                await command.ExecuteNonQueryAsync();
+
+                return Ok("ajout vol a réuissi");
+            }
+            catch (Npgsql.PostgresException e)
+            {
+                if (e.SqlState == "23503")
                 {
-                    connexDb.Open();
-                    using (var command = new NpgsqlCommand(ajoutvol, connexDb))
-                    {
-                        command.Parameters.AddWithValue("AvionId", vol.AvionId);
-                        command.Parameters.AddWithValue("NumeroVol", vol.NumeroVol);
-                        command.Parameters.AddWithValue("DateDepart", vol.DateDepart);
-                        command.Parameters.AddWithValue("HeureDepart", vol.HeureDepart);
-                        command.Parameters.AddWithValue("CapaciteMax", vol.CapaciteMax);
-                        command.Parameters.AddWithValue("LieuDepart", vol.LieuDepart);
-                        command.Parameters.AddWithValue("LieuArrivee", vol.LieuArrivee);
-
-                        await command.ExecuteNonQueryAsync();
-
-                        return Ok("ajout vol a réuissi");
-                    }
+                    return BadRequest("Le numéro " + "'" + vol.AvionId + "'" + "n'existe pas dans la table avion.");
+                }
+                else
+                {
+                    return BadRequest("Une erreur s'est produite lors de la requête : " + e.Message);
                 }
             }
         }
@@ -98,20 +106,19 @@ namespace apiWebCore.Controllers
             }
 
             string supprimerVol = "DELETE FROM vol WHERE id=@Id";
-            using (var dbC = new AppDbContext())
+            using var dbC = new AppDbContext();
+            using var connexionDb = new NpgsqlConnection(dbC.Database.GetConnectionString());
+            connexionDb.Open();
+            using var command = new NpgsqlCommand(supprimerVol, connexionDb);
+            command.Parameters.AddWithValue("Id", id);
+
+            await command.ExecuteNonQueryAsync();
+            var e = new Npgsql.NpgsqlException();
+            if (e.SqlState != "200")
             {
-                using (var connexionDb = new NpgsqlConnection(dbC.Database.GetConnectionString()))
-                {
-                    connexionDb.Open();
-                    using (var command = new NpgsqlCommand(supprimerVol, connexionDb))
-                    {
-                        command.Parameters.AddWithValue("Id", id);
-
-                        await command.ExecuteNonQueryAsync();
-
-                        return Ok("Un vol est supprimé");
-                    }
-                }
+                return BadRequest("La suppression est échouée");
+            }else{
+                return Ok("Un vol est supprimé");
             }
         }
         [Route("recherche")]
@@ -233,12 +240,12 @@ namespace apiWebCore.Controllers
             }
 
             string modification = "UPDATE vol SET datedepart=@DateDepart, heuredepart=@HeureDepart, lieudepart=@LieuDepart, lieuarrivee=@LieuArrivee WHERE id = @Id";
-            using(var dbC = new AppDbContext())
+            using (var dbC = new AppDbContext())
             {
-                using(var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                using (var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString()))
                 {
                     connexiondb.Open();
-                    using(var command = new NpgsqlCommand(modification, connexiondb))
+                    using (var command = new NpgsqlCommand(modification, connexiondb))
                     {
                         command.Parameters.AddWithValue("Id", Id);
                         command.Parameters.AddWithValue("DateDepart", vol.DateDepart);
@@ -250,7 +257,7 @@ namespace apiWebCore.Controllers
                     }
                 }
             }
-           return Ok("Modification est succès.");
+            return Ok("Modification est succès.");
         }
     }
 }
