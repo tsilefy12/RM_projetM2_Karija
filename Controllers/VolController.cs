@@ -117,7 +117,9 @@ namespace apiWebCore.Controllers
             if (e.SqlState != "200")
             {
                 return BadRequest("La suppression est échouée");
-            }else{
+            }
+            else
+            {
                 return Ok("Un vol est supprimé");
             }
         }
@@ -234,19 +236,20 @@ namespace apiWebCore.Controllers
         [HttpPost]
         public async Task<IActionResult> ModificationVol([FromBody] Vol vol, int Id)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            string modification = "UPDATE vol SET datedepart=@DateDepart, heuredepart=@HeureDepart, lieudepart=@LieuDepart, lieuarrivee=@LieuArrivee WHERE id = @Id";
-            using (var dbC = new AppDbContext())
+            else
             {
-                using (var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                try
                 {
-                    connexiondb.Open();
-                    using (var command = new NpgsqlCommand(modification, connexiondb))
+                    string modification = "UPDATE vol SET datedepart=@DateDepart, heuredepart=@HeureDepart, lieudepart=@LieuDepart, lieuarrivee=@LieuArrivee WHERE id = @Id";
+                    using (var dbC = new AppDbContext())
                     {
+                        using var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                        connexiondb.Open();
+                        using var command = new NpgsqlCommand(modification, connexiondb);
                         command.Parameters.AddWithValue("Id", Id);
                         command.Parameters.AddWithValue("DateDepart", vol.DateDepart);
                         command.Parameters.AddWithValue("HeureDepart", vol.HeureDepart);
@@ -255,9 +258,12 @@ namespace apiWebCore.Controllers
 
                         await command.ExecuteNonQueryAsync();
                     }
+                    return Ok("Modification est succès.");
+                } catch(Npgsql.NpgsqlException e){
+                    return Ok("Une erreur apparait : "+ e.Message);
                 }
             }
-            return Ok("Modification est succès.");
+
         }
     }
 }

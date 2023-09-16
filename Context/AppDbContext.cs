@@ -10,7 +10,7 @@ namespace PostgreSQLAPI.Models
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
-        { }
+        {}
         public DbSet<Avion> Avions { get; set; }
         public DbSet<Siege> Sieges { get; set; }
         public DbSet<CompaginAerienne> compagnies { get; set; }

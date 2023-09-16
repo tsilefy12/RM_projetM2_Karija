@@ -81,11 +81,108 @@ namespace apiWebCore.Controllers
             {
                 if (ex.SqlState == "23503")
                 {
-                    return BadRequest("Le numéro "+"'"+tarif.IdSiege+"'"+"n'existe pas dans la table siège.");
+                    return BadRequest("Le numéro " + "'" + tarif.IdSiege + "'" + "n'existe pas dans la table siège.");
                 }
                 else
                 {
                     return BadRequest("Une erreur s'est produite lors de la requête : " + ex.Message);
+                }
+            }
+        }
+        [Route("edit-tarif")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                string edit = "select * from tarification where id =@Id";
+                using var dbc = new AppDbContext();
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var command = new NpgsqlCommand(edit, connexion);
+                command.Parameters.AddWithValue("Id", Id);
+
+                var reader = await command.ExecuteReaderAsync();
+
+                var ListEdit = new List<Tarif>();
+                while (await reader.ReadAsync())
+                {
+                    int id = reader.GetInt32(reader.GetOrdinal("id"));
+                    int idsiege = reader.GetInt32(reader.GetOrdinal("siegeid"));
+                    string description = reader.GetString(reader.GetOrdinal("description"));
+                    double prix = reader.GetDouble(reader.GetOrdinal("prix"));
+                    string typetarif = reader.GetString(reader.GetOrdinal("type"));
+                    int nombreplacedispotarif = reader.GetInt32(reader.GetOrdinal("nombreplacedispotarif"));
+                    var tarifsEdit = new Tarif
+                    {
+                        Id = id,
+                        IdSiege = idsiege,
+                        Description = description,
+                        Prix = prix,
+                        TypeTarif = typetarif,
+                        NombrePlaceDispoTarif = nombreplacedispotarif,
+                    };
+                    ListEdit.Add(tarifsEdit);
+                }
+                return Ok(ListEdit);
+            }
+        }
+        [Route("modification-tarif")]
+        [HttpPost]
+        public async Task<IActionResult> Modification([FromBody] Tarif tarif, int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+
+                try
+                {
+                    string modificationTarif = "update tarification set prix=@Prix, nombreplacedispotarif=@NombrePlaceDispoTarif where id =@Id";
+                    using var dbc = new AppDbContext();
+                    using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                    connexiondb.Open();
+                    using var commandsql = new NpgsqlCommand(modificationTarif, connexiondb);
+
+                    commandsql.Parameters.AddWithValue("Id", Id); ;
+                    commandsql.Parameters.AddWithValue("Prix", tarif.Prix);
+                    commandsql.Parameters.AddWithValue("NombrePlaceDispoTarif", tarif.NombrePlaceDispoTarif);
+
+                    await commandsql.ExecuteNonQueryAsync();
+                    return Ok("Modification succès");
+                } catch(Npgsql.NpgsqlException e){
+                    return Ok("Une erreur apparait : " + e.Message);
+                }
+
+            }
+        }
+        [Route("supprimer-tarif/{Id}")]
+        [HttpDelete]
+        public async Task<IActionResult> SupprimerTarif(int Id){
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else{
+                try{
+
+                    string supprimerTarif = "delete from tarification where id ="+Id;
+                    using var dbc = new AppDbContext();
+                    using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                    connexiondb.Open();
+                    using var commandsql = new NpgsqlCommand(supprimerTarif, connexiondb);
+                    await commandsql.ExecuteNonQueryAsync();
+
+                    return Ok("un tarif est supprimé");
+                } catch(Npgsql.NpgsqlException e){
+                    return Ok("une erreu apparait " + e.Message);
                 }
             }
         }
