@@ -16,12 +16,10 @@ namespace PostgreSQLAPI.Models
         public DbSet<CompaginAerienne> compagnies { get; set; }
         public DbSet<Vol> Vols { get; set; }
         public DbSet<Tarif> Tarifs { get; set; }
+        public DbSet<Passager> Passagers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Vol>()
-                .HasOne(v => v.Avion)
-                .WithMany()
-                .HasForeignKey(v => v.AvionId);
+            modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
             modelBuilder.Entity<Tarif>().HasOne(s => s.Siege).WithMany().HasForeignKey(s => s.IdSiege);
         } 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
