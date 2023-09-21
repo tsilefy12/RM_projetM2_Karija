@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace apiWebCore.Models
 {
@@ -22,7 +24,7 @@ namespace apiWebCore.Models
         public DateTime DateDepart { get; set; }
 
         [Column("heuredepart")]
-        public TimeSpan HeureDepart { get; set; }
+        public string HeureDepart { get; set; } = null!; 
 
         [Column("capacitemax")]
         public int CapaciteMax { get; set; }

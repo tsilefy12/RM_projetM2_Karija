@@ -101,46 +101,38 @@ namespace apiWebCore.Controllers
         {
             try
             {
-                using (var dbC = new AppDbContext())
+                using var dbC = new AppDbContext();
+                string select = "SELECT * FROM avion WHERE id=@Id";
+
+                using NpgsqlConnection conex = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                await conex.OpenAsync();
+
+                using NpgsqlCommand cmd = new NpgsqlCommand(select, conex);
+                cmd.Parameters.AddWithValue("Id", Id);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
                 {
-                    string select = "SELECT * FROM avion WHERE id=@Id";
-
-                    using (NpgsqlConnection conex = new NpgsqlConnection(dbC.Database.GetConnectionString()))
+                    // Récupérez les données de la base de données
+                    int id = reader.GetInt32(reader.GetOrdinal("id"));
+                    string numeroAvion = reader.GetString(reader.GetOrdinal("numavion"));
+                    string model = reader.GetString(reader.GetOrdinal("modelavion"));
+                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
+                    Console.WriteLine("id = " + id);
+                    var avion = new Avion
                     {
-                        await conex.OpenAsync();
+                        Id = id,
+                        NumeroAvion = numeroAvion,
+                        ModelAvion = model,
+                        Capacite = capacite
+                    };
 
-                        using (NpgsqlCommand cmd = new NpgsqlCommand(select, conex))
-                        {
-                            cmd.Parameters.AddWithValue("Id", Id);
-
-                            using (var reader = await cmd.ExecuteReaderAsync())
-                            {
-                                if (await reader.ReadAsync())
-                                {
-                                    // Récupérez les données de la base de données
-                                    int id = reader.GetInt32(reader.GetOrdinal("id"));
-                                    string numeroAvion = reader.GetString(reader.GetOrdinal("numavion"));
-                                    string model = reader.GetString(reader.GetOrdinal("modelavion"));
-                                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
-
-                                    var avion = new Avion
-                                    {
-                                        Id = id,
-                                        NumeroAvion = numeroAvion,
-                                        ModelAvion = model,
-                                        Capacite = capacite
-                                    };
-
-                                    // Retournez les données de l'avion en réponse HTTP
-                                    return Ok(avion);
-                                }
-                                else
-                                {
-                                    return NotFound("Aucun avion trouvé avec l'ID spécifié.");
-                                }
-                            }
-                        }
-                    }
+                    // Retournez les données de l'avion en réponse HTTP
+                    return Ok(avion);
+                }
+                else
+                {
+                    return NotFound("Aucun avion trouvé avec l'ID spécifié.");
                 }
             }
             catch (Exception ex)

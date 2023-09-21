@@ -34,7 +34,7 @@ namespace apiWebCore.Controllers
                 int avionid = reader.GetInt32(reader.GetOrdinal("avionid"));
                 string numerovol = reader.GetString(reader.GetOrdinal("numerovol"));
                 DateTime datedepart = reader.GetDateTime(reader.GetOrdinal("datedepart"));
-                TimeSpan heuredepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart"));
+                string heuredepart = reader.GetString(reader.GetOrdinal("heuredepart"));
                 int capacitemax = reader.GetInt32(reader.GetOrdinal("capacitemax"));
                 string lieudepart = reader.GetString(reader.GetOrdinal("lieudepart"));
                 string lieuarrivee = reader.GetString(reader.GetOrdinal("lieuarrivee"));
@@ -152,7 +152,7 @@ namespace apiWebCore.Controllers
                                 int avionid = reader.GetInt32(reader.GetOrdinal("avionid"));
                                 string numerovol = reader.GetString(reader.GetOrdinal("numerovol"));
                                 DateTime datedepart = reader.GetDateTime(reader.GetOrdinal("datedepart"));
-                                TimeSpan heuredepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart"));
+                                string heuredepart = reader.GetString(reader.GetOrdinal("heuredepart"));
                                 int capacitemax = reader.GetInt32(reader.GetOrdinal("capacitemax"));
                                 string lieudepart = reader.GetString(reader.GetOrdinal("lieudepart"));
                                 string lieuarrivee = reader.GetString(reader.GetOrdinal("lieuarrivee"));
@@ -207,7 +207,7 @@ namespace apiWebCore.Controllers
                                 int avionid = reader.GetInt32(reader.GetOrdinal("avionid"));
                                 string numerovol = reader.GetString(reader.GetOrdinal("numerovol"));
                                 DateTime datedepart = reader.GetDateTime(reader.GetOrdinal("datedepart"));
-                                TimeSpan heuredepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart"));
+                                string heuredepart = reader.GetString(reader.GetOrdinal("heuredepart"));
                                 int capacitemax = reader.GetInt32(reader.GetOrdinal("capacitemax"));
                                 string lieudepart = reader.GetString(reader.GetOrdinal("lieudepart"));
                                 string lieuarrivee = reader.GetString(reader.GetOrdinal("lieuarrivee"));

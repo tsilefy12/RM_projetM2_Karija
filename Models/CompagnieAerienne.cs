@@ -24,9 +24,12 @@ namespace apiWebCore.Models
         public string AdresseCompagnie { get; set; } = null!;
 
         [Column("contact")]
-        public int Contact { get; set; }
+        public long Contact { get; set; }
         
         [Column("emailcampagnie")]
         public string EmailCompagnie { get; set; } = null!;
+
+        [Column("pwdcompagnie")]
+        public string PwdCompagnie { get; set; } = null!;
     }
 }
