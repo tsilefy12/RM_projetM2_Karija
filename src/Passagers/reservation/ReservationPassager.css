@@ -1,0 +1,273 @@
+.reservation-passager {
+    /* border: 1px solid blue; */
+    width: 70vw;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    margin-left: -15%;
+   
+}
+
+.passager-resa {
+    /* border: 1px solid red; */
+    margin-top: 15%;
+    width: auto;
+}
+
+.header-passager {
+    /* border: 1px solid red; */
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.resultat-vol {
+    /* border: 5px solid yellow; */
+    width: auto;
+    height: auto;
+    margin-top: 2%;
+}
+
+.res-vol {
+    display: flex;
+    flex-direction: row;
+}
+
+.res-1 {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.res-2 {
+    float: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.reserver-vol {
+    /* border: 1px solid orange; */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.recherche-personne {
+    /* border: 1px solid blue; */
+    margin-top: 5%;
+}
+
+.input-mail-personne {
+    width: 100%;
+}
+
+.formulaire-resa-personne {
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5%;
+}
+.formulaire-resa-personne .reserv{
+    margin-right: 10px;
+}
+
+.fromLabSpan {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+}
+#btn-reserver{
+    width: 100%;
+    margin-top: 5%;
+}
+@media (max-width: 1356px) and (min-width: 999px) {
+    .reservation-passager {
+        /* border: 1px solid blue; */
+        width: 70vw;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+        margin-left: 0%;
+    }
+    .passager-resa {
+        /* border: 1px solid red; */
+        margin-top: 15%;
+        width: auto;
+    }
+    .header-passager {
+        /* border: 1px solid red; */
+        width: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+
+    }
+
+    .header-passager .inpout-passager {
+        z-index: -3;
+    }
+
+    .res-vol {
+        /* border: 1px solid red; */
+        display: flex;
+        flex-direction: row;
+    }
+
+    .res-1 {
+        /* border: 1px solid brown; */
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .res-2 {
+        /* border: 1px solid black; */
+        width: 60%;
+        float: right;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .reservation-passager {
+        /* border: 1px solid rgb(222, 222, 224); */
+        width: 70vw;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+        margin-left: 0;
+        
+    }
+    .passager-resa {
+        /* border: 1px solid red; */
+        margin-top: 15%;
+        width: auto;
+    }
+    .personne {
+        float: inline-end;
+        width: 400px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        ;
+        margin-top: 1%;
+        margin-left: 20%;
+    }
+
+    .header-passager {
+        /* border: 1px solid red; */
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        z-index: 0;
+    }
+
+    .resultat-vol {
+        /* border: 1px solid rgb(0, 4, 255); */
+        width: auto;
+        height: 40vh;
+        margin-top: 5%;
+    }
+
+    .res-vol {
+        /* border: 1px solid red; */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .res-1 {
+        /* border: 1px solid red; */
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .res-2 {
+        /* border: 1px solid green; */
+        width: auto;
+        float: right;
+        display: flex;
+        width: 80%;
+        flex-direction: column;
+    }
+
+    .personne {
+        width: 300px;
+        display: flex;
+        margin-top: 1%;
+        margin-left: 30%;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .reservation-passager {
+        border: 1px solid rgb(167, 17, 226);
+        width: 70vw;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .personne {
+        width: 250px;
+        display: flex;
+        margin-top: 1%;
+        margin-left: 30%;
+    }
+    .passager-resa {
+        /* border: 1px solid red; */
+        margin-top: 15%;
+        margin-left: 0;
+        width: auto;
+    }
+    .res-vol {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .fromLabSpan {
+        display: flex;
+        flex-direction: row;
+        margin-top: 8px;
+    }
+    .res-1 {
+        /* border: 1px solid red; */
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        width: 80%;
+    }
+    .res-2 {
+        /* border-left: 1px solid green; */
+        width: auto;
+        float: right;
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        overflow: auto;
+        margin-left: 8px;
+    }
+    .formulaire-resa-personne {
+        border: 1px solid red;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .formulaire-resa-personne .reserv{
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,50 @@
+#nav-bar{
+    position: fixed;
+    left: 0;
+    height: 100vh;
+    background-color: rgb(201, 201, 233);
+}
+.link-menupassager{
+    border-top: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    height: 40vh;
+    width: 100%;
+    margin-top: 10px;
+}
+.menu-item-passager{
+    text-align: start;
+    text-decoration: none;
+    margin-top: 15px;
+}
+.footer-menu-pasager{
+    border-top: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    height: 26vh;
+}
+.tout-menu-passager{
+    /* border: 1px solid brown; */
+    width: 100%;
+    position: fixed;
+    left: 0;
+    text-align: end;
+    height: 10vh;
+}
+.personne{
+    float: inline-end;
+    width: 45%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 1%;
+}
+#resa{
+    margin-top: 40px;
+}
+@media (max-width: 768px){
+    .tout-menu-passager{
+        z-index: 2;
+    }
+}
