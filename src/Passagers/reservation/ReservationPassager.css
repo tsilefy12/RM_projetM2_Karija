@@ -212,7 +212,7 @@
 
 @media (max-width: 768px) {
     .reservation-passager {
-        border: 1px solid rgb(167, 17, 226);
+        /* border: 1px solid rgb(167, 17, 226); */
         width: 70vw;
         text-align: left;
         display: flex;
@@ -261,7 +261,7 @@
         margin-left: 8px;
     }
     .formulaire-resa-personne {
-        border: 1px solid red;
+        /* border: 1px solid red; */
         display: flex;
         flex-direction: column;
         justify-content: space-between;

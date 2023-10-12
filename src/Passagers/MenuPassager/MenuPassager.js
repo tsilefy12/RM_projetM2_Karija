@@ -40,7 +40,6 @@ function MenuPassager() {
           <button>Deconnexion</button>
         </div>
       </div>
-
     </>
 
   );

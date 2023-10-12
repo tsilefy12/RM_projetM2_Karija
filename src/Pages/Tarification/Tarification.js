@@ -106,7 +106,7 @@ function Tarification() {
   }
   const show = afficheFormulaire ? '20vh' : '0vh';
   const miseho = afficheFormulaire ? 'block' : 'none';
-  const margetoptarif = !afficheFormulaire ? '5%' : '10%';
+  const margetoptarif = !afficheFormulaire ? '5%' : '13%';
   const overflow = afficheFormulaire ? 'auto' : 'auto';
   const AfficherEdit = () => {
     setAfficheFormulaireEdit(!afficherFormulaireEdit);

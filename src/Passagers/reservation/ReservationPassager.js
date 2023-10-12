@@ -19,6 +19,8 @@ function ReservationPassager() {
     const [lieuDep, setLieuDep] = useState("");
     const [lieuAr, setLieuAr] = useState("");
     const [EmailPassager, setEmailPassager] = useState("");
+    const [messageValidation, setMessageValidation] = useState("");
+    const [donneId, setDonneId] = useState([]);
 
     const [num, setNum] = useState("");
     const [Pid, setPid] = useState("");
@@ -30,6 +32,8 @@ function ReservationPassager() {
     useEffect(() => {
         resultatAfficher();
         verify();
+        selectId();
+        // selectTypePrix();
         // afficherReservation();
     })
     const handleClearLieuD = () => {
@@ -90,12 +94,46 @@ function ReservationPassager() {
         formData.append("tarificationId", Tid);
         formData.append("libelle", typeTarification);
         formData.append("dateReservation", dateresa);
-        await axios.post(`http://localhost:5077/api/Reservation/reserver-vol`,
+        if (num=="" || dateresa=="" || Pid=="") {
+            const msg1 = (<label className='text text-danger'>Les chmaps sont obliagtoires</label>);
+            setMessageValidation(msg1);
+        }
+        else if (Tid=="Selectionner" ||  typeTarification=="" ) {
+            const msg1 = (<label className='text text-danger'>Veuillez selectionner un tarif</label>);
+            setMessageValidation(msg1);
+        } else {
+            await axios.post(`http://localhost:5077/api/Reservation/reserver-vol`,
             formData, { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
                 console.log(data);
+                setMessageValidation(<label className='text-success'>{data}</label>)
             })
+        }
     }
 
+    const selectId = async () =>{
+        await axios.get(`http://localhost:5077/api/Tarif/select-id`).then(({data}) =>{
+            setDonneId(data);
+        })
+    }
+
+    const selectTypePrix = async () =>{
+       if (Tid==="Selectionner") {
+          setTypeTarification("");
+          setPrix("");
+       } else {
+        await axios.get(`http://localhost:5077/api/Tarif/select-tarif?IdT=${Tid}`).then(({data}) =>{
+          if (data.length==0 || Tid=="Selectionner") {
+            setTypeTarification("");
+            setPrix("");
+          } else {
+            data.map((i) =>{
+                setTypeTarification(i.typeTarif)
+                setPrix(i.prix)
+            })
+          }  
+        })
+       }
+    }
     return (
         <div className='reservation-passager'>
             <MenuPassager />
@@ -118,6 +156,7 @@ function ReservationPassager() {
                                 ),
                             }
                         }
+                        placeholder='tapez un lieu de départ'
                     />
                     <FormLabel className='inpout-passager'>Lieu d'arrivée</FormLabel>
                     <TextField
@@ -136,6 +175,7 @@ function ReservationPassager() {
                                 ),
                             }
                         }
+                        placeholder="tapez un lieu d'arrivée"
                     />
                 </header>
                 <hr></hr>
@@ -175,7 +215,7 @@ function ReservationPassager() {
                         </div>
                     </div>
                     <div className='reserver-vol'>
-                        <div className='recherche-personne'>
+                        {/* <div className='recherche-personne'>
                             <TextField
                                 placeholder='rechercher votre nom par adresse email avant la réservation...'
                                 value={EmailPassager}
@@ -194,7 +234,8 @@ function ReservationPassager() {
                                 }
                                 className='input-mail-personne'
                             />
-                        </div>
+                        </div> */}
+                        <span style={{marginBottom : '-4%', marginTop: '2%'}}>{messageValidation}</span>
                         <Form onSubmit={reserverVol}>
                             <div className='formulaire-resa-personne'>
                                 <TextField
@@ -212,13 +253,18 @@ function ReservationPassager() {
                                     onChange={(e) => setPid(e.target.value)}
                                     className='reserv'
                                 />
-                                <TextField
-                                    type='number'
-                                    placeholder='numéor tarif'
-                                    value={Tid}
-                                    onChange={(e) => setTid(e.target.value)}
-                                    className='reserv'
-                                />
+                                <select className='form-control' style={{width: "200px", height: "5.8vh", 
+                                marginRight: "4px", backgroundColor: 'rgb(238, 238, 240)'}}
+                                onChange={(e) =>setTid(e.target.value)}>
+                                <option>Selectionner</option>
+                                    {
+                                        donneId.length > 0 &&(
+                                            donneId.map((i) =>(
+                                                <option value={i.id} onClick={() =>selectTypePrix()}>{i.id}</option>
+                                            ))
+                                        )
+                                    }
+                                </select>
                                 <TextField
                                     type='text'
                                     placeholder='type tarif'
@@ -228,7 +274,7 @@ function ReservationPassager() {
                                     className='reserv'
                                 />
                                 <TextField
-                                    type='text'
+                                    type='number'
                                     placeholder='prix'
                                     value={prix}
                                     onChange={(e) => setPrix(e.target.value)}

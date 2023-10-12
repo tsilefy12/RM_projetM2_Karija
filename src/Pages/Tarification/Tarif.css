@@ -61,8 +61,8 @@ body .tarif{
     flex-direction: row;
     justify-content: space-between;
 }
-.edit-tarif input{
-    margin-right: 6px;
+.edit-tarif .input{
+    margin-right: 8px;
 }
 @media (max-width: 991px) and (min-width: 906px) {
     body .tarif{

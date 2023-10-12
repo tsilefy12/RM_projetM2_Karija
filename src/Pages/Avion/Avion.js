@@ -170,7 +170,7 @@ function Avion() {
         <Menu/>
         <div className='tout-avion'>
         <div className='entête'>
-          <header className='header'>
+          <header className='header-avion'>
             <h1 className='text text-info'>GESTION<sub style={{ fontSize: '1em' }}>AVION</sub></h1>
           </header>
         </div>
@@ -237,7 +237,7 @@ function Avion() {
                   label="Rechercher"
                   type='text'
                   value={inputRecherche}
-                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey', fontSize: '1.1em' } }}
+                  sx={{ input: { fontSize: '1.2em', width: '200px' }, label: { color: 'darkgrey', fontSize: '1.1em', marginTop: "-6px"} }}
                   onChange={(e) => (
                     setInputRecherche(e.target.value)
                   )}
@@ -248,6 +248,7 @@ function Avion() {
                       </InputAdornment>
                     )
                   }}
+                  size='small'
                 /></div>
             </div>
             <div className='card-body'>

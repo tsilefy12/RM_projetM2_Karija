@@ -16,6 +16,8 @@ import EditVol from './Pages/Vols/EditVol';
 import MenuPassager from './Passagers/MenuPassager/MenuPassager';
 import Achat from './Passagers/Achat/Achat';
 import ReservationPassager from './Passagers/reservation/ReservationPassager';
+import Accueil from './Passagers/accueil/Accueil';
+import PageAccueil from './Pages/Accueil/PageAccueil';
 function App() {
   return (
     <>
@@ -24,7 +26,7 @@ function App() {
           <Route path={'/'} element={<Login />} />
           <Route path='/inscription' element={<Inscription />} />
           <Route path='/avion' element={<Avion />} />
-          <Route path={'/menu'} element={<Menu />} />
+          <Route path={'/menu'} element={<PageAccueil/>} />
           <Route path='/tarification' element={<Tarification />} />
           <Route path='/reservation' element={<Reservation />} />
           <Route path='/venteBillet' element={<Vente />} />
@@ -32,7 +34,7 @@ function App() {
           <Route path='/vols' element={<Vols />} />
           <Route path='/api/Vol/edit-vol/:Id' element={ <EditVol/>} />
           <Route path='sieges' element={<Sieges />} />
-          <Route path='/MenuPassager' element={<MenuPassager/>} />
+          <Route path='/MenuPassager' element={<Accueil/>} />
           <Route path='/reservation-passager' element={<ReservationPassager/>}/>
           <Route path='/Achat-billet' element={<Achat/>} />
         </Routes>
