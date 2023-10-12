@@ -15,16 +15,20 @@ namespace apiWebCore.Models
 
         [Column("avionid")]
         public int AvionId { get; set; }
-        public Avion Avion { get; set; } = null!;
+        [JsonIgnore]
+       public Avion? Avion { get; set; }
 
         [Column("numerovol")]
         public string NumeroVol { get; set; } = null!;
 
         [Column("datedepart")]
+        [DataType(DataType.Date)]
         public DateTime DateDepart { get; set; }
 
+        // [DataType(DataType.Time)]
+        // [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         [Column("heuredepart")]
-        public string HeureDepart { get; set; } = null!; 
+        public TimeSpan HeureDepart { get; set; }
 
         [Column("capacitemax")]
         public int CapaciteMax { get; set; }
@@ -34,5 +38,17 @@ namespace apiWebCore.Models
 
         [Column("lieuarrivee")]
         public string LieuArrivee { get; set; } = null!;
+
     }
+    public class HeureDepartModel
+{
+    public long Ticks { get; set; }
+    public int Days { get; set; }
+    public int Hours { get; set; }
+    public int Milliseconds { get; set; }
+    public int Minutes { get; set; }
+    public int Seconds { get; set; }
+    public string HeureDepartFormatee { get; set; }
+}
+
 }

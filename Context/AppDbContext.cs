@@ -25,12 +25,14 @@ namespace PostgreSQLAPI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
-            modelBuilder.Entity<Tarif>().HasOne(s => s.Siege).WithMany().HasForeignKey(s => s.IdSiege);
             modelBuilder.Entity<Demande>().HasOne(d =>d.Passager).WithMany().HasForeignKey(p =>p.IdPassager);
             modelBuilder.Entity<Reservation>().HasOne(a =>a.Vol).WithMany().HasForeignKey(a =>a.VolId);
             modelBuilder.Entity<Reservation>().HasOne(p =>p.Passager).WithMany().HasForeignKey(p =>p.PassagerId);
             modelBuilder.Entity<Reservation>().HasOne(t =>t.Tarif).WithMany().HasForeignKey(t =>t.TarificationId);
-        } 
+            modelBuilder.Entity<Vol>()
+            .Property(v => v.HeureDepart)
+            .HasColumnType("time");
+            } 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql("Host = localhost; Port = 5432; Database = revenu_management; Username= postgres; Password = tsilefy;");

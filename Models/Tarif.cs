@@ -10,10 +10,6 @@ namespace apiWebCore.Models
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("siegeid")]
-        public int IdSiege { get; set; }
-        public Siege Siege { get; set; } = null!;
-
         [Column("description")]
         public string Description { get; set; } = null!;
 
@@ -25,5 +21,8 @@ namespace apiWebCore.Models
 
         [Column("nombreplacedispotarif")]
         public int NombrePlaceDispoTarif {get; set; }
+
+        [Column("statut")]
+        public string Statut { get; set; } = null!;
     }
 }

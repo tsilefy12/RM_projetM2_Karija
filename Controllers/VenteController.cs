@@ -57,7 +57,8 @@ namespace apiWebCore.Controllers
 
             try{
 
-                string verifier = "SELECT passager.nompassager, tarification.prix, vol.numerovol FROM passager, reservation, vol, tarification"+
+                string verifier = "SELECT passager.nompassager,passager.id, tarification.prix,tarification.type, vol.numerovol, vol.datedepart, vol.lieudepart, vol.lieuarrivee "+
+                "FROM passager, reservation, vol, tarification"+
                 " WHERE passager.id=reservation.passagerid AND reservation.tarificationid=tarification.id "+
                 "AND reservation.volid=vol.id AND email ='"+Email+"'";
 
@@ -73,11 +74,17 @@ namespace apiWebCore.Controllers
                 var ListV = new List<Vol>();
 
                 if(await reader.ReadAsync()){
+                    int idP = reader.GetInt32(reader.GetOrdinal("id")); 
                     string nom = reader.GetString(reader.GetOrdinal("nompassager"));
                     double prix = reader.GetDouble(reader.GetOrdinal("prix"));
                     string numvol = reader.GetString(reader.GetOrdinal("numerovol"));
+                    string typeT = reader.GetString(reader.GetOrdinal("type"));
+                    string depart = reader.GetString(reader.GetOrdinal("lieudepart"));
+                    string arrivee = reader.GetString(reader.GetOrdinal("lieuarrivee"));
+                    DateTime datydep = reader.GetDateTime(reader.GetOrdinal("datedepart"));
 
                     var passagers = new Passager{
+                        IdPassager = idP,
                         NomPassager = nom,
                     };
                     
@@ -85,11 +92,15 @@ namespace apiWebCore.Controllers
 
                     var tarifs = new Tarif{
                         Prix = prix,
+                        TypeTarif = typeT
                     };
                     ListT.Add(tarifs);
 
                     var vols = new Vol{
                         NumeroVol = numvol,
+                        DateDepart = datydep,
+                        LieuDepart = depart,
+                        LieuArrivee = arrivee
                     };
                     ListV.Add(vols);
                 }
