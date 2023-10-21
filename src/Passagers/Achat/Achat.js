@@ -12,7 +12,6 @@ import OrangeMoney from '../../images/téléchargement (2).png'
 import bancaire from '../../images/images.png'
 import { Form, Image } from 'react-bootstrap';
 import axios from 'axios';
-import { yellow } from '@mui/material/colors';
 
 function Achat() {
     const [recherche, setRecherche] = useState("")
@@ -28,7 +27,6 @@ function Achat() {
     const [prix, setPrix] = useState("");
     const [type, setType] = useState("");
     const [montant, setMontant] = useState("");
-    const [nombrebillet, setNombreBillet] = useState("");
     const [lieuZ, setLieuZ] = useState("");
     const [lieuX, setLieuX] = useState("");
     const [numV, setNumV] = useState("");
@@ -47,13 +45,13 @@ function Achat() {
     const [erreurMessageChamp, setErreurMessageChamp] = useState("");
 
     const displayBtnAcheter = (modePaiement == "") ? 'none' : 'block';
-    const afficherBtnModePaiement = (nombrebillet == "") ? 'none' : 'block';
     useEffect(() => {
         validationinput();
         verifierNumeroTelma();
         verifierNumeroAirtel();
         verifierNumeroOrange();
         verifierCompteBancaire();
+      
     })
     const Afficher = () => {
         setPaiement(!AfficherPaiement);
@@ -148,7 +146,6 @@ function Achat() {
                 setLieuX("")
                 setNumV("")
                 setDatyDep("")
-                setNombreBillet("")
                 setModePaiement("")
             } else {
                 const donne = data[0]
@@ -171,6 +168,7 @@ function Achat() {
                 setLieuX(lieuArriveeVerify);
                 setDatyDep(datydepart);
                 setNumV(numVolVerify)
+                setMontant(prix);
                 const text = (<label className='text-success' style={{ display: (recherche === "" || nom === "") ? 'none' : 'block' }}>Ok, votre recherche est succès!!</label>)
                 setMessageVide(text)
             }
@@ -189,13 +187,9 @@ function Achat() {
             setLieuX("")
             setNumV("")
             setDatyDep("")
-            setNombreBillet("")
-            setModePaiement("")
             setErreurMessageChamp("")
-        } else {
-            VerifierReservation()
-            const calcul = prix * nombrebillet;
-            setMontant(calcul);
+        } else{
+            VerifierReservation();
         }
     }
 
@@ -207,9 +201,8 @@ function Achat() {
         formData.append("montant", montant);
         formData.append("dateTransaction", dateTransaction);
         formData.append("statutPaiement", nom);
-        formData.append("nombreBillet", nombrebillet);
         formData.append("modePaiement", modePaiement);
-        if (idP == "" || montant == "" || dateTransaction == "" || nom == "" || nombrebillet == "" || modePaiement == "") {
+        if (idP == "" || montant == "" || dateTransaction == "" || nom == "" || modePaiement == "") {
             const msg = (<label className='text text-danger'>Les champs sont obligatoires</label>);
             setErreurMessageChamp(msg);
         } else {
@@ -283,10 +276,6 @@ function Achat() {
                                 <span className='text text-info' style={{ marginLeft: '4px' }}>{montant}</span>
                             </div>
                             <div className='flex-row' style={{ marginTop: '10px' }}>
-                                <label>Nombre de billet :</label>
-                                <span className='text text-info' style={{ marginLeft: '4px' }}>{nombrebillet}</span>
-                            </div>
-                            <div className='flex-row' style={{ marginTop: '10px' }}>
                                 <label>Lieu de départ :</label>
                                 <span className='text text-info' style={{ marginLeft: '4px' }}>{lieuZ}</span>
                             </div>
@@ -316,16 +305,9 @@ function Achat() {
                             <TextField
                                 type='number'
                                 placeholder='montant'
-                                value={montant}
+                                value={prix}
                                 onChange={(e) => setMontant(e.target.value)}
                                 sx={{ margin: '6px' }}
-                            />
-                            <TextField
-                                type='number'
-                                placeholder='nombre de billet'
-                                sx={{ margin: '6px' }}
-                                value={nombrebillet}
-                                onChange={(e) => setNombreBillet(e.target.value)}
                             />
                             <TextField
                                 type='date'
@@ -339,7 +321,7 @@ function Achat() {
                                 value={modePaiement}
                                 onChange={(e) => setModePaiement(e.target.value)}
                                 placeholder='mode du paiement'
-                                sx={{ margin: '6px' }}
+                                sx={{ margin: '6px', display: AfficherPaiement? 'none': 'block' }}
                                 aria-readonly
                             />
                             <div className='flex'>
@@ -349,7 +331,7 @@ function Achat() {
                         </div>
                     </Form>
                     <div className='flex'>
-                        <button className='btn btn-success grow' style={{ margin: "6px", display: afficherBtnModePaiement }} onClick={() => Afficher()}>Mode paiement</button>
+                        <button className='btn btn-success grow' style={{ margin: "6px" }} onClick={() => Afficher()}>Mode paiement</button>
                         <button className='btn btn-secondary grow' style={{ margin: "6px" }}>Pas maintenant</button>
                     </div>
                     <div className='flex-box mode-paiement' style={{ marginTop: PaiemenMode, transition: 'margin-top 1s' }}>

@@ -18,6 +18,9 @@ import Achat from './Passagers/Achat/Achat';
 import ReservationPassager from './Passagers/reservation/ReservationPassager';
 import Accueil from './Passagers/accueil/Accueil';
 import PageAccueil from './Pages/Accueil/PageAccueil';
+import DemandeAnnulation from './Passagers/demandeAnnulation/DemandeAnnulation';
+import Prevision from './Passagers/prevision/Prevision';
+import Remboursement from './Passagers/remboursement/Remboursement';
 function App() {
   return (
     <>
@@ -37,6 +40,9 @@ function App() {
           <Route path='/MenuPassager' element={<Accueil/>} />
           <Route path='/reservation-passager' element={<ReservationPassager/>}/>
           <Route path='/Achat-billet' element={<Achat/>} />
+          <Route path='/demande-annulation' element={<DemandeAnnulation/>} />
+          <Route path='/prevision' element={<Prevision/>} />
+          <Route path='/remboursement' element={<Remboursement/>} />
         </Routes>
       </Router>
     </>

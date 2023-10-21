@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import '../reservation/ReservationPassager.css'
-import { FormLabel, InputAdornment, TextField, useStepContext } from '@mui/material'
+import { FormLabel, InputAdornment, TextField } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import * as AiIcons from "react-icons/ai"
 import MenuPassager from '../MenuPassager/MenuPassager';
-import { Form } from 'react-bootstrap';
+import { Form, Image } from 'react-bootstrap';
+import logoImage from '../../images/Air-Mad.jpeg'
 
 function ReservationPassager() {
     // const [donneResultat, setDonneResultat] = useState([]);
@@ -183,35 +184,38 @@ function ReservationPassager() {
                     <div className='res-vol'>
                         <div className='res-1'>
                             <div className='fromLabSpan'>
-                                <FormLabel>Numéro d'avion : </FormLabel>
+                                <FormLabel>Numéro d'avion </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{numavion}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Numéro du vol : </FormLabel>
+                                <FormLabel>Numéro du vol </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{numvol}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Date départ : </FormLabel>
+                                <FormLabel>Date départ </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{date}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Heure de départ : </FormLabel>
+                                <FormLabel>Heure de départ </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{heuredep}</span>
                             </div>
                         </div>
                         <div className='res-2'>
                             <div className='fromLabSpan'>
-                                <FormLabel>Capacité : </FormLabel>
+                                <FormLabel>Capacité </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{capacite}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Lieu de départ : </FormLabel>
+                                <FormLabel>Lieu de départ </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{lieuD}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Lieu d'arrivée : </FormLabel>
+                                <FormLabel>Lieu d'arrivée </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{lieuA}</span>
                             </div>
+                        </div>
+                        <div className='res-3'>
+                            <Image src={logoImage} size='cover'/>
                         </div>
                     </div>
                     <div className='reserver-vol'>

@@ -1,48 +1,59 @@
 import React from 'react';
-import { FormLabel, TextField } from '@mui/material';
-import { Button, Image } from 'react-bootstrap';
-import logo from '../images/images.jpg';
+import {  TextField,InputAdornment } from '@mui/material';
+import { FormLabel, Image } from 'react-bootstrap';
+import * as AiIcons from "react-icons/ai"
+import logo from '../images/FILE023.JPG';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import 'tachyons';
 function Login() {
+  
   return (
-    <div className='container'>
-      <div className='tous'>
-        <div className='logo'>
-          <Image src={logo} id='img' sizes='sx'></Image>
-        </div>
-        <div className='login'>
-          <FormLabel className='text text-light' id='label'>Login</FormLabel>
-          <div className='loginPage'>
-            <div>
-              <TextField
-                id="standard-basic"
-                label="Adresse mail"
-                variant="standard"
-                fullWidth
-                size='small'
-                sx={{ input: { color: 'white' }, label: { color: 'white' }, variant: { color: 'white'} }}
-              />
-            </div>
-            <div id='pswd'>
-              <TextField
-                label="Mot de passe"
-                variant="standard"
-                outline="white"
-                fullWidth
-                size='small'
-                type='password'
-                sx={{ input: { color: 'white' }, label: { color: 'white' }, outline: { color: 'white' } }}
-                autoComplete='off'
-              />
-            </div>
-            <div className='action'>
-              <Button className='btn btn-grey grow' 
-              style={{ backgroundColor: 'grey', color: 'white', border: 'none' }}>Sign in</Button>
-              <Link to={'/inscription'} style={{ textDecoration: 'none', fontSize: '1.2em', float: 'right', color: 'white' }}>create account</Link>
-            </div>
-          </div>
+    <div className='tous'>
+      <div className='logo'>
+        <Image src={logo} id='img' width={320} height={308}></Image>
+      </div>
+      <div className='flex login'>
+       <div className='flex' id='inpt'>
+       <FormLabel style={{margin: '20px'}} id='labelLog'>Adresse mail :</FormLabel>
+        <TextField
+          type='text'
+          sx={{ marginTop: '20px', label: { marginTop: '-10px', width: 'auto' } }} id='inputLog'
+          autoComplete='off'
+          placeholder='saisir votre adresse mail'
+          InputProps={
+            {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AiIcons.AiFillMail width={20} height={20} color='#800000'/>
+                </InputAdornment>
+              ),
+            }
+          }
+        />
+       </div>
+      <div className='flex' id='inpt'>
+      <FormLabel style={{margin: '20px'}} id='labelLog'>Mot de passe :</FormLabel>
+      <TextField
+          type='password'
+          sx={{ marginTop: '20px', label: { marginTop: '-10px' } }} id='inputLog'
+          autoComplete='off'
+          placeholder='saisir votre mot de passe'
+          InputProps={
+            {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AiIcons.AiTwotoneLock  width={20} height={20} color='#800000'/>
+                </InputAdornment>
+              ),
+            }
+          }
+        />
+      </div>
+        <div className='bouton-login'>
+          <button className='btn btn-info grow' id='boutonLog'>Sign in</button>
+          <Link to={'/inscription'} className='btn btn-success grow' id='boutonLog'>
+            <button style={{ border: 'none' }} className='bg-success'>S'inscrire</button></Link>
         </div>
       </div>
     </div>

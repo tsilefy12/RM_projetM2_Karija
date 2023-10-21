@@ -1,33 +1,31 @@
-/* .tousInscription{
-    width: 800px;
-    display: 'flex';
-    background-image: url('/src/Pages/Page_Inscription/sary/téléchargement (1).jpg');
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 80vh;
-    margin-top: -10%;
-} */
+.formulaire-inscription{
+    /* border: 1px solid blue; */
+    width: 40%;
+    height: 60%;
+    float: right;
+    margin-right: 13%;
+    margin-top: 6%;
+}
 .inscription{
-    width: 450px;
-    margin-top: 20%;
-    margin-left: 20%;
-    height: 60vh;
-    text-align: center;
-    background-color: white;
+    /* border: 1px solid red; */
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
 }
-.inscription-formulaires{
-    display: flex;
-    flex-direction: column;
+.logo-inscription{
+    /* border: 1px solid green; */
+    width: 30%;
+    height: 60%;
+    float: left;
+    margin-left: 15%;
+    margin-top: 6%;
+    background-image: url(/src/images/images.jpg);
+    background-size: cover;
 }
-.footer{
-    display: flex;
-    flex-direction: column;
-    width: 365px;
-    margin-left: 40px;
-    margin-top: 10px;
-    text-align: center;
-}
-.formulaireInscription{
-    margin: 6px;
+.inscrit-header{
+    background-color: #800000;
+    font-size: 1.5em;
+    text-align: left;
+    margin-left: 20px;
 }
