@@ -32,7 +32,9 @@ namespace PostgreSQLAPI.Models
             modelBuilder.Entity<Vol>()
             .Property(v => v.HeureDepart)
             .HasColumnType("time");
+            modelBuilder.Entity<Annulation>().Property(d =>d.HeureVoyage).HasColumnType("time");
             } 
+            
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql("Host = localhost; Port = 5432; Database = revenu_management; Username= postgres; Password = tsilefy;");

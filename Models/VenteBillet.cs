@@ -26,9 +26,6 @@ namespace apiWebCore.Models
         [Column("statutpaiement")]
         public string StatutPaiement {get; set; } = null!;
 
-        [Column("nombrebillet")]
-        public int NombreBillet { get; set; }
-
         [Column("modepaiement")]
         public string ModePaiement { get; set; } = null!;
     }

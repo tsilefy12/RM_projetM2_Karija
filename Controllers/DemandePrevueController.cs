@@ -79,7 +79,7 @@ namespace apiWebCore.Controllers
 
                 await commandsql.ExecuteNonQueryAsync();
 
-                return Ok("ajout avec succès!");
+                return Ok("Votre demande a été envoyée.");
             } catch(Npgsql.NpgsqlException erreur){
                 
                 if (erreur.SqlState == "23503")

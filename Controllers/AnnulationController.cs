@@ -44,7 +44,7 @@ namespace apiWebCore.Controllers
                     string mailaka = reader.GetString(reader.GetOrdinal("mailaka"));
                     string numvol = reader.GetString(reader.GetOrdinal("numvol"));
                     DateTime datevoyage = reader.GetDateTime(reader.GetOrdinal("datevoyage"));
-                    string heurevoayge = reader.GetString(reader.GetOrdinal("heurevoyage"));
+                    TimeSpan heurevoayge = reader.GetTimeSpan(reader.GetOrdinal("heurevoyage"));
                     string motif = reader.GetString(reader.GetOrdinal("motif"));
                     string methodepaiement = reader.GetString(reader.GetOrdinal("methodepaiement"));
                     DateTime datetrans = reader.GetDateTime(reader.GetOrdinal("datetrans"));
@@ -177,11 +177,11 @@ namespace apiWebCore.Controllers
                     string mailaka = reader.GetString(reader.GetOrdinal("mailaka"));
                     string numvol = reader.GetString(reader.GetOrdinal("numvol"));
                     DateTime datevoyage = reader.GetDateTime(reader.GetOrdinal("datevoyage"));
-                    string heurevoayge = reader.GetString(reader.GetOrdinal("heurevoyage"));
+                    TimeSpan heurevoayge = reader.GetTimeSpan(reader.GetOrdinal("heurevoyage"));
                     string motif = reader.GetString(reader.GetOrdinal("motif"));
                     string methodepaiement = reader.GetString(reader.GetOrdinal("methodepaiement"));
                     DateTime datetrans = reader.GetDateTime(reader.GetOrdinal("datetrans"));
-                    int numtrans = reader.GetInt32(reader.GetOrdinal("numtrans"));
+                    double numtrans = reader.GetDouble(reader.GetOrdinal("numtrans"));
                     DateTime datedemande = reader.GetDateTime(reader.GetOrdinal("datedemande"));
                     string valide = reader.GetString(reader.GetOrdinal("valide"));
 
@@ -240,11 +240,11 @@ namespace apiWebCore.Controllers
                     string mailaka = reader.GetString(reader.GetOrdinal("mailaka"));
                     string numvol = reader.GetString(reader.GetOrdinal("numvol"));
                     DateTime datevoyage = reader.GetDateTime(reader.GetOrdinal("datevoyage"));
-                    string heurevoayge = reader.GetString(reader.GetOrdinal("heurevoyage"));
+                    TimeSpan heurevoayge = reader.GetTimeSpan(reader.GetOrdinal("heurevoyage"));
                     string motif = reader.GetString(reader.GetOrdinal("motif"));
                     string methodepaiement = reader.GetString(reader.GetOrdinal("methodepaiement"));
                     DateTime datetrans = reader.GetDateTime(reader.GetOrdinal("datetrans"));
-                    int numtrans = reader.GetInt32(reader.GetOrdinal("numtrans"));
+                    double numtrans = reader.GetDouble(reader.GetOrdinal("numtrans"));
                     DateTime datedemande = reader.GetDateTime(reader.GetOrdinal("datedemande"));
                     string valide = reader.GetString(reader.GetOrdinal("valide"));
 
@@ -272,6 +272,81 @@ namespace apiWebCore.Controllers
             {
 
                 return Ok("Erreur : " + erreur.Message);
+            }
+        }
+        [Route("afficher-informations")]
+        [HttpGet]
+        public async Task<IActionResult> AfficherInformations(string email){
+            if(!ModelState.IsValid){
+
+                return BadRequest(ModelState);
+            }
+
+            try{
+
+                string verifier = "SELECT passager.nompassager,passager.telephone,passager.email, vol.datedepart, vol.heuredepart, vente_billet.modepaiement, vente_billet.datetransaction"+
+                ", vol.numerovol, vente_billet.montant FROM passager,reservation, vente_billet,vol"+
+                " WHERE passager.id=vente_billet.passagerid AND passager.id =  reservation.passagerid AND reservation.volid = vol.id "+
+                "AND passager.email ='"+email+"'";
+
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+
+                using var commandsql = new NpgsqlCommand(verifier, connexion);
+
+                var reader = await commandsql.ExecuteReaderAsync();
+
+                var ListP = new List<Passager>();
+                var ListVB = new List<VenteBillet>();
+                var ListV = new List<Vol>();
+
+                if(await reader.ReadAsync()){
+                    string nom = reader.GetString(reader.GetOrdinal("nompassager"));
+                    string mail = reader.GetString(reader.GetOrdinal("email"));
+                    long phone = reader.GetInt64(reader.GetOrdinal("telephone"));
+                    string numvol = reader.GetString(reader.GetOrdinal("numerovol"));
+                    DateTime dateDe = reader.GetDateTime(reader.GetOrdinal("datedepart"));
+                    TimeSpan heure = reader.GetTimeSpan(reader.GetOrdinal("heuredepart"));
+                    string modepaye = reader.GetString(reader.GetOrdinal("modepaiement"));
+                    DateTime datetrans = reader.GetDateTime(reader.GetOrdinal("datetransaction"));
+                    double montant = reader.GetDouble(reader.GetOrdinal("montant"));
+
+                    var passagers = new Passager{
+                        Email = mail,
+                        NomPassager = nom,
+                        Telephone = phone,
+
+                    };
+                    
+                    ListP.Add(passagers);
+
+                    var vb = new VenteBillet{
+                        ModePaiement = modepaye,
+                        DateTransaction = datetrans,
+                        Montant = montant,
+                    };
+                    ListVB.Add(vb);
+
+                    var vols = new Vol{
+                        NumeroVol = numvol,
+                        DateDepart = dateDe,
+                        HeureDepart = heure,
+                    };
+                    ListV.Add(vols);
+                }
+                var mergedList = ListP.Zip(ListVB, (passager, vente) => new { Passager = passager, VenteBillet = vente })
+                .Zip(ListV, (pt, vol) => new { Passager = pt.Passager, VenteBillet = pt.VenteBillet, Vol = vol })
+                .ToList();
+
+                foreach (var tuple in mergedList)
+                {
+                    Passager passager = tuple.Passager;
+                    VenteBillet vente = tuple.VenteBillet;
+                    Vol vol = tuple.Vol;
+                }
+                return Ok(mergedList);
+            } catch(Npgsql.NpgsqlException erreur){
+                return Ok("Erreur : "+erreur.Message);
             }
         }
     }

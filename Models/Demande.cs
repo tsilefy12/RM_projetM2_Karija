@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace apiWebCore.Models
@@ -16,7 +17,8 @@ namespace apiWebCore.Models
 
         [Column("passagerid")]
         public int IdPassager { get; set; }
-        public Passager Passager { get; set; } = null!;
+        [JsonIgnore]
+        public Passager? Passager { get; set; }
 
         [Column("demandeprevue")]
         public string DemandePrevue { get; set; } = null!;

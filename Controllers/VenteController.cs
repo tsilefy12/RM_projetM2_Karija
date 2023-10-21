@@ -24,8 +24,8 @@ namespace apiWebCore.Controllers
             }
             try{
 
-                string achatbillet = "INSERT INTO vente_billet(passagerid, montant, datetransaction, statutpaiement, nombrebillet, modepaiement)"+
-                "VALUES(@PassagerId, @Montant, @DateTransaction, @Statutpaiement, @NombreBillet, @ModePaiement)";
+                string achatbillet = "INSERT INTO vente_billet(passagerid, montant, datetransaction, statutpaiement, modepaiement)"+
+                "VALUES(@PassagerId, @Montant, @DateTransaction, @Statutpaiement, @ModePaiement)";
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -35,7 +35,6 @@ namespace apiWebCore.Controllers
                 commandsql.Parameters.AddWithValue("Montant", vente.Montant);
                 commandsql.Parameters.AddWithValue("DateTransaction", vente.DateTransaction);
                 commandsql.Parameters.AddWithValue("Statutpaiement", vente.StatutPaiement);
-                commandsql.Parameters.AddWithValue("NombreBillet", vente.NombreBillet);
                 commandsql.Parameters.AddWithValue("ModePaiement", vente.ModePaiement);
 
                 await commandsql.ExecuteNonQueryAsync();
