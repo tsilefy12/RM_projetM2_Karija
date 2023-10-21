@@ -29,3 +29,29 @@
     text-align: left;
     margin-left: 20px;
 }
+@media (max-width: 991px){
+    .inscription{
+        border: 1px solid red;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .formulaire-inscription{
+        /* border: 1px solid blue; */
+        width: 80%;
+        height: auto;
+        float: right;
+        margin-right: 13%;
+        margin-top: 2%;
+    }
+    .logo-inscription{
+        /* border: 1px solid green; */
+        width: 80%;
+        height: 35vh;
+        margin-top: 6%;
+        position: relative;
+        margin-left: 9%;
+        background-image: url(/src/images/images.jpg);
+        background-size: cover;
+    }
+}
