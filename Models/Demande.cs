@@ -29,4 +29,5 @@ namespace apiWebCore.Models
         [Column("commentaire")]
         public string Commentaire { get; set; } = null!;
     }
+
 }
