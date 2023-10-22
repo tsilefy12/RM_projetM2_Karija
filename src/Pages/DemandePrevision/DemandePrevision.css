@@ -1,0 +1,42 @@
+.headerPrevision{
+    /* border: 1px solid blue; */
+    width: 100%;
+    font-size: 2em;
+}
+.demandePrevision{
+    /* border: 1px solid red; */
+    width: 70vw;
+    margin-top: 10%;
+}
+.menu-demande-prevision{
+    /* border: 1px solid black; */
+    width: 70vw;
+    position: absolute;
+    left: 0;
+    margin-left: -20%;
+}
+.toutes-liset-prevision{
+    border: 1px solid orange;
+    width: 100%;
+    height: 40vh;
+}
+.tableau-prevision{
+    width: 100%;
+    overflow: auto;
+}
+@media (max-width: 991px){
+    .menu-demande-prevision{
+        /* border: 1px solid black; */
+        width: 70vw;
+        position: absolute;
+        left: 0;
+        margin-left: -5%;
+    }
+    .headerPrevision{
+        font-size: 1em;
+    }
+    .prevu{
+        display: flex;
+        flex-direction: column;
+    }
+}

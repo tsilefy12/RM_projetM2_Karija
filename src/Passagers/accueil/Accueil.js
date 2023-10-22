@@ -6,7 +6,7 @@ function Accueil() {
     <div>
     <MenuPassager/>
     <div>
-        hk
+       
     </div>
     </div>
   )

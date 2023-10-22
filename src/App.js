@@ -10,7 +10,6 @@ import Reservation from './Pages/Reservation/Reservation';
 import Vente from './Pages/VenteBillets/Vente';
 import Tableau from './Pages/TableauDeBord/Tableau';
 import Vols from './Pages/Vols/Vols';
-import Sieges from './Pages/Sieages/Sieges';
 import Menu from './Menu/Menu';
 import EditVol from './Pages/Vols/EditVol';
 import MenuPassager from './Passagers/MenuPassager/MenuPassager';
@@ -21,6 +20,7 @@ import PageAccueil from './Pages/Accueil/PageAccueil';
 import DemandeAnnulation from './Passagers/demandeAnnulation/DemandeAnnulation';
 import Prevision from './Passagers/prevision/Prevision';
 import Remboursement from './Passagers/remboursement/Remboursement';
+import DemandePrevion from './Pages/DemandePrevision/DemandePrevion';
 function App() {
   return (
     <>
@@ -36,13 +36,13 @@ function App() {
           <Route path='/tableauDeBord' element={<Tableau />} />
           <Route path='/vols' element={<Vols />} />
           <Route path='/api/Vol/edit-vol/:Id' element={ <EditVol/>} />
-          <Route path='sieges' element={<Sieges />} />
           <Route path='/MenuPassager' element={<Accueil/>} />
           <Route path='/reservation-passager' element={<ReservationPassager/>}/>
           <Route path='/Achat-billet' element={<Achat/>} />
           <Route path='/demande-annulation' element={<DemandeAnnulation/>} />
           <Route path='/prevision' element={<Prevision/>} />
           <Route path='/remboursement' element={<Remboursement/>} />
+          <Route path='/demande-prevision' element={<DemandePrevion/>} />
         </Routes>
       </Router>
     </>

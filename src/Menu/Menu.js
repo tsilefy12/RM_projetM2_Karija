@@ -26,7 +26,7 @@ function Menu() {
     { title: "REVENU", icon: require("../images/Money Bag Pounds_40px.png"), path: "" },
     { title: "RESERVATION", icon: require("../images/reception_40px.png"), path: "/reservation" },
     { title: "VENTE DE BILLET", icon: require("../images/movie_ticket_40px.png"), path: "/venteBillet" },
-    { title: "PREVISION", icon: require("../images/ask_question_40px.png"), path: "" },
+    { title: "PREVISION", icon: require("../images/ask_question_40px.png"), path: "/demande-prevision" },
   ]
   const containerWidth = open ? '210px' : '80px';
   const containerWidthMenu = open ? '210px' : '80px';
@@ -69,11 +69,9 @@ function Menu() {
           marginTop: topmenu, height: '90vh',
           color: 'white', display: 'flex', flexDirection: 'column'
         }}>
-          <header className='header' style={{
-            width: "auto", height: "120px",
-            border: "1px solid white", marginTop: "-20px"
+          <header className='header-menu' style={{
+           
           }}>
-            Passager connecté
           </header>
           <ul style={{
             marginTop: topMenus, borderTop: '4px solid #07af6f',
