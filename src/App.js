@@ -29,7 +29,7 @@ function App() {
           <Route path={'/'} element={<Login />} />
           <Route path='/inscription' element={<Inscription />} />
           <Route path='/avion' element={<Avion />} />
-          <Route path={'/menu'} element={<PageAccueil/>} />
+          <Route path={'/menu'} element={<Tableau/>} />
           <Route path='/tarification' element={<Tarification />} />
           <Route path='/reservation' element={<Reservation />} />
           <Route path='/venteBillet' element={<Vente />} />

@@ -126,6 +126,22 @@ function Vols() {
        setAvionId(data)
     })
   }
+  const SelectCapacite= async() =>{
+    if (avionNum == "Selectionner") {
+      setCapaciteMax("")
+    } else {
+      console.log("nu avion ", avionNum)
+      await axios.get(`http://localhost:5077/api/Avion/num-avion/${avionNum}`).then(({data}) =>{
+        if (data == 0) {
+          setCapaciteMax("")
+        } else {
+          data.map((e) =>{
+            setCapaciteMax(e.capacite)
+          })
+        }
+    })
+   
+  }}
   return (
     <div className='vol-menu'>
       <div>
@@ -161,7 +177,7 @@ function Vols() {
               {
                 avionId.length > 0 && (
                   avionId.map((e, i) =>(
-                    <option key={i} value={e.id} >{e.id}</option>
+                    <option key={i} value={e.id} onClick={() =>SelectCapacite()}>{e.id}</option>
                   ))
                 )
               }
@@ -198,12 +214,12 @@ function Vols() {
                   // label="Capacité"
                   type='number'
                   value={capaciteMax}
-                  onChange={(e) => setCapaciteMax(e.target.value)}
                   size='normal'
                   inputProps={{ min: 0 }}
                   variant='standard'
                   placeholder='capacité'
                   autoComplete='off'
+                  aria-readonly
                 />
               </div>
               <div className='form-group-vol'>

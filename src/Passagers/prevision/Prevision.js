@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuPassager from '../MenuPassager/MenuPassager'
 import '../prevision/Prevision.css'
 import { Form } from 'react-bootstrap'
@@ -9,11 +9,20 @@ import axios from 'axios'
 
 function Prevision() {
   const [recherche, setRecherche] = useState("");
+  const [donnePrevue, setDonnePrevue] = useState([]);
   const [idP, setIdP] = useState("");
   const [demandePrevue, setDemandePrevue] = useState("");
   const [datePrevue, setDatePrevue] = useState("");
   const [commentaire, setCommentaire] = useState("");
   const [messagePrevue, setMessagePrevue] = useState("");
+
+  const [id, setId] =useState("");
+  const [nom, setNom] = useState("");
+  const [adressemail, setAdresseMail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [datee, setDate] = useState("");
+  const [demandepre, setDemandePre] = useState("");
+  const [avisResponsable, setAvisResponsable] = useState("");
 
   const ajouterDemandePrevue = async (e) =>{
     e.preventDefault();
@@ -41,6 +50,50 @@ function Prevision() {
   }
   const handleClearRecherche = () => {
     setRecherche("");
+}
+useEffect(() =>{
+  verifierInput();
+})
+const RechercherDemande = async () => {
+  await axios.get(`http://localhost:5077/api/DemandePrevue/rechercher-demande-prevision?recherche=${recherche}`).then(({ data }) => {
+      if (data == 0) {
+          setDonnePrevue(data)
+          setId("");
+          setNom("");
+          setAdresseMail("");
+          setAvisResponsable("");
+          setDate("");
+          setDemandePre("");
+          setPhone("");
+      } else {
+         setDonnePrevue(data);
+         donnePrevue.map((item) =>(
+          setId(item.demande.idPrevision),
+          setNom(item.passager.nomPassager),
+          setAdresseMail(item.passager.email),
+          setAvisResponsable(item.demande.commentaire),
+          setDate(item.demande.datePrevue),
+          setDemandePre(item.demande.demandePrevue),
+          setPhone(item.passager.telephone)
+         ))
+
+      }
+  })
+}
+const daty = new Date(datee);
+const datedemande = daty.toLocaleDateString('en-FR');
+const verifierInput = () =>{
+  if (recherche == "") {
+    setId("");
+    setNom("");
+    setAdresseMail("");
+    setAvisResponsable("");
+    setDate("");
+    setDemandePre("");
+    setPhone("");
+  } else {
+    RechercherDemande();
+  }
 }
   return (
     <div className='prevision'>
@@ -115,31 +168,31 @@ function Prevision() {
           <div className='afficher-prevision' style={{marginLeft: '20px'}}>
              <div className='flex-box'>
                <label>ID : </label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>1</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{id} </span>
              </div>
              <div className='flex-box'>
                <label>Nom passager : </label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>2</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{nom}</span>
              </div>
              <div className='flex-box'>
                <label>Adresse mail : </label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>3</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{adressemail}</span>
              </div>
              <div className='felx-box'>
                <label>Téléphone : </label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>4</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{phone}</span>
              </div>
              <div className='felx-box'>
                <label>Date :</label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>5</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{datedemande}</span>
              </div>
              <div className='felx-box'>
                <label>Demande :</label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>6</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{demandepre}</span>
              </div>
              <div className='flex-box'>
                <label>Avix du responsable :</label>
-               <span className='text text-info' style={{marginLeft: '6px'}}>7</span>
+               <span className='text text-success' style={{marginLeft: '6px'}}>{avisResponsable}</span>
              </div>
           </div>
          </div>

@@ -104,3 +104,11 @@
   width: auto;
   margin-top: -20px;
 }
+.test:is(:link, :active, :visited){
+  color: white;
+}
+
+.test:is(:link, :active, :visited).active{
+  color: blue;
+  background-color: grey;
+}

@@ -95,7 +95,7 @@ body .vol-menu{
     margin-left: 10px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 992px) {
     .formulaire-1{
         display: flex;
         flex-direction: column;
@@ -220,7 +220,7 @@ body .vol-menu{
         margin-top: 2%;
     }
 }
-@media (max-width: 700px){
+@media (max-width: 768px){
     body .vol-menu{
         /* border: 1px solid red; */
         margin-left: 0;

@@ -26,7 +26,12 @@ function DemandeAnnulation() {
 
     useEffect(() => {
         verificationInput();
+        test();
     })
+
+    function test(){
+        setMsg5("")
+    }
     const afficherInformations = async () => {
         await axios.get(`http://localhost:5077/api/Annulation/afficher-informations?email=${recherche}`).then(({ data }) => {
             if (data == 0) {
@@ -114,7 +119,9 @@ function DemandeAnnulation() {
         || montant == "" || dateDemande == "" || valide =="")  {
             const msg1 = (<label className='text text-danger'>Les champs sont obligatoires</label>)
             setMsg5(msg1);
-            
+            window.setTimeout(function(){
+                test().location.reload();
+            }, 2000)
         }else if(msg == "Données non disponibles"){
             const mg = (<label className='text-danger'>Vous avez saisi des fausses informations</label>);
             setMsg5(msg5);
@@ -125,8 +132,8 @@ function DemandeAnnulation() {
                 setMsg5(msg7);
             })
         }
-
     }
+     
     const handleClearRecherche = () => {
         setRecherche("");
     }

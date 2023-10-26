@@ -89,3 +89,11 @@
         display: none;
     }
 }
+.menu-item-passager:is(:link, :active, :visited){
+    color: white;
+}
+
+.menu-item-passager:is(:link, :active, :visited).active{
+    color: blue;
+    background-color: grey;
+}

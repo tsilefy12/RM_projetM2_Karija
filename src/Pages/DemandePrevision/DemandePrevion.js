@@ -5,8 +5,15 @@ import { InputAdornment, TextField } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear';
 import * as AiIcons from "react-icons/ai"
 import axios from 'axios';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import { Form } from 'react-bootstrap'
 
 function DemandePrevion() {
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     const [recherche, setRecherche] = useState("");
     const [donnePrevue, setDonnePrevue] = useState([]);
     const [id, setId] = useState("");
@@ -18,8 +25,7 @@ function DemandePrevion() {
     const [datepre, setDatePre] = useState("");
     const [affiche, setAffiche] = useState("");
     const [nombre, setNombre] = useState("");
-    const daty = new Date(datepre);
-    const datyy = daty.toLocaleDateString('en-Us');
+    const [avis, setAvis] = useState("");
     useEffect(() => {
         verificationRechercher();
     })
@@ -55,7 +61,34 @@ function DemandePrevion() {
         }
 
     }
+ const editDemande = async (editId) =>{
+    await axios.get(`http://localhost:5077/api/DemandePrevue/edit-demande-prevision/${editId}`).then(({data}) =>{
+        setAvis(data[0].commentaire);
+    })
+    handleOpen();
+    console.log("commentaire :", avis)
+    setId(editId);
+   
+ }
 
+ const ModificationDemande = async (e) =>{
+    e.preventDefault();
+
+    console.log("id :", id);
+    const formData = new FormData();
+    formData.append("idPrevision", 0);
+    formData.append("idPassager", 0);
+    formData.append("demandePrevue", "string");
+    formData.append("datePrevue", "2023-10-23T11:25:27.969Z");
+    formData.append("commentaire", avis);
+    
+    await axios.post(`http://localhost:5077/api/DemandePrevue/modification-demande-prevision/${id}`, 
+    formData,{headers:{'Content-Type': 'application/json'}}).then(({data}) =>{
+        console.log("message : ", data);
+    })
+    affihcerDonnePrevue();
+    handleClose();
+ }
     const verificationRechercher = () => {
         if (recherche == "") {
             affihcerDonnePrevue();
@@ -116,17 +149,18 @@ function DemandePrevion() {
                             <tbody>
                                 {donnePrevue.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{item.demande.idPassager}</td>
+                                        <td>{item.demande.idPrevision}</td>
                                         <td>{item.passager.nomPassager}</td>
                                         <td>{item.passager.email}</td>
                                         <td>{item.passager.telephone}</td>
-                                        <td style={{ display: affiche }}>{item.demande.datePrevue}</td>
+                                        <td>{(item.demande.datePrevue).split('T')[0]}</td>
                                         <td>{item.demande.demandePrevue}</td>
                                         <td>{item.demande.commentaire}</td>
                                         <td className='flex'>
-                                            <AiIcons.AiFillEdit color='blue' display={affiche} />
+                                            <AiIcons.AiFillEdit color='blue' onClick={() =>editDemande(item.demande.idPrevision)} 
+                                            style={{ cursor: 'pointer', margin: '5px' }}/>
                                             <AiIcons.AiFillDelete color='red' onClick={() => supprimerDeamande(item.demande.idPassager)}
-                                                style={{ cursor: 'pointer' }} display={affiche} />
+                                                style={{ cursor: 'pointer', margin: '5px' }}/>
                                         </td>
                                     </tr>
                                 ))}
@@ -134,9 +168,58 @@ function DemandePrevion() {
                         </table>
                     </div>
                 </div>
+                <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Form onSubmit={ModificationDemande}>
+                <div>
+                  <div>
+                    <header>
+                      <h2 className='text text-center text-info' style={{ marginBottom: '6px' }}>MODIFICATION</h2>
+                    </header>
+                  </div>
+                  <div className='edite-avion-formulaire'>
+                    <label className='label-avion'>Avix du responsable</label>
+                    <input
+                      type='text'
+                      min={0}
+                      className='form-control'
+                      autoComplete='off'
+                      value={avis}
+                      onChange={(e) => setAvis(e.target.value)}
+                    />
+                  </div>
+
+                  <div className='boutton-avion-update'>
+                    <button className='btn btn-primary grow'>+ENREGISTRER</button>
+                    <span onClick={handleClose} className='btn btn-danger grow' style={{ cursor: 'pointer' }}>RETOUR</span>
+                  </div>
+                </div>
+              </Form>
+            </Box>
+          </Modal>
             </div>
         </div>
     )
 }
+
+const style = {
+    position: 'absolute',
+    top: '35%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    height: 'auto',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    pt: 2,
+    px: 2,
+    pb: 3,
+    border: 'none',
+  };
 
 export default DemandePrevion
