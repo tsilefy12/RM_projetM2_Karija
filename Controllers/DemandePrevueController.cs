@@ -26,8 +26,8 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string selectDemande = "select passager.id,passager.nompassager, passager.email, passager.telephone,prevision.passagerid, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
-                " from passager, prevision where passager.id = prevision.passagerid";
+                string selectDemande = "select passager.nompassager, passager.email, passager.telephone,prevision.id, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
+                " from passager, prevision where passager.id = prevision.passagerid order by prevision.id asc";
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
                 using var commandsql = new NpgsqlCommand(selectDemande, connexion);
@@ -39,8 +39,7 @@ namespace apiWebCore.Controllers
 
 
                 {
-                    // int id = reader.GetInt32(reader.GetOrdinal("id"));
-                    int idpassager = reader.GetInt32(reader.GetOrdinal("id"));
+                    int idPrevue = reader.GetInt32(reader.GetOrdinal("id"));
                     string demandeprevue = reader.GetString(reader.GetOrdinal("demandeprevue"));
                     DateTime dateprevue = reader.GetDateTime(reader.GetOrdinal("dateprevue"));
                     string commentaire = reader.GetString(reader.GetOrdinal("commentaire"));
@@ -50,7 +49,7 @@ namespace apiWebCore.Controllers
 
                     var demandes = new Demande
                     {
-                        IdPassager = idpassager,
+                        IdPrevision = idPrevue,
                         DemandePrevue = demandeprevue,
                         DatePrevue = dateprevue,
                         Commentaire = commentaire
@@ -158,7 +157,7 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string selectDemande = "select passager.id,passager.nompassager, passager.email, passager.telephone,prevision.passagerid, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
+                string selectDemande = "select passager.id,passager.nompassager, passager.email, passager.telephone,prevision.id, prevision.passagerid, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
                 " from passager, prevision where passager.id = prevision.passagerid and  passager.email='"+recherche+"'";
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -171,7 +170,7 @@ namespace apiWebCore.Controllers
 
 
                 {
-                    // int id = reader.GetInt32(reader.GetOrdinal("id"));
+                    int id = reader.GetInt32(reader.GetOrdinal("id"));
                     int idpassager = reader.GetInt32(reader.GetOrdinal("id"));
                     string demandeprevue = reader.GetString(reader.GetOrdinal("demandeprevue"));
                     DateTime dateprevue = reader.GetDateTime(reader.GetOrdinal("dateprevue"));
@@ -182,6 +181,7 @@ namespace apiWebCore.Controllers
 
                     var demandes = new Demande
                     {
+                        IdPrevision = id,
                         IdPassager = idpassager,
                         DemandePrevue = demandeprevue,
                         DatePrevue = dateprevue,
@@ -208,6 +208,61 @@ namespace apiWebCore.Controllers
             catch (Npgsql.NpgsqlException erreur)
             {
                 return Ok("erreur : " + erreur.Message);
+            }
+        }
+        [Route("edit-demande-prevision/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> EditDemande(int Id){
+            if (!ModelState.IsValid)
+            {   
+                return BadRequest(ModelState);
+                
+            }
+
+            string edit = "SELECT commentaire FROM prevision WHERE id ='"+Id+"'";
+            var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+            connexion.Open();
+            var cmd = new NpgsqlCommand(edit, connexion);
+            var read = await cmd.ExecuteReaderAsync();
+
+            var list = new List<Demande>();
+
+            while(await read.ReadAsync()){
+                string commente = read.GetString(read.GetOrdinal("commentaire"));
+
+                var demandes = new Demande{
+                    Commentaire = commente
+                };
+                list.Add(demandes);
+            }
+
+            return Ok(list);
+        }
+        [Route("modification-demande-prevision/{Id}")]
+        [HttpPost]
+        public async Task<IActionResult> ModifierDemande([FromBody] Demande demande, int Id){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string modifier = "UPDATE prevision SET commentaire=@Commentaire WHERE id='"+Id+"'";
+                var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexiondb.Open();
+                var cmd = new NpgsqlCommand(modifier, connexiondb);
+
+                cmd.Parameters.AddWithValue("Commentaire", demande.Commentaire);
+
+                await cmd.ExecuteNonQueryAsync();
+
+                return Ok("Modification succès.");
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return BadRequest("Erreur :" + e.Message);
             }
         }
     }

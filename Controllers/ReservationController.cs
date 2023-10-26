@@ -112,8 +112,8 @@ namespace apiWebCore.Controllers
                         TypeTarif = reader.GetString(reader.GetOrdinal("type")),
                     };
                     resultatRecherche.Tarifs.Add(tarif);
+                   continue;
                 }
-
                 return Ok(resultatRecherche);
             }
             catch (Npgsql.NpgsqlException e)
@@ -121,9 +121,9 @@ namespace apiWebCore.Controllers
                 return StatusCode(500, "Erreur interne du serveur" + e.Message);
             }
         }
-        [Route("recherche-reservation")]
+        [Route("recherche-reservation/{NumeroVol}")]
         [HttpGet]
-        public async Task<IActionResult> Recherche(int mail)
+        public async Task<IActionResult> Recherche(string NumeroVol)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace apiWebCore.Controllers
 
                 string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol," +
                     "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
-                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid AND reservation.volid='" + mail + "'";
+                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid AND vol.numerovol like '%"+NumeroVol+"%'";
 
                 using var commandsql = new NpgsqlCommand(selectresa, connexion);
                 using var reader = await commandsql.ExecuteReaderAsync();
@@ -174,7 +174,6 @@ namespace apiWebCore.Controllers
                         TypeTarif = reader.GetString(reader.GetOrdinal("type")),
                     };
                     resultatRecherche.Tarifs.Add(tarif);
-                    continue;
                 }
 
                 return Ok(resultatRecherche);

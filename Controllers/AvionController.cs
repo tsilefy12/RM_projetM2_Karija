@@ -252,5 +252,29 @@ namespace apiWebCore.Controllers
                 }
                 return Ok(numavion);
         }
+        [Route("num-avion/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> Numero(int Id){
+             using var db = new AppDbContext();
+                using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
+
+                string verifierAvion = "SELECT capacite FROM avion where id ='"+Id+"'";
+                connexion.Open();
+                using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
+
+                var reader = await cmdverify.ExecuteReaderAsync();
+
+                var numavion = new List<Avion>();
+                while (await reader.ReadAsync())
+                {
+                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
+                    var num = new Avion{
+                        Capacite= capacite
+                    };
+                    numavion.Add(num);
+                    continue;
+                }
+                return Ok(numavion);
+        }
     }
 }
