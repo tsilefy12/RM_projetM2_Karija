@@ -15,6 +15,44 @@ namespace apiWebCore.Controllers
     public class VenteController : ControllerBase
     {
         private AppDbContext dbc = new AppDbContext();
+        [Route("afficher-vente")]
+        [HttpGet]
+        public async Task<IActionResult> AfficherVente(){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string AfficherVentes = "SELECT * FROM vente_billet";
+                using var connexDb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexDb.Open();
+                using var cmd = new NpgsqlCommand(AfficherVentes, connexDb);
+
+                var reader = await cmd.ExecuteReaderAsync();
+                var listes = new List<VenteBillet>();
+                while (await reader.ReadAsync())
+                {
+                    var ventes = new VenteBillet{
+                        IdVente = reader.GetInt32(reader.GetOrdinal("id")),
+                        PassagerId = reader.GetInt32(reader.GetOrdinal("passagerid")),
+                        Montant = reader.GetDouble(reader.GetOrdinal("montant")),
+                        DateTransaction = reader.GetDateTime(reader.GetOrdinal("datetransaction")),
+                        StatutPaiement = reader.GetString(reader.GetOrdinal("statutpaiement")),
+                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement"))
+
+                    };
+                    listes.Add(ventes);
+                    continue;  
+                }
+                return Ok(listes);
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+        }
         [Route("achat-du-billet")]
         [HttpPost]
         public async Task<IActionResult> Achat([FromBody] VenteBillet vente){
@@ -116,6 +154,71 @@ namespace apiWebCore.Controllers
                 return Ok(mergedList);
             } catch(Npgsql.NpgsqlException erreur){
                 return Ok("Erreur : "+erreur.Message);
+            }
+        }
+        [Route("rechercher-billet/{recherche}")]
+        [HttpGet]
+        public async Task<IActionResult> ReschercherBillet(string recherche){
+             if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var karoka = recherche.ToLower();
+                string AfficherVentes = "SELECT * FROM vente_billet where statutpaiement ILIKE '%"+karoka+"%' OR modepaiement ILIKE '%"+karoka+"%'";
+                using var connexDb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexDb.Open();
+                using var cmd = new NpgsqlCommand(AfficherVentes, connexDb);
+
+                var reader = await cmd.ExecuteReaderAsync();
+                var listes = new List<VenteBillet>();
+                while (await reader.ReadAsync())
+                {
+                    var ventes = new VenteBillet{
+                        IdVente = reader.GetInt32(reader.GetOrdinal("id")),
+                        PassagerId = reader.GetInt32(reader.GetOrdinal("passagerid")),
+                        Montant = reader.GetDouble(reader.GetOrdinal("montant")),
+                        DateTransaction = reader.GetDateTime(reader.GetOrdinal("datetransaction")),
+                        StatutPaiement = reader.GetString(reader.GetOrdinal("statutpaiement")),
+                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement"))
+
+                    };
+                    listes.Add(ventes);
+                    continue;  
+                }
+                return Ok(listes);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("Erreur : "+e.Message);
+            }
+        }
+        [Route("supprimer-billet/{Id}")]
+        [HttpDelete]
+        public async Task<IActionResult> SupprimerBillet(int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string supprimer = "DELETE FROM vente_billet WHERE id ='"+Id+"'";
+                using var cnnx = new NpgsqlConnection(dbc.Database.GetConnectionString());
+
+                cnnx.Open();
+                using var cmd = new NpgsqlCommand(supprimer, cnnx);
+
+                await cmd.ExecuteNonQueryAsync();
+
+                return Ok("Vous avez supprimé un billet.");
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur : "+e.Message);
             }
         }
     }

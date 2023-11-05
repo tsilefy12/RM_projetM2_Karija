@@ -26,7 +26,7 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string selectDemande = "select passager.nompassager, passager.email, passager.telephone,prevision.id, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
+                string selectDemande = "select passager.nompassager, passager.email, passager.telephone, prevision.id, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
                 " from passager, prevision where passager.id = prevision.passagerid order by prevision.id asc";
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -39,7 +39,7 @@ namespace apiWebCore.Controllers
 
 
                 {
-                    int idPrevue = reader.GetInt32(reader.GetOrdinal("id"));
+                    
                     string demandeprevue = reader.GetString(reader.GetOrdinal("demandeprevue"));
                     DateTime dateprevue = reader.GetDateTime(reader.GetOrdinal("dateprevue"));
                     string commentaire = reader.GetString(reader.GetOrdinal("commentaire"));
@@ -49,7 +49,7 @@ namespace apiWebCore.Controllers
 
                     var demandes = new Demande
                     {
-                        IdPrevision = idPrevue,
+                        IdPrevision =  reader.GetInt32(reader.GetOrdinal("id")),
                         DemandePrevue = demandeprevue,
                         DatePrevue = dateprevue,
                         Commentaire = commentaire
@@ -118,9 +118,9 @@ namespace apiWebCore.Controllers
                 }
             }
         }
-        [Route("supprimer-demande")]
+        [Route("supprimer-demande/{IdPrevision}")]
         [HttpDelete]
-        public async Task<IActionResult> Suppression(int IdPassager)
+        public async Task<IActionResult> Suppression(int IdPrevision)
         {
             if (!ModelState.IsValid)
             {
@@ -130,7 +130,7 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string deleteByidPassager = "delete from prevision where passagerid ='" + IdPassager + "'";
+                string deleteByidPassager = "delete from prevision where id ="+IdPrevision;
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
 
@@ -158,7 +158,7 @@ namespace apiWebCore.Controllers
             {
 
                 string selectDemande = "select passager.id,passager.nompassager, passager.email, passager.telephone,prevision.id, prevision.passagerid, prevision.dateprevue, prevision.demandeprevue, prevision.commentaire" +
-                " from passager, prevision where passager.id = prevision.passagerid and  passager.email='"+recherche+"'";
+                " from passager, prevision where passager.id = prevision.passagerid and  passager.email like '%"+recherche+"%'";
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
                 using var commandsql = new NpgsqlCommand(selectDemande, connexion);

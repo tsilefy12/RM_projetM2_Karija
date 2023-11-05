@@ -64,16 +64,16 @@ namespace apiWebCore.Controllers
                     int cpt = model.Capacite;
                     string sql = "INSERT INTO avion (numavion, modelavion, capacite) VALUES (@NumeroAvion, @ModelAvion, @Capacite)";
                     using var connection = new NpgsqlConnection(db.Database.GetConnectionString());
-                        connection.Open();
+                    connection.Open();
 
-                        using var command = new NpgsqlCommand(sql, connection);
-                        command.Parameters.AddWithValue("NumeroAvion", model.NumeroAvion);
-                        command.Parameters.AddWithValue("ModelAvion", model.ModelAvion);
-                        command.Parameters.AddWithValue("Capacite", cpt);
+                    using var command = new NpgsqlCommand(sql, connection);
+                    command.Parameters.AddWithValue("NumeroAvion", model.NumeroAvion);
+                    command.Parameters.AddWithValue("ModelAvion", model.ModelAvion);
+                    command.Parameters.AddWithValue("Capacite", cpt);
 
-                        // Ajoutez d'autres paramètres si nécessaire
+                    // Ajoutez d'autres paramètres si nécessaire
 
-                        await command.ExecuteNonQueryAsync();
+                    await command.ExecuteNonQueryAsync();
                     return Ok("Avion enregistré dans la base de données.");
                 }
             }
@@ -95,11 +95,12 @@ namespace apiWebCore.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
-            try{
+
+            try
+            {
                 using var db = new AppDbContext();
                 var test = Recherche.ToLower();
-                string search = "SELECT * FROM avion WHERE numavion LIKE '%"+test+"%' OR modelavion LIKE '%"+test+"%'";
+                string search = "SELECT * FROM avion WHERE numavion LIKE '%" + test + "%' OR modelavion LIKE '%" + test + "%'";
                 using var connexionbase = new NpgsqlConnection(db.Database.GetConnectionString());
                 connexionbase.Open();
                 using var commandsql = new NpgsqlCommand(search, connexionbase);
@@ -113,9 +114,10 @@ namespace apiWebCore.Controllers
                     int id = reader.GetInt32(reader.GetOrdinal("id"));
                     string num = reader.GetString(reader.GetOrdinal("numavion"));
                     string model = reader.GetString(reader.GetOrdinal("modelavion"));
-                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite")); 
-                    var avion = new Avion{
-                        Id = id, 
+                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
+                    var avion = new Avion
+                    {
+                        Id = id,
                         NumeroAvion = num,
                         ModelAvion = model,
                         Capacite = capacite,
@@ -124,9 +126,11 @@ namespace apiWebCore.Controllers
                     continue;
                 }
                 return Ok(listRecherche);
-            }catch(Npgsql.NpgsqlException e){
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
 
-                return Ok("Erreur : " +e.Message);
+                return Ok("Erreur : " + e.Message);
             }
         }
 
@@ -217,64 +221,104 @@ namespace apiWebCore.Controllers
             }
             using (var dbC = new AppDbContext())
             {
-                string deleteVol ="DELETE FROM vol WHERE avionid="+Id;
-                string deleteAvion = "DELETE FROM avion WHERE id="+Id;
-                using NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString());
-                connexion.Open();
-                using var command = new NpgsqlCommand(deleteVol, connexion);
-                await command.ExecuteNonQueryAsync();
-                using var cmd = new NpgsqlCommand(deleteAvion, connexion);
-                await cmd.ExecuteNonQueryAsync();
+                string selectIdvol = "SELECT volid FROM reservation, vol, avion WHERE avion.id=vol.avionid AND vol.id=reservation.volid AND avion.id =" + Id;
+                using var conn = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                conn.Open();
+                using var cmd = new NpgsqlCommand(selectIdvol, conn);
+                var reader = await cmd.ExecuteReaderAsync();
+
+                int idvolresa = 0;
+                while (await reader.ReadAsync())
+                {
+                    int resavolid = reader.GetInt32(reader.GetOrdinal("volid"));
+                    idvolresa = resavolid;
+                }
+                Console.WriteLine("id " + idvolresa);
+                if (idvolresa == 0)
+                {
+                    string deleteVol = "DELETE FROM vol WHERE avionid=" + Id;
+                    string deleteAvion = "DELETE FROM avion WHERE id=" + Id;
+                    using NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                    connexion.Open();
+                    using var command = new NpgsqlCommand(deleteVol, connexion);
+                    await command.ExecuteNonQueryAsync();
+                    using var cmdsql = new NpgsqlCommand(deleteAvion, connexion);
+                    await cmdsql.ExecuteNonQueryAsync();
+                    return Ok("Vous avez suppimé  un avion aucune réservation");
+                }
+                else
+                {
+                    string deleteResa = "DELETE FROM reservation WHERE volid="+idvolresa;
+                    string deleteVol = "DELETE FROM vol WHERE avionid=" + Id;
+                    string deleteAvion = "DELETE FROM avion WHERE id=" + Id;
+
+                    using NpgsqlConnection connexion = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                    connexion.Open();
+
+                    using var commandsql = new NpgsqlCommand(deleteResa, connexion);
+                    await commandsql.ExecuteNonQueryAsync();
+
+                    using var command = new NpgsqlCommand(deleteVol, connexion);
+                    await command.ExecuteNonQueryAsync();
+
+                    using var commandesql = new NpgsqlCommand(deleteAvion, connexion);
+                    await commandesql.ExecuteNonQueryAsync();
+                    return Ok("Vous avez suppimé  un avion déjà réservé par passager");
+                }
             }
-            return Ok("Vous avez suppimé  un avion");
+           
         }
         [Route("num-avion")]
         [HttpGet]
-        public async Task<IActionResult> Numero(){
-             using var db = new AppDbContext();
-                using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
+        public async Task<IActionResult> Numero()
+        {
+            using var db = new AppDbContext();
+            using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
 
-                string verifierAvion = "SELECT id FROM avion ORDER BY id";
-                connexion.Open();
-                using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
+            string verifierAvion = "SELECT id FROM avion ORDER BY id";
+            connexion.Open();
+            using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
 
-                var reader = await cmdverify.ExecuteReaderAsync();
+            var reader = await cmdverify.ExecuteReaderAsync();
 
-                var numavion = new List<Avion>();
-                while (await reader.ReadAsync())
+            var numavion = new List<Avion>();
+            while (await reader.ReadAsync())
+            {
+                int numero = reader.GetInt32(reader.GetOrdinal("id"));
+                var num = new Avion
                 {
-                    int numero = reader.GetInt32(reader.GetOrdinal("id"));
-                    var num = new Avion{
-                        Id = numero
-                    };
-                    numavion.Add(num);
-                    continue;
-                }
-                return Ok(numavion);
+                    Id = numero
+                };
+                numavion.Add(num);
+                continue;
+            }
+            return Ok(numavion);
         }
         [Route("num-avion/{Id}")]
         [HttpGet]
-        public async Task<IActionResult> Numero(int Id){
-             using var db = new AppDbContext();
-                using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
+        public async Task<IActionResult> Numero(int Id)
+        {
+            using var db = new AppDbContext();
+            using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
 
-                string verifierAvion = "SELECT capacite FROM avion where id ='"+Id+"'";
-                connexion.Open();
-                using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
+            string verifierAvion = "SELECT capacite FROM avion where id ='" + Id + "'";
+            connexion.Open();
+            using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
 
-                var reader = await cmdverify.ExecuteReaderAsync();
+            var reader = await cmdverify.ExecuteReaderAsync();
 
-                var numavion = new List<Avion>();
-                while (await reader.ReadAsync())
+            var numavion = new List<Avion>();
+            while (await reader.ReadAsync())
+            {
+                int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
+                var num = new Avion
                 {
-                    int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
-                    var num = new Avion{
-                        Capacite= capacite
-                    };
-                    numavion.Add(num);
-                    continue;
-                }
-                return Ok(numavion);
+                    Capacite = capacite
+                };
+                numavion.Add(num);
+                continue;
+            }
+            return Ok(numavion);
         }
     }
 }

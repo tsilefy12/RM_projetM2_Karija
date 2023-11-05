@@ -72,7 +72,7 @@ namespace apiWebCore.Controllers
             try{
 
                 string demandeRemboursement = "INSERT INTO remboursement(nompass, moderemboursement, piecejustificative, telephoneremboursement, datedemanderemboursement, mailadresse, verification)"+
-                "VALUES(@NomPass, @ModeRemboursement, @PieceJustificative, @TelephoneRemboursement, @DateDemandeRemboursement, @MailAdresse, 'Non Remboursé')";
+                "VALUES(@NomPass, @ModeRemboursement, @PieceJustificative, @TelephoneRemboursement, @DateDemandeRemboursement, @MailAdresse, 'Non validé')";
                 using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexiondb.Open();
                 using var commandsql = new NpgsqlCommand(demandeRemboursement, connexiondb);
@@ -92,7 +92,7 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur : " +e.Message);
             }
         }
-        [Route("recherche-remboursement")]
+        [Route("recherche-remboursement/{mailadresse}")]
         [HttpGet]
          public async Task<IActionResult> RechercheRemboursement(string mailadresse){
             if(!ModelState.IsValid){
@@ -161,6 +161,56 @@ namespace apiWebCore.Controllers
             } catch(Npgsql.NpgsqlException e){
 
                 return Ok("Erreur : "+e.Message);
+            }
+        }
+        [Route("verifier-information/{adresseMail}")]
+        [HttpGet]
+        public async Task<IActionResult> VerifierInfo(string adresseMail){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string infon = "SELECT passager.email, passager.nompassager, passager.telephone, annulation.methodepaiement, annulation.valide"+
+                " FROM passager, annulation WHERE passager.email=annulation.mailaka AND passager.email ='"+adresseMail+"'";
+
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+
+                connexion.Open();
+
+                using var command = new NpgsqlCommand(infon, connexion);
+                 var reader = await command.ExecuteReaderAsync();
+                 var listeP = new List<Passager>();
+                 var listeA = new List<Annulation>();
+
+                 while (await reader.ReadAsync())
+                 {
+                    var p = new Passager{
+                        Email = reader.GetString(reader.GetOrdinal("email")),
+                        NomPassager = reader.GetString(reader.GetOrdinal("nompassager")),
+                        Telephone = reader.GetInt32(reader.GetOrdinal("telephone")),
+                    };
+                    listeP.Add(p);
+
+                    var a = new Annulation{
+                        MethodePaiement = reader.GetString(reader.GetOrdinal("methodepaiement")),
+                        Valide = reader.GetString(reader.GetOrdinal("valide")),
+                    };
+                    listeA.Add(a);
+                 }
+                 var listeToutes = listeP.Zip(listeA, (passager, annulation) => new {Passager = passager, Annulation = annulation}).ToList();
+                foreach (var item in listeToutes)
+                {
+                    Passager passager = item.Passager;
+                    Annulation annulation = item.Annulation;    
+                }
+                return Ok(listeToutes);
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
             }
         }
     }

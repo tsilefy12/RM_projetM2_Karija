@@ -115,24 +115,6 @@ namespace apiWebCore.Controllers
 
                     await command.ExecuteNonQueryAsync();
 
-                    // string subject = "Confirmation d'inscription";
-                    // string body = "Bonjour " + passager.NomPassager + ",\n\n";
-                    // body += "Votre inscription a été confirmée avec succès.";
-                    //  using (var message = new MailMessage())
-                    // {
-                    //     message.From = new MailAddress("karijatsilefilaza@gmail.com"); // Adresse e-mail expéditeur
-                    //     message.To.Add(new MailAddress(passager.Email)); // Adresse e-mail du passager
-                    //     message.Subject = subject;
-                    //     message.Body = body;
-
-                    //     using var smtpClient = new SmtpClient("smtp.example.com"); 
-                    //     smtpClient.UseDefaultCredentials = false;
-                    //     smtpClient.Credentials = new System.Net.NetworkCredential(passager.Email, passager.Password); // Remplacez par vos propres informations de compte
-                    //     smtpClient.EnableSsl = true; // Activez SSL si nécessaire
-
-                    //     smtpClient.Send(message);
-                    // }
-
                     return Ok("Vous êtes inscrit avec succès !");
                 }
             }
@@ -141,7 +123,7 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur apparait : " + erreur.Message);
             }
         }
-        [Route("modification-profil-passager{Id}")]
+        [Route("modification-profil-passager/{Id}")]
         [HttpPost]
         public async Task<IActionResult> ProfilModif([FromBody] Passager passager, int Id){
             if(!ModelState.IsValid){
@@ -153,8 +135,8 @@ namespace apiWebCore.Controllers
                 var hasher = new PasswordHasher<Passager>();
                 var pwdHashed = hasher.HashPassword(null!, passager.Password);
 
-                string modifProfil = "UPDATE passager SET adressepassager='"+passager.Adressepassager+"', telephone='"+passager.Telephone+"'"+
-                ",email= '"+passager.Email+"', password='"+pwdHashed+"' WHERE id="+Id;
+                string modifProfil = "UPDATE passager SET email='"+passager.Email+"', telephone='"+passager.Telephone+"',"+
+                " adressepassager = '"+passager.Adressepassager+"' WHERE id="+Id;
                 using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connection.Open();
                 using var cmdsql = new NpgsqlCommand(modifProfil, connection);
@@ -164,6 +146,108 @@ namespace apiWebCore.Controllers
             } catch(Npgsql.NpgsqlException e){
 
                 return Ok("Erreur : "+e.Message);
+            }
+        }
+        [Route("edit-mail/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> EditMail(int Id){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);    
+            }
+            try
+            {
+                string editmail = "SELECT email FROM passager WHERE id ="+Id;
+
+                using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connection.Open();
+                using var command = new NpgsqlCommand(editmail, connection);
+
+                var reader = await command.ExecuteReaderAsync();
+
+                var listeMail = new List<Passager>();
+
+                while (await reader.ReadAsync())
+                {
+                    var adresseMail = new Passager{
+                        Email = reader.GetString(reader.GetOrdinal("email")),
+                    };
+                    listeMail.Add(adresseMail);
+                }
+                return Ok(listeMail);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
+            }
+        }
+        [Route("edit-Phone/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> EditPhone(int Id){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);    
+            }
+            try
+            {
+                string editphone = "SELECT telephone FROM passager WHERE id ="+Id;
+
+                using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connection.Open();
+                using var command = new NpgsqlCommand(editphone, connection);
+
+                var reader = await command.ExecuteReaderAsync();
+
+                var listePhone = new List<Passager>();
+
+                while (await reader.ReadAsync())
+                {
+                    var phone = new Passager{
+                        Telephone = reader.GetInt64(reader.GetOrdinal("telephone")),
+                    };
+                    listePhone.Add(phone);
+                }
+                return Ok(listePhone);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
+            }
+        }
+        [Route("edit-adresse/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> EditAdresse(int Id){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);    
+            }
+            try
+            {
+                string editphone = "SELECT adressepassager FROM passager WHERE id ="+Id;
+
+                using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connection.Open();
+                using var command = new NpgsqlCommand(editphone, connection);
+
+                var reader = await command.ExecuteReaderAsync();
+
+                var listePhone = new List<Passager>();
+
+                while (await reader.ReadAsync())
+                {
+                    var phone = new Passager{
+                        Adressepassager = reader.GetString(reader.GetOrdinal("adressepassager")),
+                    };
+                    listePhone.Add(phone);
+                }
+                return Ok(listePhone);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
             }
         }
     }

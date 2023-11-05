@@ -176,7 +176,7 @@ namespace apiWebCore.Controllers
                     using var commandsql = new NpgsqlCommand(supprimerTarif, connexiondb);
                     await commandsql.ExecuteNonQueryAsync();
 
-                    return Ok("un tarif est supprimé");
+                    return Ok("Vous avez supprimé un tarif.");
                 } catch(Npgsql.NpgsqlException e){
                     return Ok("une erreu apparait " + e.Message);
                 }

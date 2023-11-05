@@ -5,12 +5,12 @@ namespace PostgreSQLAPI.Models
 {
     public class AppDbContext : DbContext
     {
-       public AppDbContext()
+        public AppDbContext()
         { }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
-        {}
+        { }
         public DbSet<Avion> Avions { get; set; }
         public DbSet<Siege> Sieges { get; set; }
         public DbSet<CompaginAerienne> compagnies { get; set; }
@@ -25,19 +25,20 @@ namespace PostgreSQLAPI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
-            modelBuilder.Entity<Demande>().HasOne(d =>d.Passager).WithMany().HasForeignKey(p =>p.IdPassager);
-            modelBuilder.Entity<Reservation>().HasOne(a =>a.Vol).WithMany().HasForeignKey(a =>a.VolId);
-            modelBuilder.Entity<Reservation>().HasOne(p =>p.Passager).WithMany().HasForeignKey(p =>p.PassagerId);
-            modelBuilder.Entity<Reservation>().HasOne(t =>t.Tarif).WithMany().HasForeignKey(t =>t.TarificationId);
+            modelBuilder.Entity<Demande>().HasOne(d => d.Passager).WithMany().HasForeignKey(p => p.IdPassager);
+            modelBuilder.Entity<Reservation>().HasOne(a => a.Vol).WithMany().HasForeignKey(a => a.VolId);
+            modelBuilder.Entity<Reservation>().HasOne(p => p.Passager).WithMany().HasForeignKey(p => p.PassagerId);
+            modelBuilder.Entity<Reservation>().HasOne(t => t.Tarif).WithMany().HasForeignKey(t => t.TarificationId);
             modelBuilder.Entity<Vol>()
             .Property(v => v.HeureDepart)
             .HasColumnType("time");
-            modelBuilder.Entity<Annulation>().Property(d =>d.HeureVoyage).HasColumnType("time");
-            } 
-            
+            modelBuilder.Entity<Annulation>().Property(d => d.HeureVoyage).HasColumnType("time");
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host = localhost; Port = 5432; Database = revenu_management; Username= postgres; Password = tsilefy;");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=revenu_management;Username=postgres;Password=tsilefy;Pooling=true;Maximum Pool Size=1000");
         }
+
     }
 }

@@ -48,7 +48,7 @@ namespace apiWebCore.Controllers
                     string motif = reader.GetString(reader.GetOrdinal("motif"));
                     string methodepaiement = reader.GetString(reader.GetOrdinal("methodepaiement"));
                     DateTime datetrans = reader.GetDateTime(reader.GetOrdinal("datetrans"));
-                    int numtrans = reader.GetInt32(reader.GetOrdinal("numtrans"));
+                    double numtrans = reader.GetDouble(reader.GetOrdinal("numtrans"));
                     DateTime datedemande = reader.GetDateTime(reader.GetOrdinal("datedemande"));
                     string valide = reader.GetString(reader.GetOrdinal("valide"));
 
@@ -92,7 +92,7 @@ namespace apiWebCore.Controllers
             {
 
                 string demande = "INSERT INTO annulation(nomp, phone, mailaka, numvol, datevoyage, heurevoyage, motif, methodepaiement, datetrans, numtrans, datedemande, valide)" +
-                "VALUES (@Nomp, @Phone, @Mailaka, @NumVol, @DateVoyage, @HeureVoyage, @Motif, @MethodePaiement, @DateTrans, @NumTrans, @DateDemande, @Valide)";
+                "VALUES (@Nomp, @Phone, @Mailaka, @NumVol, @DateVoyage, @HeureVoyage, @Motif, @MethodePaiement, @DateTrans, @NumTrans, @DateDemande, 'Non')";
                 using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexiondb.Open();
                 using var commandsql = new NpgsqlCommand(demande, connexiondb);
@@ -108,7 +108,7 @@ namespace apiWebCore.Controllers
                 commandsql.Parameters.AddWithValue("DateTrans", annulation.DateTrans);
                 commandsql.Parameters.AddWithValue("Numtrans", annulation.NumTrans);
                 commandsql.Parameters.AddWithValue("DateDemande", annulation.DateDemande);
-                commandsql.Parameters.AddWithValue("Valide", annulation.Valide);
+                // commandsql.Parameters.AddWithValue("Valide", annulation.Valide);
 
                 await commandsql.ExecuteNonQueryAsync();
 
@@ -121,9 +121,9 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur : " + erreur.Message);
             }
         }
-        [Route("supprimer-demande")]
+        [Route("supprimer-demande/{Phone}")]
         [HttpDelete]
-        public async Task<IActionResult> Suppression(DateTime DateVoyage)
+        public async Task<IActionResult> Suppression(string Phone)
         {
             if (!ModelState.IsValid)
             {
@@ -133,14 +133,14 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string supprimerDemande = "DELETE FROM annulation WHERE datevoyage ='" + DateVoyage + "'";
+                string supprimerDemande = "DELETE FROM annulation WHERE phone ='" + Phone + "'";
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
                 using var commandsql = new NpgsqlCommand(supprimerDemande, connexion);
 
                 await commandsql.ExecuteNonQueryAsync();
 
-                return Ok("toutes les demandes d'annulation pour un voyage du date '" + DateVoyage + "' sont supprimées.");
+                return Ok("La demande d'annulation de cette personne est supprimée.");
             }
             catch (Npgsql.NpgsqlException erreur)
             {
@@ -148,9 +148,9 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur : " + erreur.Message);
             }
         }
-        [Route("recherche-demande-annulation")]
+        [Route("recherche-demande-annulation/{recherche}")]
         [HttpGet]
-        public async Task<IActionResult> RechercheDemande(string? recherche, DateTime daty)
+        public async Task<IActionResult> RechercheDemande(string? recherche)
         {
             if (!ModelState.IsValid)
             {
@@ -160,8 +160,9 @@ namespace apiWebCore.Controllers
 
             try
             {
-
-                string select = "SELECT * FROM annulation WHERE mailaka = '" + recherche + "' OR datevoyage='" + daty + "'";
+                var search = recherche.ToLower();
+                string select = "SELECT * FROM annulation WHERE mailaka ILIKE '%" + search + "%' OR nomp ILIKE '%" + search + "%'"+
+                " or valide ILIKE '%"+search+"%' or methodepaiement ILIKE '%"+search+"%' or numVol ILIKE '%"+search+"%'";
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -264,7 +265,6 @@ namespace apiWebCore.Controllers
                         Valide = valide
                     };
                     ListAnnulationVue.Add(annulations);
-                    continue;
                 }
                 return Ok(ListAnnulationVue);
             }
@@ -349,5 +349,94 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur : "+erreur.Message);
             }
         }
-    }
+        [Route("edit-validation-annulation/{mailaka}")]
+        [HttpGet]
+        public async Task<IActionResult> EditValidation(string mailaka){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string editValidation = "SELECT valide FROM annulation WHERE mailaka = '"+mailaka+"'";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var command = new NpgsqlCommand(editValidation, connexion);
+                var reader = await command.ExecuteReaderAsync();
+                var valideListe = new List<Annulation>();
+                if (await reader.ReadAsync()){
+                    var v = new Annulation{
+                        Valide = reader.GetString(reader.GetOrdinal("valide")),
+                    };
+                    valideListe.Add(v);
+                }
+                return Ok(valideListe);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
+            }
+        }
+        [Route("modifier-validation/{mail}")]
+        [HttpPost]
+        public async Task<IActionResult> ModifierValidation([FromBody] Annulation annulation, string mail){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string modifierValider= "UPDATE annulation SET valide=@Valide WHERE mailaka='"+mail+"'";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var commandsql = new NpgsqlCommand(modifierValider, connexion);
+
+                commandsql.Parameters.AddWithValue("Valide", annulation.Valide);
+
+                await commandsql.ExecuteNonQueryAsync();
+                return Ok("Vous avez validé l'annulation.");
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur : "+e.Message);
+            }
+        }
+        [Route("count-nonValid")]
+        [HttpGet]
+        public async Task<IActionResult> CountNonValid(){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string afficher = "SELECT * FROM annulation WHERE valide != 'Oui'";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var command = new NpgsqlCommand(afficher, connexion);
+
+                var reader = await command.ExecuteReaderAsync();
+                var liste = new List<Annulation>();
+
+                while(await reader.ReadAsync()){
+                    var annulations = new Annulation{
+                        Valide = reader.GetString(reader.GetOrdinal("valide")),
+                    };
+                    liste.Add(annulations);
+                    continue;
+                }
+                return Ok(liste);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
+            }
+        }
+}
 }
