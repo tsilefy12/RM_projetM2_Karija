@@ -21,6 +21,10 @@ import DemandeAnnulation from './Passagers/demandeAnnulation/DemandeAnnulation';
 import Prevision from './Passagers/prevision/Prevision';
 import Remboursement from './Passagers/remboursement/Remboursement';
 import DemandePrevion from './Pages/DemandePrevision/DemandePrevion';
+import Annulation from './Pages/Annulation/Annulation';
+import Profil from './Passagers/Profil/Profil';
+import RemboursementPassager from './Pages/RemboursementPassager/RemboursementPassager';
+import Revenu from './Pages/Revenu/Revenu';
 function App() {
   return (
     <>
@@ -43,6 +47,10 @@ function App() {
           <Route path='/prevision' element={<Prevision/>} />
           <Route path='/remboursement' element={<Remboursement/>} />
           <Route path='/demande-prevision' element={<DemandePrevion/>} />
+          <Route path='/annulation' element={<Annulation/>} />
+          <Route path='/profil' element={<Profil/>} />
+          <Route path='/remboursement-passager' element={<RemboursementPassager/>} />
+          <Route path='/revenus' element={<Revenu/>} />
         </Routes>
       </Router>
     </>

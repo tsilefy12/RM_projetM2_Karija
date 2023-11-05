@@ -1,104 +1,134 @@
-
-.tout-avion{
+.tout-avion {
     /* border: 1px solid rgb(7, 7, 7); */
     display: flex;
     flex-direction: column;
-    width: 70vw;
-    margin-block-start: auto;
-    margin: 2% 0% 0% -20%;
-    height: auto;
-    size-adjust: auto;
+    width: 88vw;
+    height: 100vh;
+    position: fixed;
+    left: 10%;
 }
-.form-group{
+
+.form-group {
     /* border: 1px solid yellow; */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: auto;
     margin-right: 30px;
 }
-.card-header{
+
+.card-header {
     display: flex;
     justify-content: space-between;
-    background-color: rgb(238, 238, 240);
+    background-color: white;
+    height: 10vh;
 }
-.card-body{
+
+.card-body {
     /* border: 1px solid brown; */
     width: auto;
     height: 55vh;
     overflow: auto;
     text-align: center;
-   
+
 }
-.table tbody tr td{
-    background-color: rgb(238, 238, 240);
-}
-.table th{
+
+.table th {
     background-color: #07af6f;
     color: white;
 }
-.table .operations-btn{
+
+.table .operations-btn {
     width: 113px;
     display: flex;
     justify-content: space-between;
 }
-body{
+
+body {
     background-color: white;
 }
-.card{
-    /* border: 1px solid green; */
+
+.card {
+    border: 1px solid green;
     width: auto;
-    border: none;
-    background-color: rgb(238, 238, 240);
+    height: 70vh;
 }
-.contenue{
+
+.contenue {
     /* border: 1px solid blue; */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    height: 50vh;
 }
-.TextField{
-    margin-bottom: 50px;
+
+.TextField {
     width: 100%;
 }
-.card-footer{
-    background-color: rgb(238, 238, 240);
+
+.card-footer {
+    background-color: white;
 }
-.boutton-avion-update{
+
+.boutton-avion-update {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
 }
 
-.affichage-avion{
+.affichage-avion {
     /* border: 1px solid red; */
     width: 100%;
+
 }
-@media (max-width: 991px){
-    .tout-avion{
-        /* border: 1px solid red; */
+
+.textHeader-Avion {
+    display: flex;
+    flex-direction: row;
+}
+
+.textHeader-Avion .text-liste-avions {
+    font-size: 1.5em;
+    margin-top: -0%;
+}
+
+@media (max-width: 888px) {
+    .tout-avion {
+        border: 1px solid red;
         display: flex;
         flex-direction: column;
-        width: 70vw;
-        margin-block-start: auto;
-        margin: 2% 0% 0% -4%;
-        height: auto;
-        size-adjust: auto;
+        width: 80vw;
+        height: 100vh;
+        position: fixed;
+        left: 20%;
     }
-    .contenue{
+
+    .contenue {
         /* border: 1px solid blue; */
         display: flex;
         flex-direction: column;
     }
-    .form-group{
-        /* border: 1px solid orange; */
-        width: 100%;
-        height: 35vh;
+
+    .form-group {
+        /* border: 1px solid yellow; */
+        display: flex;
+        flex-direction: column;
+        height: auto;
     }
-    .TextField{
+
+    .TextField {
         width: 100%;
         /* border: 1px solid brown; */
         margin: 6px;
     }
-    .TextField .test{
+
+    .TextField .test {
         width: 90%;
     }
+
+    .textHeader-Avion {
+        display: flex;
+        flex-direction: column;
+        width: 70vw;
+        height: auto;
+    }
+
 }

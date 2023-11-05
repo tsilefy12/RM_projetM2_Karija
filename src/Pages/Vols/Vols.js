@@ -2,19 +2,21 @@ import React, { useEffect } from 'react'
 import Menu from '../../Menu/Menu'
 import '../Vols/Vol.css'
 import {Form } from 'react-bootstrap'
-import { TextField, InputAdornment } from '@mui/material'
+import { TextField, InputAdornment, Modal, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import * as AiIcons from "react-icons/ai"
 import { useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import Swal from 'sweetalert2'
 
 function Vols() {
   const [donneVol, setDonneVol] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [dialog, setOpenDialog] = useState(false)
   const [inputRechercheVol, setInputRechercheVol] = useState("");
   const [erreurMessageAPI, setErreurMessageAPI] = useState("");
   const [messageData, setMessageData] = useState("");
   const [messageOk, setMessageOk] = useState("");
+  const [supp, setSuppr] =  useState("");
 
   const [numVol, setNumVol] = useState("");
   const [avionId, setAvionId] = useState([]);
@@ -33,7 +35,7 @@ function Vols() {
     setMessageData();
   })
 
-  let AfficherVol = async () => {
+  const AfficherVol = async () => {
     await axios.get(`http://localhost:5077/api/Vol`).then(({ data }) => {
         setDonneVol(data)
     }).catch(error => {
@@ -74,6 +76,7 @@ function Vols() {
         }
       );
       const data = response.data;
+      setOpen(true);
       let message2 = <label className="text-success">{data}</label>;
       setMessageOk(message2);
       setNumVol("")
@@ -102,6 +105,7 @@ function Vols() {
       lieuArrivee === ""
     ) {
       
+      setOpen(true)
       let message = <label className="text-danger">Les champs sont obligatoires</label>;
       setMessageOk(message);
     } else {
@@ -110,17 +114,14 @@ function Vols() {
 } 
   const SupprimerVol = async (id) => {
     await axios.delete(`http://localhost:5077/api/Vol/supprimer-vol?id=${id}`).then(({ data }) => {
-      console.log("supprimer vol ", data);
+      setOpen(true);
+      const messageSupprimmer = (<label className='text-success'>{data}</label>);
+      setMessageOk(messageSupprimmer);
     })
+    setOpenDialog(false);
     AfficherVol();
   }
 
-  const editVol = async (edit) =>{
-    await axios.get(`http://localhost:5077/api/Vol/edit-vol/${edit}`).then(({data}) =>{
-      setNumVol(data.numeroVol);
-      console.log("data ", data);
-    })
-  }
   const SelectNum= async() =>{
     await axios.get(`http://localhost:5077/api/Avion/num-avion`).then(({data}) =>{
        setAvionId(data)
@@ -142,6 +143,11 @@ function Vols() {
     })
    
   }}
+
+  const supprimerAction = (z) =>{
+    setSuppr(z);
+    setOpenDialog(true);
+  }
   return (
     <div className='vol-menu'>
       <div>
@@ -150,7 +156,6 @@ function Vols() {
       <div className='vols'>
         <div className='text-header'>
           <h2 className='text text-info'>ENREGISTREMENT DU VOL DE LA COMPAGIE AERIENNE</h2>
-          <label>{messageOk}</label>
         </div>
         <div className='body-vol'>
           <Form onSubmit={ajout} className='form'>
@@ -172,7 +177,7 @@ function Vols() {
               
               <select style={{borderTop: 'none', borderLeft: 'none', borderRight: 'none', 
               borderTop: 'none', borderBottom: '1px solid gray', backgroundColor: 'rgb(238, 238, 240)'}}
-              onChange={(e) =>setAvionNum(e.target.value)}>
+              onChange={(e) =>setAvionNum(e.target.value)} className='input'>
                <option value="" style={{color: "darkgray"}}>{text}</option>
               {
                 avionId.length > 0 && (
@@ -193,6 +198,7 @@ function Vols() {
                   variant='standard'
                   placeholder="lieu de départ"
                   autoComplete='off'
+                  className='input'
                 />
               </div>
               <div className='form-group-vol'>
@@ -205,6 +211,7 @@ function Vols() {
                   variant='standard'
                   placeholder="lieu d'arrivée"
                   autoComplete='off'
+                  className='input'
                 />
               </div>
             </div>
@@ -220,6 +227,7 @@ function Vols() {
                   placeholder='capacité'
                   autoComplete='off'
                   aria-readonly
+                  className='input'
                 />
               </div>
               <div className='form-group-vol'>
@@ -233,6 +241,7 @@ function Vols() {
                   size='small'
                   variant='standard'
                   autoComplete='off'
+                  className='input'
                 />
               </div>
               <div className='form-group-vol'>
@@ -246,6 +255,7 @@ function Vols() {
                   variant='standard'
                   placeholder='heure du départ'
                   autoComplete='off'
+                  className='input'
                 />
               </div>
               <button className='btn grow' style={{ marginBottom: "4px", marginTop: "-2%" }}>
@@ -261,8 +271,8 @@ function Vols() {
               <span className='text text-info' style={{ fontSize: "1.5em" }}>{(donneVol.length <= 1) ? 
               donneVol.length +" vol" : donneVol.length + " Vols"}</span>
             </div>
-            <div className='search'>
-              <TextField type='text' className='form-control text' placeholder='recherche...'
+            <div className='input-recherche-vol'>
+              <TextField type='text' className='input-recherche-vol' placeholder='recherche...'
                 value={inputRechercheVol}
                 onChange={(event) => setInputRechercheVol(event.target.value)}
                 InputProps={{
@@ -296,11 +306,11 @@ function Vols() {
                         <td>{item.lieuArrivee}</td>
                         <td>{item.capaciteMax}</td>
                         <td>
-                        <Link to={`/api/Vol/edit-vol/${item.id}`} >
+                        <Link to={`/api/Vol/edit-vol/${item.numeroVol}`} >
                           <AiIcons.AiFillEdit style={{ width: '20px', height: '20px', cursor: 'pointer' }}>
                           </AiIcons.AiFillEdit>
                         </Link>
-                          <button style={{ border: 'none', background: 'none' }} onClick={() => SupprimerVol(item.id)}>
+                          <button style={{ border: 'none', background: 'none' }} onClick={() => supprimerAction(item.id)}>
                             <AiIcons.AiFillDelete style={{ color: 'red' }}>
                             </AiIcons.AiFillDelete>
                           </button>
@@ -313,10 +323,49 @@ function Vols() {
               </tbody>
             </table>
           </div>
+          <Modal
+          open={open}
+          disablePortal={true}
+          >
+            <Box sx={style}>
+              <div className='flex-box'>
+              <AiIcons.AiOutlineClose onClick={() =>setOpen(false)} size={25} 
+              style={{cursor: 'pointer', float: 'right', marginTop: '-10px'}}/>
+                <label style={{marginRight: '10px'}}>{messageOk}</label>
+              </div>
+            </Box>
+          </Modal>
+          <Dialog 
+          open={dialog}
+          disablePortal={true}
+          >
+            <DialogTitle className='text-danger'>Information</DialogTitle>
+            <DialogContent>
+              Voulez-vous supprimer cette ligne
+              <AiIcons.AiFillQuestionCircle  size={40}/>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() =>SupprimerVol(supp)}>Oui</Button>
+              <Button onClick={() =>setOpenDialog(false)}>Non</Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     </div>
   )
 }
-
+const style = {
+  position: 'absolute',
+  top: '35%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  height: 'auto',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  pt: 2,
+  px: 2,
+  pb: 3,
+  border: 'none',
+};
 export default Vols

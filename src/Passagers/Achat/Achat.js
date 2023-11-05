@@ -342,7 +342,6 @@ function Achat() {
                     </div>
                     <Modal
                         open={open}
-                        onClose={handleClose}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
@@ -367,7 +366,6 @@ function Achat() {
                     </Modal>
                     <Modal
                         open={openAirtelMoney}
-                        onClose={handleClose}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
@@ -392,7 +390,6 @@ function Achat() {
                     </Modal>
                     <Modal
                         open={openOrangeMoney}
-                        onClose={handleClose}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
@@ -417,7 +414,6 @@ function Achat() {
                     </Modal>
                     <Modal
                         open={openCarteBancaire}
-                        onClose={handleClose}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >

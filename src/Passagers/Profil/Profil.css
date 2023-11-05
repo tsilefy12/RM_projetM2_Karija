@@ -1,0 +1,104 @@
+.profil{
+    /* border: 1px solid blue; */
+    width: 75vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    margin-left: -15%;
+}
+.tewt{
+    /* border: 1px solid blue; */
+    width: 75vw;
+}
+.profil-contenu{
+    border-bottom: 1px solid rgb(156, 94, 94);
+    width: 100%;
+    height: 65vh;
+    display: flex;
+    flex-direction: row;
+}
+.Photo-profil{
+    /* border: 1px solid black; */
+    width: 40%;
+    height: 40vh;
+    float: left;
+    margin: 13%;
+}
+.contenu-profil{
+    /* border: 1px solid green; */
+    width: 75%;
+    float: right;
+    height: 50vh;
+    margin: 10%;
+    margin-left: 2%;
+    padding-left: 20px;
+}
+.sary-profil{
+    width: auto;
+    height: 35vh;
+    border-radius: 50%;
+}
+.formulaires-profil{
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+}
+.editer-passager{
+    float: right;
+    margin-top: -13%;
+    margin-right: 10px;
+}
+.edit-value{
+    margin: 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.modif-profil{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+@media (max-width: 768px){
+    .profil{
+        width: 70vw;
+        margin-left: 0;
+    }
+    .profil-contenu{
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding-bottom: 10px;
+    }
+    .Photo-profil{
+        width: 50%;
+        margin: 20%;
+        height: 27vh;
+    }
+    .contenu-profil{
+        width: 94%;
+        margin: 4%;
+        margin-top: -5%;
+        height: 40vh;
+    }
+    .sary-profil{
+        width: 200px;
+        height: 30vh;
+        border-radius: 50%;
+    }
+    .edit-value{
+        margin-top: 2%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .modif-profil button{
+       margin-top: 5%;
+       margin-bottom: 5%;
+    }
+    .tewt{
+        /* border: 1px solid blue; */
+        width: 65vw;
+        height: 145vh;
+    }
+}

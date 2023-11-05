@@ -1,0 +1,45 @@
+.revenu{
+    border: 1px solid blue;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    /* background-color: red; */
+}
+.affciher-revenu{
+    border: 1px solid orange;
+    width: 100vw;
+    margin-left: 10%;
+    margin-top: 10%;
+}
+.revenu-header{
+    border: 1px solid black;
+    width: 100vw;
+    height: 10vh;
+    margin-left: 10%;
+    margin-top: 0%;
+    
+}
+.contenue-header-revenue{
+    margin: 50%;
+    margin-top: 30%;
+}
+@media (max-width: 768px){
+    .affciher-revenu{
+        border: 1px solid orange;
+        width: 100vw;
+        margin: 20%;
+    }
+    .revenu-header{
+        border: 1px solid black;
+        width: 100vw;
+        height: 50vh;
+        margin-left: 20%;
+        background: none;
+        /* margin-top: 0%;
+        background-image: url(/src/images/FILE019.JPG);
+        background-repeat: no-repeat;
+        background-size: cover; */
+        
+    }
+}

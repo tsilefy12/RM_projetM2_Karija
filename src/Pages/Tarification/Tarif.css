@@ -1,223 +1,133 @@
-body{
-    background-color: rgb(238, 238, 240);
+body {
+    background-color: white;
 }
-body .tarif{
+
+.tarif {
     /* border: 1px solid blue; */
-    width: 80vw;
-    margin-left: -30%;
-    right: 2;
-    margin-top: 4%;
+    width: 90vw;
+    position: fixed;
+    left: 10%;
 }
-.header-tarif{
+
+.header-tarif {
     /* border: 1px solid orange; */
     text-align: start;
     font-size: 3em;
-    height: 20vh;
+    height: auto;
 }
-.text-info{
+
+.text-info {
     margin-top: 30px;
 }
-.tarif-corps{
+
+.tarif-corps {
     /* border: 1px solid red; */
     margin-top: 10px;
     height: 70vh;
 }
-.formulaire-tarif{
-    /* border: 1px solid black; */
-    width: auto;
-    height: 20vh;
-    margin-bottom: 10px;
-}
-.tableau-tarif{
+
+.tableau-tarif {
     /* border: 1px solid green; */
     width: 90%;
     height: 30vh;
+    margin-top: 6%;
 }
- .form-tarif-1{
+
+.form-tarif {
+    margin: 20px;
+}
+
+.form-tarif-1 {
     /* border: 1px solid black; */
-    width: 90%;
+    width: auto;
+    height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 6px;
+    margin-bottom: 6px;
 }
-.form-tarif-2{
+
+.form-tarif-2 {
     /* border: 1px solid red; */
-    width: 90%;
+    width: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 25px;
 }
-.image-tarif{
+
+.image-tarif {
     z-index: 1;
     cursor: pointer;
     /* float: right; */
 }
-.edit-tarif{
+
+.edit-tarif {
     /* border: 1px solid red; */
     width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.edit-tarif .input{
+
+.edit-tarif .input {
     margin-right: 8px;
 }
-@media (max-width: 991px) and (min-width: 906px) {
-    body .tarif{
-        /* border: 1px solid blue; */
-        width: 80vw;
+
+@media (max-width: 992px) {
+    .tarif {
+        border: 1px solid blue;
+        width: 85vw;
+        position: fixed;
+        left: 20%;
+        overflow: auto;
     }
-    .edit-tarif{
+
+    .edit-tarif {
         /* border: 1px solid red; */
         width: 90%;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         margin-top: -2%;
     }
-    .edit-tarif .input{
-        margin-right: 6px;
+
+    .edit-tarif .input {
+        margin-top: 15px;
     }
-    .image-tarif{
+
+    .image-tarif {
         z-index: 0;
         cursor: pointer;
         margin-top: -5%;
     }
-    .nouvel-tarif{
+
+    .nouvel-tarif {
         z-index: -1;
         cursor: pointer;
         margin-top: -5%;
         scale: 0;
     }
-}
-@media (max-width: 905px) and (min-width: 890px){
-    body .tarif{
-        /* border: 1px solid rgb(255, 94, 0); */
-        width: 80vw;
-        margin-left: -15%;
-    }
-    .edit-tarif{
-        /* border: 1px solid red; */
-        width: 90%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-top: -2%;
-    }
-    .edit-tarif .input{
-        margin-right: 8px;
-    }
-    .image-tarif{
-        z-index: 0;
-        cursor: pointer;
-        margin-top: -5%;
-    }
-    .nouvel-tarif{
-        z-index: 0;
-        cursor: pointer;
-        margin-top: -5%;
-        scale: 0;
-    }
     .form-tarif{
-        /* border: 1px solid red; */
-        width: 90%;
-        height: 20vh;
-        overflow: auto;
-        margin-top: 0%;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        margin-top: -50%;
+        margin-right: 10%;
     }
     .form-tarif-1{
-        /* border: 1px solid black; */
-        width: auto;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        margin-top: 6px;
+        margin-bottom: 10px;
     }
     .form-tarif-2{
-        /* border: 1px solid red; */
-        width: auto;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        margin-top: 25px;
     }
-    .form-tarif-1 .ajout-input{
-        margin-bottom: 8px;
+    .form-tarif .form-tarif-1 .ajout-input{
+        margin-top: 10px;
     }
-    .form-tarif-2 .ajout-input{
-        margin-bottom: 8px;
+    .form-tarif .form-tarif-2 .ajout-input{
+        margin-top: 10px;
     }
 }
 
-@media (max-width: 880px) and (min-width: 600px){
-    body .tarif{
-        /* border: 1px solid rgb(0, 255, 106); */
-        width: 80vw;
-        margin-left: -15%;
-    }
-    .edit-tarif{
-        /* border: 1px solid red; */
-        width: 90%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-top: -2%;
-    }
-    .edit-tarif .input{
-        margin-right: 8px;
-    }
-    .image-tarif{
-        z-index: 0;
-        cursor: pointer;
-        margin-top: -10%;
-    }
-    .nouvel-tarif{
-        z-index: 0;
-        cursor: pointer;
-        margin-top: -5%;
-        scale: 0;
-    }
-    .form-tarif{
-        /* border: 1px solid red; */
-        width: 90%;
-        height: 25vh;
-        overflow: auto;
-        margin-top: -5%;
-    }
-    .form-tarif-1{
-        /* border: 1px solid black; */
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        margin-top: 6px;
-    }
-    .form-tarif-2{
-        /* border: 1px solid red; */
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        margin-top: 25px;
-    }
-    .form-tarif-1 .ajout-input{
-        margin-bottom: 8px;
-    }
-    .form-tarif-2 .ajout-input{
-        margin-bottom: 8px;
-    }
-    .header-tarif{
-        font-size: 1.5em;
-    }
-}
-@media (max-width: 660px) and (min-width: 360px){
-    body .tarif{
-        /* border: 1px solid rgb(17, 17, 17); */
-        width: 80vw;
-    }
-    .header-tarif{
-        font-size: 2em;
-    }
-}

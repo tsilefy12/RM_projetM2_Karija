@@ -51,7 +51,7 @@ function MenuPassager() {
                     
                   </div>
                   <div className='footer-menu-pasager'>
-                    <Link to={'/'} className='menu-item-passager'>
+                    <Link to={'/profil'} className='menu-item-passager'>
                     <AiFillProfile style={{marginTop: '-6px'}} size={25}/><label className='link-menu'style={{marginLeft: '4px', 
                     cursor: 'pointer'}}>PROFIL</label>
                     </Link>
@@ -66,9 +66,9 @@ function MenuPassager() {
           </Navbar>
         </div>
         <div className='personne'>
-          <span>Message</span>
-          <label>Compte</label>
-          <button>Deconnexion</button>
+          <span style={{cursor: 'pointer'}}>Message</span>
+          <span style={{cursor: 'pointer'}}>Compte</span>
+          <span style={{cursor: 'pointer'}}>Deconnexion</span>
         </div>
       </div>
     </>

@@ -13,7 +13,12 @@
     margin-top: 15%;
     width: auto;
 }
-
+.afficher-rechercher-vol{
+    /* border: 1px solid blue; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .header-passager {
     /* border: 1px solid red; */
     width: auto;
@@ -88,6 +93,27 @@
 #btn-reserver{
     width: 100%;
     margin-top: 5%;
+}
+.tout-vol-itineraire{
+    border-bottom: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.imageInfovol{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 8px;
+    height: 15vh;
+    overflow: auto;
+}
+.image-vol{
+    /* border: 1px solid blue; */
+    width: 100px;
+    margin-bottom: 10px;
 }
 @media (max-width: 1356px) and (min-width: 999px) {
     .reservation-passager {
@@ -216,6 +242,7 @@
     }
     .header-passager{
         margin-top: 5%;
+        width: 300px;
     }
     .res-vol {
         display: flex;
@@ -245,7 +272,7 @@
         overflow: auto;
     }
     .res-3{
-        width: auto;
+        width: 300px;
         margin-top: 10px;
     }
     .formulaire-resa-personne {
@@ -257,5 +284,12 @@
     }
     .formulaire-resa-personne .reserv{
         margin-top: 10px;
+    }
+    .reserver-vol #btn-reserver{
+       width: 300px;
+    }
+    .afficher-rechercher-vol{
+        display: flex;
+        flex-direction: column;
     }
 }

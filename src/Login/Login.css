@@ -11,95 +11,32 @@ body{
     position: fixed;
     left: 0;
     height: 100%;
+}
+.login-formulaire{
+    /* border: 1px solid red; */
     text-align: center;
     display: flex;
+    flex-direction: column;
+    width: 25vw;
+    position: fixed;
+    left: 35%;
+    top: 25%;
+    box-shadow: 5px 10px 18px #888888;
+    padding: 20px;
+}
+.login-formulaire .login-input{
+    margin: 10px;
+}
+.button-login{
+    /* border: 1px solid blue; */
+    display: flex;
     flex-direction: row;
-    background-image: url(/src/images/ap1697889540);
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center;
+    justify-content: space-around;
 }
-.logo{
-    margin-top: 10%;
-    margin-left: 26%;
-}
-.login{
-    /* border: 1px solid red; */
-    width: 30%;
-    height: 50%;
-    margin-top: 10%;
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(243, 243, 243);
-}
-.bouton-login{
-    width: 83%;
-    display: flex;
-    flex-direction: column;
-}
-.bouton-login #boutonLog{
-    margin-left: 22%;
-}
-#boutonLog{
-    margin: 6%;
-}
-@media (max-width: 991px){
-    .tous{
-        display: flex;
-        flex-direction: column;
-        background-image: none;
-    }
-    .logo{
-        
-        width: 50%;
-    }
-    .logo #img{
-        height: 150px;
-        width: 200px;
-    }
-    .login{
-        /* border: 1px solid red; */
-        margin-top: 2%;
-        margin-left: 25%;
-        width: 50vw;
-        display: flex;
-        flex-direction: column;
-    }
-    .login #boutonLog{
-        width: 70%;
-        margin-top: 2%;
-        text-align: center;
-        margin-left: 26%;
-    }
-    .login #inpt{
-        margin-right: 15px;
-    }
-    .login .bouton-login{
-        width: 200px;
+@media (max-width: 992px){
+    .login-formulaire{
+        width: 300px;
         position: fixed;
-        left: 0;
-        margin-left: 15%;
-    }
-}
-@media (max-width: 360px){
-    .tous{
-        width: 100vw;
-    }
-    #inpt{
-        display: flex;
-        flex-direction: column;
-        margin-left: 2%;
-        margin-top: -10%;
-    }
-    .login #boutonLog{
-        width: 90%;
-        margin-top: 2%;
-        margin-left: 2%;
-    }
-    #inpt #inputLog{
-        margin-left: 2%;
-    }
-    #labelLog{
-        margin-top: -20px;
+        left: 15%;
     }
 }

@@ -99,7 +99,7 @@ const verifierInput = () =>{
     <div className='prevision'>
         <MenuPassager/>
         <div className='contenue-prevision'>
-         <header className='text text-info' id='prevision-header'>
+         <header className='text text-success' id='prevision-header'>
           DEMANDE DE LA PREVISION 
          </header>
          <div className='formulaires-demande-prevision'>
@@ -141,7 +141,7 @@ const verifierInput = () =>{
                />
                <label style={{margin: '50px'}}>{messagePrevue}</label>
                <div className='flex-box' style={{width: '100%'}}>
-                  <button className='btn btn-info grow frm-prevue' style={{margin: '15px'}}>ENVOYER LA DEMANDE</button>
+                  <button className='btn btn-success grow frm-prevue' style={{margin: '15px'}}>ENVOYER LA DEMANDE</button>
                   <TextField 
                     type='text'
                     placeholder='rechercher...'

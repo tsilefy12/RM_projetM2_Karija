@@ -1,8 +1,10 @@
 .resa-liste{
     /* border: 1px solid blue; */
-    width: 65vw;
+    width: 88vw;
     height: 100vh;
-    margin-left: -25%;
+    position: fixed;
+    left: 10%;
+    right: 10%;
 }
 .header-resaListe{
     /* border: 1px solid red; */
@@ -27,7 +29,9 @@
 
 @media (max-width: 768px){
     .resa-liste{
-        margin-left: 0;
+        position: fixed;
+        width: 78vw;
+        left: 20%;
     }
     .resa-header-card{
         display: flex;

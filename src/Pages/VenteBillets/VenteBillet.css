@@ -1,0 +1,145 @@
+.vente-billet-liste{
+    /* border: 1px solid blue; */
+    width: 85.2vw;
+    height: 100vh;
+    margin-left: -35%;
+}
+.billet-vendu{
+    /* border: 1px solid red; */
+    width: 82vw;
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+.billet-carte{
+    width: 300px;
+    height: 250px;
+    border: 1px solid gray;
+    margin-left: 4%;
+    margin-top: 10px;
+    animation: afficher  linear 1;
+    animation-duration: 1.5s;
+}
+.body-vente{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.body-vente label{
+    margin-top: 4px;
+    color: black;
+}
+@keyframes afficher{
+    from{
+        margin-left: -100%;
+    }
+    to{
+        margin-left: 4%;
+    }
+}
+.header-billet-vente{
+    /* border: 1px solid red; */
+    width: 82vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2%;
+}
+.footer-vente{
+    display: flex;
+    flex-direction: row;
+}
+@media (max-width: 992px){
+    .vente-billet-liste{
+        /* border: 1px solid red; */
+        margin-left: -25%;
+        overflow: auto;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    .header-billet-vente .rechercher-vente-billet{
+        width: auto;
+    }
+    .billet-carte{
+        width: 270px;
+        height: 300px;
+        border: 1px solid gray;
+        margin-left: 4%;
+        margin-top: 10px;
+        animation: afficher  linear 1;
+        animation-duration: 3.5s;
+    }
+    .vente-header{
+        display: flex;
+        flex-direction: row;
+    }
+    .footer-vente{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
+@media (max-width: 768px){
+    .vente-billet-liste{
+        /* border: 1px solid green; */
+        margin-left: -15%;
+        width: 75vw;
+    }
+    .header-billet-vente .rechercher-vente-billet{
+        width: auto;
+    }
+    .billet-carte{
+        width: 350px;
+        height: 290px;
+        border: 1px solid gray;
+        margin-left: 4%;
+        margin-top: 10px;
+        animation: afficher  linear 1;
+        animation-duration: 3.5s;
+    }
+    .vente-header{
+        display: flex;
+        flex-direction: row;
+    }
+    .footer-vente{
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media (max-width: 600px){
+    .vente-billet-liste{
+        /* border: 1px solid black; */
+        margin-left: -2%;
+        width: 70vw;
+        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+    .billet-carte{
+        margin-left: 2px;
+        margin-right: 4px;
+    }
+    .header-billet-vente{
+        margin-bottom: 10%;
+    }
+    .header-billet-vente .rechercher-vente-billet{
+        width: auto;
+    }
+    .billet-carte{
+        width: 60vw;
+        height: 270px;
+        border: 1px solid gray;
+        margin-left: 4%;
+        margin-top: 10px;
+        animation: afficher  linear 1;
+        animation-duration: 3.5s;
+    }
+    .vente-header{
+        display: flex;
+        flex-direction: row;
+    }
+    .footer-vente{
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -3,7 +3,7 @@ import Menu from '../../Menu/Menu'
 import img from '../Tarification/ajouter.png'
 import '../Tarification/Tarif.css'
 import { Form } from 'react-bootstrap'
-import { TextField, InputAdornment } from '@mui/material'
+import { TextField, InputAdornment, Modal, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormLabel } from '@mui/material'
 import * as AiIcons from "react-icons/ai"
 import { Link} from 'react-router-dom'
 import axios from 'axios'
@@ -11,12 +11,15 @@ import axios from 'axios'
 function Tarification() {
   const [afficheFormulaire, setAfficheFormulaire] = useState(false);
   const [afficherFormulaireEdit, setAfficheFormulaireEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openModaleDialogn, setOpneModalDialog] = useState(false);
   const [donneetarif, setDonneeTarif] = useState([]);
   const [description, setDescription] = useState("");
   const [prix, setPrix] = useState("");
   const [nombrePlaceDispoTarif, setNombrePlace] = useState("")
   const [typeTarif, setTypeTarif] = useState("");
   const [statut, setStatut] = useState("");
+  const [message, setMessage] = useState("");
 
   const [IdEditTarif, setIdEditTarif] = useState("");
   const [editPrix, setEditPrix] = useState("");
@@ -25,6 +28,7 @@ function Tarification() {
   const [editDescription, setEditDescription] = useState("");
   const [editTypeTarif, setEditTypeTarif] = useState("string");
   const [rechercheTarif, setRechercheTarif] = useState("");
+  const [idModif, setIdModif] = useState("");
 
   useEffect(() => {
     AffichageTarification();
@@ -36,12 +40,19 @@ function Tarification() {
   }
   const AjouterTarif = async (e) =>{
     e.preventDefault();
-    await axios.post(`http://localhost:5077/api/Tarif/ajout-tarif`,
-    {description, prix, typeTarif, nombrePlaceDispoTarif, statut},
-    {headers:{'Content-Type': 'application/json'}}
-    ).then(({data}) =>{
-      console.log("message :", data)
-    })
+    if(description=="" || prix=="" || typeTarif=="" || nombrePlaceDispoTarif=="" || statut==""){
+      const msg = (<label className='text-danger'>Les champs sont obligatoires</label>);
+      setMessage(msg);
+    }else{
+      await axios.post(`http://localhost:5077/api/Tarif/ajout-tarif`,
+      {description, prix, typeTarif, nombrePlaceDispoTarif, statut},
+      {headers:{'Content-Type': 'application/json'}}
+      ).then(({data}) =>{
+        const msg1 = (<label className='text-success'>{data}</label>);
+        setMessage(msg1);
+      })
+    }
+    
     setDescription("");
     setPrix("");
     setTypeTarif("");
@@ -51,8 +62,11 @@ function Tarification() {
   }
   const supprimerTarif = async (id) => {
     await axios.delete(`http://localhost:5077/api/Tarif/supprimer-tarif/${id}`).then(({ data }) => {
-      console.log(data)
+      setOpen(true)
+       const messageSupr=(<label className='text-success'>{data}</label>)
+       setMessage(messageSupr);
     })
+    setOpneModalDialog(false);
     AfficherTarif();
   }
   const Afficher = () => {
@@ -99,19 +113,26 @@ function Tarification() {
     formData, {headers: {
       'Content-Type': 'application/json'
     }}).then(({data}) =>{
-      console.log("message :", data)
+      setOpen(true);
+      const msgModif = (<label className='text-success'>{data}</label>);
+      setMessage(msgModif);
     })
     AfficherTarif();
     AfficherEdit(afficherFormulaireEdit);
   }
   const show = afficheFormulaire ? '20vh' : '0vh';
   const miseho = afficheFormulaire ? 'block' : 'none';
-  const margetoptarif = !afficheFormulaire ? '5%' : '13%';
   const overflow = afficheFormulaire ? 'auto' : 'auto';
   const AfficherEdit = () => {
     setAfficheFormulaireEdit(!afficherFormulaireEdit);
   }
 
+  const fermerModaleMessage = () =>setOpen(false);
+  const OpenModalDialog = () =>setOpneModalDialog(false);
+  const lanceModal = (modif) =>{
+    setIdModif(modif);
+    setOpneModalDialog(true);
+  } 
 
   return (
     <div>
@@ -209,15 +230,16 @@ function Tarification() {
                   placeholder='statut'
                   className='ajout-input'
                 />
-                <button className='btn btn-success'>AJOUTER NOUVEL TARIF</button>
+                <button className='btn btn-success' style={{display: afficherFormulaireEdit ? 'none' : 'block'}}>
+                AJOUTER NOUVEL TARIF</button>
               </div>
              </Form>
             </div>
           </div>
           <div className='tableau-tarif' style={{
-            marginTop: margetoptarif, transition: 'margin-top 0.5s',
+           transition: 'margin-top 0.5s',
             height: !afficheFormulaire ? "90%" : '40vh', overflow: overflow,
-             display: 'flex', flexDirection: 'column'
+             display: afficheFormulaire ? 'none': afficherFormulaireEdit ? 'none':'flex', flexDirection: 'column'
           }}>
             <table className='table text-center table-bordered'>
               <thead>
@@ -244,7 +266,7 @@ function Tarification() {
                           <Link>
                             <AiIcons.AiFillEdit onClick={() => editeTarif(item.id)} />
                           </Link>
-                          <AiIcons.AiFillDelete color='red' onClick={() => supprimerTarif(item.id)} cursor={'pointer'} />
+                          <AiIcons.AiFillDelete color='red' onClick={() => lanceModal(item.id)} cursor={'pointer'} />
                         </td>
                       </tr>
                     ))
@@ -253,10 +275,46 @@ function Tarification() {
               </tbody>
             </table>
           </div>
+          <Modal
+          open={open}
+          >
+            <Box sx={style}>
+              <label>{message}</label>
+              <div style={{ textAlign: 'right', marginTop: '20px' }}>
+                  <AiIcons.AiOutlineClose onClick={() =>fermerModaleMessage()} style={{ cursor: 'pointer' }} size={25} />             </div>
+            </Box>
+          </Modal>
+          <Dialog
+          open={openModaleDialogn}
+          disablePortal={true}
+          >
+            <DialogTitle className='text-danger'>Information</DialogTitle>
+            <DialogContent>
+            <FormLabel>Voulez-vous supprimer cette ligne </FormLabel>
+            <AiIcons.AiFillQuestionCircle size={40}/> </DialogContent>
+            <DialogActions>
+              <Button onClick={() =>supprimerTarif(idModif)}>Oui</Button>
+              <Button onClick={() =>OpenModalDialog(false)}>Annuler</Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     </div>
   )
 }
+const style = {
+  position: 'absolute',
+  top: '35%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 200,
+  height: 'auto',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  pt: 2,
+  px: 2,
+  pb: 3,
+  border: 'none',
+};
 
 export default Tarification

@@ -9,6 +9,10 @@
     /* height: 50vh; */
     margin-top: 10%;
 }
+.rembousementPassager{
+    border: 1px solid gray;
+    height: 40vh;
+}
 @media (max-width: 991px){
     .remboursement-contenue{
         margin-top: 25%;

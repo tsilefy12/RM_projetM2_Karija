@@ -1,22 +1,22 @@
+.menu-demande-prevision{
+    /* border: 1px solid black; */
+    width: 83vw;
+    position: fixed;
+    left: 15%;
+}
 .headerPrevision{
     /* border: 1px solid blue; */
-    width: 100%;
+    width: auto;
     font-size: 2em;
 }
 .demandePrevision{
     /* border: 1px solid red; */
-    width: 70vw;
+    width: auto;
     margin-top: 10%;
 }
-.menu-demande-prevision{
-    /* border: 1px solid black; */
-    width: 70vw;
-    position: absolute;
-    left: 0;
-    margin-left: -20%;
-}
+
 .toutes-liset-prevision{
-    border: 1px solid orange;
+    /* border: 1px solid orange; */
     width: 100%;
     height: 40vh;
 }
@@ -27,10 +27,9 @@
 @media (max-width: 991px){
     .menu-demande-prevision{
         /* border: 1px solid black; */
-        width: 70vw;
-        position: absolute;
-        left: 0;
-        margin-left: -5%;
+        width: 78vw;
+        position: fixed;
+        left: 20%;
     }
     .headerPrevision{
         font-size: 1em;
@@ -38,5 +37,6 @@
     .prevu{
         display: flex;
         flex-direction: column;
+        height: auto;
     }
 }

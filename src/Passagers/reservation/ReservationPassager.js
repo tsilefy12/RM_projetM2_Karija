@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import '../reservation/ReservationPassager.css'
-import { FormLabel, InputAdornment, TextField } from '@mui/material'
+import { Box, FormLabel, InputAdornment, Modal, TextField } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import * as AiIcons from "react-icons/ai"
 import MenuPassager from '../MenuPassager/MenuPassager';
 import { Form, Image } from 'react-bootstrap';
 import logoImage from '../../images/Air-Mad.jpeg'
+import photo from '../../images/images (4).jpg'
 
 function ReservationPassager() {
     // const [donneResultat, setDonneResultat] = useState([]);
@@ -25,17 +26,21 @@ function ReservationPassager() {
 
     const [num, setNum] = useState("");
     const [Pid, setPid] = useState("");
-    const [Tid, setTid] = useState("");
+    const [Tid, setTid] = useState("Selectionner");
     const [prix, setPrix] = useState("");
     const [dateresa, setDateResa] = useState("");
     const [typeTarification, setTypeTarification] = useState("");
+    const [longueur, setLongueur] = useState([]);
+    const [nombre, setNombre] = useState(0);
+    const [openModal, setOpenModal] = useState(false)
+
+
 
     useEffect(() => {
         resultatAfficher();
         verify();
         selectId();
-        // selectTypePrix();
-        // afficherReservation();
+        selectTypePrix();
     })
     const handleClearLieuD = () => {
         setLieuDep("");
@@ -50,28 +55,34 @@ function ReservationPassager() {
     const date = daty.toLocaleDateString('en-Us');
     const mess = (<label className='text-danger'>champ vide</label>)
     const resultatAfficher = async () => {
-        if (lieuDep === "" || lieuAr === "") {
+        if (lieuDep === "") {
             setNumAvion(mess);
             setNumVol(mess);
+            setNum("");
             setDateDep(mess);
             setHeureDep(mess);
             setCapacite(mess);
             setLieuD(mess);
             setLieuA(mess);
+            setNombre(0);
         } else {
-            await axios.get(`http://localhost:5077/api/Vol/recherche?LieuDepart=${lieuDep}&LieuArrivee=${lieuAr}`).then(({ data }) => {
+            await axios.get(`http://localhost:5077/api/Vol/recherche?recherche=${lieuDep}`).then(({ data }) => {
                 if (data.length == 0) {
                     setNumAvion(mess);
                     setNumVol(mess);
+                    setNum("");
                     setDateDep(mess);
                     setHeureDep(mess);
                     setCapacite(mess);
                     setLieuD(mess);
                     setLieuA(mess);
+                    setNombre(0);
                 } else {
+                    setNombre(data.length);
                     data.map((item) => {
                         setNumAvion(item.avionId);
                         setNumVol(item.id);
+                        setNum(item.id);
                         setDateDep(item.dateDepart);
                         setHeureDep(item.heureDepart);
                         setCapacite(item.capaciteMax);
@@ -83,8 +94,9 @@ function ReservationPassager() {
             })
         }
     }
+
     const verify = () => {
-        (lieuDep == "" || lieuAr == "") ? setNum("") : setNum(numvol);
+        (lieuDep == "") ? setNum("") : setNum(numvol);
     }
 
     const reserverVol = async (e) => {
@@ -95,156 +107,139 @@ function ReservationPassager() {
         formData.append("tarificationId", Tid);
         formData.append("libelle", typeTarification);
         formData.append("dateReservation", dateresa);
-        if (num=="" || dateresa=="" || Pid=="") {
+        if (num == "" || dateresa == "" || Pid == "") {
             const msg1 = (<label className='text text-danger'>Les chmaps sont obliagtoires</label>);
             setMessageValidation(msg1);
         }
-        else if (Tid=="Selectionner" ||  typeTarification=="" ) {
+        else if (Tid == "Selectionner" || typeTarification == "") {
             const msg1 = (<label className='text text-danger'>Veuillez selectionner un tarif</label>);
             setMessageValidation(msg1);
         } else {
             await axios.post(`http://localhost:5077/api/Reservation/reserver-vol`,
-            formData, { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
-                console.log(data);
-                setMessageValidation(<label className='text-success'>{data}</label>)
-            })
+                formData, { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
+                    console.log(data);
+                    setMessageValidation(<label className='text-success'>{data}</label>)
+                })
         }
     }
 
-    const selectId = async () =>{
-        await axios.get(`http://localhost:5077/api/Tarif/select-id`).then(({data}) =>{
+    const selectId = async () => {
+        await axios.get(`http://localhost:5077/api/Tarif/select-id`).then(({ data }) => {
             setDonneId(data);
         })
     }
 
-    const selectTypePrix = async () =>{
-       if (Tid==="Selectionner") {
-          setTypeTarification("");
-          setPrix("");
-       } else {
-        await axios.get(`http://localhost:5077/api/Tarif/select-tarif?IdT=${Tid}`).then(({data}) =>{
-          if (data.length==0 || Tid=="Selectionner") {
+    const selectTypePrix = async () => {
+        if (Tid == "Selectionner") {
             setTypeTarification("");
             setPrix("");
-          } else {
-            data.map((i) =>{
-                setTypeTarification(i.typeTarif)
-                setPrix(i.prix)
+        } else {
+            await axios.get(`http://localhost:5077/api/Tarif/select-tarif?IdT=${Tid}`).then(({ data }) => {
+                if (data.length == 0 || Tid == "Selectionner") {
+                    setTypeTarification("");
+                    setPrix("");
+                } else {
+                    data.map((i) => {
+                        setTypeTarification(i.typeTarif)
+                        setPrix(i.prix)
+                    })
+                }
             })
-          }  
-        })
-       }
+        }
     }
+
+    const afficherTout = async () => {
+        if (lieuDep === "") {
+
+        } else {
+            await axios.get(`http://localhost:5077/api/Vol/recherche?recherche=${lieuDep}`).then(({ data }) => {
+                setLongueur(data)
+            }).catch(error => {
+                console.log("erreur :", error);
+            });
+            setOpenModal(true);
+        }
+        console.log("longueur :", longueur)
+    }
+
     return (
         <div className='reservation-passager'>
             <MenuPassager />
             <div className='passager-resa'>
-                <header className='header-passager'>
-                    <FormLabel className='inpout-passager'>Lieu de départ</FormLabel>
-                    <TextField
-                        type='text'
-                        value={lieuDep}
-                        onChange={(e) => setLieuDep(e.target.value)}
-                        autoComplete='off'
-                        InputProps={
-                            {
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {lieuDep && (
-                                            <ClearIcon onClick={handleClearLieuD} style={{ cursor: 'pointer' }} />
-                                        )}
-                                    </InputAdornment>
-                                ),
+                <div className='afficher-rechercher-vol'>
+                    <span onClick={() => afficherTout()} style={{ cursor: 'pointer', fontSize: '1.5em' }}
+                        className='text-info'>Afficher tout</span>
+                    <span style={{ marginTop: '4%' }}>Résultat trouvé : {nombre}</span>
+                    <header className='header-passager'>
+                        <TextField
+                            type='text'
+                            value={lieuDep}
+                            onChange={(e) => setLieuDep(e.target.value)}
+                            autoComplete='off'
+                            InputProps={
+                                {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {lieuDep && (
+                                                <ClearIcon onClick={handleClearLieuD} style={{ cursor: 'pointer' }} />
+                                            )}
+                                            <AiIcons.AiOutlineSearch></AiIcons.AiOutlineSearch>
+                                        </InputAdornment>
+                                    ),
+                                }
                             }
-                        }
-                        placeholder='tapez un lieu de départ'
-                    />
-                    <FormLabel className='inpout-passager'>Lieu d'arrivée</FormLabel>
-                    <TextField
-                        type='text'
-                        value={lieuAr}
-                        onChange={(e) => setLieuAr(e.target.value)}
-                        autoComplete='off'
-                        InputProps={
-                            {
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {lieuAr && (
-                                            <ClearIcon onClick={handleClearLieuA} style={{ cursor: 'pointer' }} />
-                                        )}
-                                    </InputAdornment>
-                                ),
-                            }
-                        }
-                        placeholder="tapez un lieu d'arrivée"
-                    />
-                </header>
+                            placeholder='rechercher votre vol'
+                            sx={{ marginTop: '12%' }}
+                        />
+                    </header>
+                </div>
                 <hr></hr>
                 <div className='resultat-vol'>
                     <div className='res-vol'>
                         <div className='res-1'>
                             <div className='fromLabSpan'>
-                                <FormLabel>Numéro d'avion </FormLabel>
+                                <FormLabel>Numéro d'avion : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{numavion}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Numéro du vol </FormLabel>
+                                <FormLabel>Numéro du vol : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{numvol}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Date départ </FormLabel>
+                                <FormLabel>Date départ : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{date}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Heure de départ </FormLabel>
+                                <FormLabel>Heure de départ : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{heuredep}</span>
                             </div>
                         </div>
                         <div className='res-2'>
                             <div className='fromLabSpan'>
-                                <FormLabel>Capacité </FormLabel>
+                                <FormLabel>Capacité : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{capacite}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Lieu de départ </FormLabel>
+                                <FormLabel>Lieu de départ : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{lieuD}</span>
                             </div>
                             <div className='fromLabSpan'>
-                                <FormLabel>Lieu d'arrivée </FormLabel>
+                                <FormLabel>Lieu d'arrivée : </FormLabel>
                                 <span style={{ marginLeft: '4px', color: 'green' }}>{lieuA}</span>
                             </div>
                         </div>
                         <div className='res-3'>
-                            <Image src={logoImage} size='cover'/>
+                            <Image src={logoImage} size='cover' />
                         </div>
                     </div>
                     <div className='reserver-vol'>
-                        {/* <div className='recherche-personne'>
-                            <TextField
-                                placeholder='rechercher votre nom par adresse email avant la réservation...'
-                                value={EmailPassager}
-                                onChange={(e) => setEmailPassager(e.target.value)}
-                                InputProps={
-                                    {
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                {EmailPassager && (
-                                                    <ClearIcon onClick={handleClearEmail} style={{ cursor: 'pointer' }} />
-                                                )}
-                                                <AiIcons.AiOutlineSearch width={20} height={20}></AiIcons.AiOutlineSearch>
-                                            </InputAdornment>
-                                        ),
-                                    }
-                                }
-                                className='input-mail-personne'
-                            />
-                        </div> */}
-                        <span style={{marginBottom : '-4%', marginTop: '2%'}}>{messageValidation}</span>
+
+                        <span style={{ marginBottom: '-4%', marginTop: '2%' }}>{messageValidation}</span>
                         <Form onSubmit={reserverVol}>
                             <div className='formulaire-resa-personne'>
                                 <TextField
-                                    type='text'
-                                    placeholder='numéro vol'
+                                    type='number'
+                                    placeholder='Id vol'
                                     value={num}
                                     onChange={(e) => setNum(e.target.value)}
                                     className='reserv'
@@ -257,14 +252,16 @@ function ReservationPassager() {
                                     onChange={(e) => setPid(e.target.value)}
                                     className='reserv'
                                 />
-                                <select className='form-control' style={{width: "200px", height: "5.8vh", 
-                                marginRight: "4px", backgroundColor: 'rgb(238, 238, 240)'}}
-                                onChange={(e) =>setTid(e.target.value)}>
-                                <option>Selectionner</option>
+                                <select className='form-control reserv' style={{
+                                    width: "200px", height: "5.8vh",
+                                    marginRight: "4px", backgroundColor: 'rgb(238, 238, 240)'
+                                }}
+                                    onChange={(e) => setTid(e.target.value)}>
+                                    <option>Selectionner</option>
                                     {
-                                        donneId.length > 0 &&(
-                                            donneId.map((i) =>(
-                                                <option value={i.id} onClick={() =>selectTypePrix()}>{i.id}</option>
+                                        donneId.length > 0 && (
+                                            donneId.map((i) => (
+                                                <option value={i.id} onClick={() => selectTypePrix()}>{i.id}</option>
                                             ))
                                         )
                                     }
@@ -293,13 +290,59 @@ function ReservationPassager() {
                                     className='reserv'
                                 />
                             </div>
-                            <button className='btn btn-primary grow' id='btn-reserver'>RESERVER</button>
+                            <button className='btn btn-success grow' id='btn-reserver'>RESERVER</button>
                         </Form>
                     </div>
                 </div>
             </div>
+            <Modal
+                open={openModal}
+                disablePortal={true}
+            >
+               
+                <Box sx={style}>
+                <AiIcons.AiOutlineClose size={23} style={{ float: 'right', cursor: 'pointer', 
+                marginTop: '-16px', marginRight: '-15px', marginLeft: '6px' }}
+                    onClick={() => setOpenModal(false)} />
+                    <div style={{height: '35vh', overflow: 'auto'}}>
+                    {
+                        longueur.length > 0 && (
+                            longueur.map((e, index) => (
+                                <div className='imageInfovol' key={index}>
+                                    <div className='tout-vol-itineraire'>
+                                        <label>Numéro vol : {e.numeroVol}</label>
+                                        <label>Date départ : {e.dateDepart.split('T')[0]}</label>
+                                        <label>Heure départ : {e.heureDepart}</label>
+                                    </div>
+                                    <div className='image-vol'>
+                                        <Image src={photo} size={'cover'}></Image>
+                                    </div>
+                                </div>
+
+
+                            ))
+                        )
+                    }
+                    </div>
+                    
+                </Box>
+            </Modal>
         </div>
     )
 }
+const style = {
+    position: 'absolute',
+    top: '35%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    height: 240,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    pt: 2,
+    px: 2,
+    pb: 3,
+    border: 'none',
 
+};
 export default ReservationPassager

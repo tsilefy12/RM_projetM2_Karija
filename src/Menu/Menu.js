@@ -23,7 +23,7 @@ function Menu() {
     { title: "AVION", icon: require("../images/airplane_take_off_48px.png"), path: "/Avion" },
     { title: "VOLS", icon: require("../images/paper_plane_48px.png"), path: "/vols" },
     { title: "TARIFICATION", icon: require("../images/Us Dollar Circled_40px.png"), path: "/tarification" },
-    { title: "REVENU", icon: require("../images/Money Bag Pounds_40px.png"), path: "" },
+    { title: "REVENU", icon: require("../images/Money Bag Pounds_40px.png"), path: "/revenus" },
     { title: "RESERVATION", icon: require("../images/reception_40px.png"), path: "/reservation" },
     { title: "VENTE DE BILLET", icon: require("../images/movie_ticket_40px.png"), path: "/venteBillet" },
     { title: "PREVISION", icon: require("../images/ask_question_40px.png"), path: "/demande-prevision" },
@@ -98,13 +98,13 @@ function Menu() {
               </Link>
               {showServices && (
                 <ul style={{marginLeft: '-40px'}}>
-                  <Link className='flex' style={{width: '350px', textDecoration: 'none'}}>
+                  <Link to={'/annulation'} className='flex' style={{width: '350px', textDecoration: 'none'}}>
                    <Image src={deletelogo} width={25} height={25}></Image>
                     <label style={{
                     display: afficher, transition: 'display: none 0.5s',
                     textDecoration: 'none', marginLeft: "8px", color: 'white', cursor: 'pointer'}}>ANNULATION</label>
                   </Link>
-                  <Link className='flex' style={{width: '350px', textDecoration: 'none'}}>
+                  <Link to={'/remboursement-passager'} className='flex' style={{width: '350px', textDecoration: 'none'}}>
                     <Image src={paye} width={25} height={25}></Image>
                     <label style={{
                     display: afficher, transition: 'display: none 0.5s',
@@ -113,7 +113,6 @@ function Menu() {
                 </ul>
               )}
           </ul>
-         
         </div>
       </div>
     </div>

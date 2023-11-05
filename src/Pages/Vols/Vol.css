@@ -1,9 +1,10 @@
 body .vol-menu{
     /* border: 1px solid red; */
-    margin-left: -30%;
-    width: 70vw;
+    width: 85vw;
     height: auto;
     height: 100vh;
+    position: fixed;
+    left: 10%;
 }
 .vol-menu{
     /* border: 1px solid brown; */
@@ -50,7 +51,7 @@ body .vol-menu{
     display: flex;
     justify-content: space-between;
     margin-bottom: 6px;
-    background-color: rgb(238, 238, 240);
+    /* background-color: rgb(238, 238, 240); */
 }
 .vol-tab{
     height: 36vh;
@@ -62,9 +63,7 @@ body .vol-menu{
     width: 100%;
     margin-right: 10%;
 }
-.search{
-    width: 500px;
-}
+
 /*css edit vol*/
 .edit-vol .form-vol{
     border-bottom: 1px solid blue;
@@ -94,139 +93,20 @@ body .vol-menu{
     margin-top: 20%;
     margin-left: 10px;
 }
-
-@media (max-width: 992px) {
-    .formulaire-1{
-        display: flex;
-        flex-direction: column;
-        width: 200px;
-        text-align: start;
-        margin-bottom: 5%;
-        justify-content: space-between;
-    }
-    .formulaire-2{
-        /* border: 1px solid red; */
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        text-align: start;
-        justify-content: space-between;
-        float: right;
-        margin-left: 10px;
-    
-    }
-    .formulaire-2 .form-group-vol{
-        width: 100%;
-    }
-    .form-group-vol{
-        margin-bottom: 20px;
-    }
-    .form{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-    }
-  .body-vol{
-    display: flex;
-    flex-direction: column;
-    /* border: 1px solid blue; */
-  }
-  body .vol-menu{
-    /* border: 1px solid red; */
-    margin-left: 0;
-    width: 70vw;
-    height: 100vh;
-    overflow: auto;
+.input-recherche-vol{
+    margin-top: 3%;
+    width: 300px;
 }
-.recherche-vol{
-    /* border: 1px solid red; */
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 6px;
-}
-.recherche-vol .info-vol{
-    display: flex;
-    justify-content: space-between;
-}
-.recherche-vol .search{
-    width: auto;
-}
-.edit-vol .form-vol{
-    border-bottom: none;
-    width: 75vw;
-    margin-top: 20%;
-    display: flex;
-    flex-direction: column;
-    margin-left: -10%;
-    overflow: auto;
-}
-.edit-vol .edit-vol-1{
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-}
-.edit-vol .edit-vol-2{
-    border-left: none;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-}
-.edit-vol-1 input, .edit-vol-2 input{
-    margin-top: 10px;
-}
-.form-vol .edit-vol-2 .btn{
-    width: auto;
-    margin-top: 2%;
-}
-}
-@media (min-width: 1020px) and (max-width: 1110px){
+@media (max-width: 888px){
     body .vol-menu{
-        /* border: 1px solid red; */
-        margin-left: -10%;
-        width: 70vw;
+        border: 1px solid red;
+        width: 78vw;
+        height: auto;
         height: 100vh;
-        overflow: auto;
-    }
-    .edit-vol .form-vol{
-        border-bottom: none;
-        width: 70vw;
-        margin-top: 20%;
-        display: flex;
-        flex-direction: column;
-        margin-left: -10%;
-    }
-    .edit-vol .edit-vol-1{
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        margin: 10px;
-    }
-    .edit-vol .edit-vol-2{
-        border-left: none;
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        margin: 10px;
-    }
-    .edit-vol-1 input, .edit-vol-2 input{
-        margin-top: 10px;
-    }
-    .form-vol .edit-vol-2 .btn{
-        width: auto;
-        margin-top: 2%;
-    }
-}
-@media (max-width: 768px){
-    body .vol-menu{
-        /* border: 1px solid red; */
-        margin-left: 0;
-        width: 70vw;
-        height: 100vh;
-        overflow: auto;
+        position: fixed;
+        left: 20%;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .edit-vol .form-vol{
         /* border: 1px solid brown; */
@@ -250,5 +130,34 @@ body .vol-menu{
     }
     .edit-vol-1 input, .edit-vol-2 input{
         margin-top: 10px;
+    }
+    .recherche-vol{
+        /* border: 1px solid red; */
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+    .input-recherche-vol{
+        margin-top: 3%;
+        width: 280px;
+    }
+    .form .formulaire-1{
+        display: flex;
+        flex-direction: column;
+    }
+    .formulaire-2{
+        display: flex;
+        flex-direction: column;
+    }
+    .formulaire-1 .input{
+        margin: 10px;
+    }
+    .formulaire-2 .input{
+        margin: 10px;
+    }
+    .tableau-vol{
+        width: auto;
     }
 }

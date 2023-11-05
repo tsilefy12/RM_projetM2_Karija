@@ -13,6 +13,7 @@ function EditVol() {
     const [lieuDepartEdit, setLieurDepartEdit] = useState("");
     const [lieuArriveeEdit, setLieuArriveeEdit] = useState("");
     const [capaciteEdit, setCapaciteEdit] = useState("");
+    const [msg, setMsg] = useState("");
 
     const { Id } = useParams();
 
@@ -48,7 +49,8 @@ function EditVol() {
         { headers: { 'Content-Type': 'application/json' }, }
         ).then(({data}) =>{
             console.log(data)
-            console.log("id : ",Id);
+            const message = (<label className='text-success'>{data}</label>);
+            setMsg(message);
         })
     }
     //   console.log("numéro : ",numeroVolEdit);
@@ -57,8 +59,10 @@ function EditVol() {
             <Menu />
            
             <div className='edit-vol'>
+           
             <Form onSubmit={ModifierVol} className='form-vol'>
             <div className='edit-vol-1'>
+            <span>{msg}</span>
                     <input type='text' className='form-control' value={numeroVolEdit}
                         onChange={(e) => setNumVol(e.target.value)}
                     />
