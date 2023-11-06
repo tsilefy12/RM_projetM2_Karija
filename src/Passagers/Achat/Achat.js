@@ -12,8 +12,11 @@ import OrangeMoney from '../../images/téléchargement (2).png'
 import bancaire from '../../images/images.png'
 import { Form, Image } from 'react-bootstrap';
 import axios from 'axios';
+import { name } from '../Name';
+import { useNavigate } from 'react-router';
 
 function Achat() {
+    const navigate = useNavigate();
     const [recherche, setRecherche] = useState("")
     const [AfficherPaiement, setPaiement] = useState(true)
     const [open, setOpen] = React.useState(false);
@@ -51,7 +54,7 @@ function Achat() {
         verifierNumeroAirtel();
         verifierNumeroOrange();
         verifierCompteBancaire();
-      
+
     })
     const Afficher = () => {
         setPaiement(!AfficherPaiement);
@@ -188,7 +191,7 @@ function Achat() {
             setNumV("")
             setDatyDep("")
             setErreurMessageChamp("")
-        } else{
+        } else {
             VerifierReservation();
         }
     }
@@ -215,230 +218,236 @@ function Achat() {
         }
     }
     return (
-        <div className='achat'>
-            <MenuPassager />
-            <div className='achat-billet-passager'>
-                <div>
-                    <TextField
-                        placeholder='rechercher...'
-                        value={recherche}
-                        onChange={(e) => setRecherche(e.target.value)}
-                        InputProps={
-                            {
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {recherche && (
-                                            <ClearIcon onClick={handleClearRecherche} style={{ cursor: 'pointer' }} />
-                                        )}
-                                        <AiIcons.AiOutlineSearch width={20} height={20}></AiIcons.AiOutlineSearch>
-                                    </InputAdornment>
-                                ),
-                            }
-                        }
-                        className='input-rechercheAchat'
-                    />
+        <>
+            {
+                (name.length == 0) ? navigate('/') : (
+                    <div className='achat'>
+                        <MenuPassager />
+                        <div className='achat-billet-passager'>
+                            <div>
+                                <TextField
+                                    placeholder='rechercher...'
+                                    value={recherche}
+                                    onChange={(e) => setRecherche(e.target.value)}
+                                    InputProps={
+                                        {
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {recherche && (
+                                                        <ClearIcon onClick={handleClearRecherche} style={{ cursor: 'pointer' }} />
+                                                    )}
+                                                    <AiIcons.AiOutlineSearch width={20} height={20}></AiIcons.AiOutlineSearch>
+                                                </InputAdornment>
+                                            ),
+                                        }
+                                    }
+                                    className='input-rechercheAchat'
+                                />
 
-                </div>
-                <span>{messageVide}</span>
-                <div className='resultat-verification'>
-                    <div className='flex-column search-resa'>
-                        <div style={{ float: 'left' }}>
+                            </div>
+                            <span>{messageVide}</span>
+                            <div className='resultat-verification'>
+                                <div className='flex-column search-resa'>
+                                    <div style={{ float: 'left' }}>
 
-                            <div className='flex-row' style={{ marginTop: '10px' }}>
-                                <label>Nom passager : </label>
-                                <span className='text text-info' style={{ marginLeft: '4px' }}>{nom}</span>
-                            </div>
+                                        <div className='flex-row' style={{ marginTop: '10px' }}>
+                                            <label>Nom passager : </label>
+                                            <span className='text text-info' style={{ marginLeft: '4px' }}>{nom}</span>
+                                        </div>
 
-                            <div className='flex_column' style={{ marginTop: '10px' }}>
-                                <div className='flex-row' style={{ marginTop: '10px' }}>
-                                    <label>prix de la réservation :</label>
-                                    <span className='text text-info' style={{ marginLeft: '4px' }}>{prix}</span>
+                                        <div className='flex_column' style={{ marginTop: '10px' }}>
+                                            <div className='flex-row' style={{ marginTop: '10px' }}>
+                                                <label>prix de la réservation :</label>
+                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{prix}</span>
+                                            </div>
+                                            <div className='flex-row' style={{ marginTop: '10px' }}>
+                                                <label>Type du tarif :</label>
+                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{type}</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex-column' style={{ marginTop: '10px' }}>
+                                            <div className='flex-row' style={{ marginTop: '10px' }}>
+                                                <label>Numéro du vol :</label>
+                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{numV}</span>
+                                            </div>
+                                            <div className='flex-row' style={{ marginTop: '10px' }}>
+                                                <label>La date de départ :</label>
+                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{datyDep}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='flex-box informations-billet'>
+                                        <div className='flex-row' style={{ marginTop: '10px' }}>
+                                            <label>Montant total :</label>
+                                            <span className='text text-info' style={{ marginLeft: '4px' }}>{montant}</span>
+                                        </div>
+                                        <div className='flex-row' style={{ marginTop: '10px' }}>
+                                            <label>Lieu de départ :</label>
+                                            <span className='text text-info' style={{ marginLeft: '4px' }}>{lieuZ}</span>
+                                        </div>
+                                        <div className='flex-row' style={{ marginTop: '10px' }}>
+                                            <label>Lieu d'arrivée :</label>
+                                            <span className='text text-info' style={{ marginLeft: '4px' }}>{lieuX}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className='flex-row' style={{ marginTop: '10px' }}>
-                                    <label>Type du tarif :</label>
-                                    <span className='text text-info' style={{ marginLeft: '4px' }}>{type}</span>
+                                <Form onSubmit={AcheterBillet}>
+                                    <div className='formulaire-ventes-passager flex-box'>
+                                        <TextField
+                                            type='number'
+                                            placeholder='numéro passager'
+                                            value={idP}
+                                            sx={{ margin: '6px' }}
+                                            onChange={(e) => setIdP(e.target.value)}
+                                            aria-readonly
+                                        />
+                                        <TextField
+                                            type='text'
+                                            placeholder='nom passager'
+                                            value={nom}
+                                            onChange={(e) => setIdP(e.target.value)}
+                                            sx={{ margin: '6px' }}
+                                        />
+                                        <TextField
+                                            type='number'
+                                            placeholder='montant'
+                                            value={prix}
+                                            onChange={(e) => setMontant(e.target.value)}
+                                            sx={{ margin: '6px' }}
+                                        />
+                                        <TextField
+                                            type='date'
+                                            size='small'
+                                            value={dateTransaction}
+                                            onChange={(e) => setDateTransaction(e.target.value)}
+                                            sx={{ margin: '6px' }}
+                                        />
+                                        <TextField
+                                            type='text'
+                                            value={modePaiement}
+                                            onChange={(e) => setModePaiement(e.target.value)}
+                                            placeholder='mode du paiement'
+                                            sx={{ margin: '6px', display: AfficherPaiement ? 'none' : 'block' }}
+                                            aria-readonly
+                                        />
+                                        <div className='flex'>
+                                            <button className='btn btn-info grow' style={{ margin: "6px", display: displayBtnAcheter }}>Acheter maintenant</button>
+                                            <span style={{ marginTop: "10px" }}>{erreurMessageChamp}</span>
+                                        </div>
+                                    </div>
+                                </Form>
+                                <div className='flex'>
+                                    <button className='btn btn-success grow' style={{ margin: "6px" }} onClick={() => Afficher()}>Mode paiement</button>
+                                    <button className='btn btn-secondary grow' style={{ margin: "6px" }}>Pas maintenant</button>
                                 </div>
-                            </div>
-                            <div className='flex-column' style={{ marginTop: '10px' }}>
-                                <div className='flex-row' style={{ marginTop: '10px' }}>
-                                    <label>Numéro du vol :</label>
-                                    <span className='text text-info' style={{ marginLeft: '4px' }}>{numV}</span>
+                                <div className='flex-box mode-paiement' style={{ marginTop: PaiemenMode, transition: 'margin-top 1s' }}>
+                                    <Image src={MVola} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalMVola()} />
+                                    <Image src={AirtelMoney} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalAirterl()} />
+                                    <Image src={OrangeMoney} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalOrange()} />
+                                    <Image src={bancaire} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenCarteBancaire()} />
                                 </div>
-                                <div className='flex-row' style={{ marginTop: '10px' }}>
-                                    <label>La date de départ :</label>
-                                    <span className='text text-info' style={{ marginLeft: '4px' }}>{datyDep}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='flex-box informations-billet'>
-                            <div className='flex-row' style={{ marginTop: '10px' }}>
-                                <label>Montant total :</label>
-                                <span className='text text-info' style={{ marginLeft: '4px' }}>{montant}</span>
-                            </div>
-                            <div className='flex-row' style={{ marginTop: '10px' }}>
-                                <label>Lieu de départ :</label>
-                                <span className='text text-info' style={{ marginLeft: '4px' }}>{lieuZ}</span>
-                            </div>
-                            <div className='flex-row' style={{ marginTop: '10px' }}>
-                                <label>Lieu d'arrivée :</label>
-                                <span className='text text-info' style={{ marginLeft: '4px' }}>{lieuX}</span>
+                                <Modal
+                                    open={open}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <header className='text-info' style={{ marginTop: '-2%' }}>
+                                            Veuillez saisir votre numéro de téléphone Telma
+                                        </header>
+                                        <div className='body-mvola'>
+                                            <TextField
+                                                type='text'
+                                                value={telephoneTelma}
+                                                onChange={(e) => setTelephoneTelma(e.target.value)}
+                                                helperText={erreurNonValidNumeroTelma}
+                                            />
+                                            <span>Montant à payer : {montant}</span><br></br>
+                                            <div className='flex-row'>
+                                                <button className='btn btn-success grow'>Retrait</button>
+                                                <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </Modal>
+                                <Modal
+                                    open={openAirtelMoney}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <header className='text-info' style={{ marginTop: '-2%' }}>
+                                            Veuillez saisir votre numéro de téléphone Airtel
+                                        </header>
+                                        <div className='body-mvola'>
+                                            <TextField
+                                                type='text'
+                                                value={telephoneAirtel}
+                                                onChange={(e) => setTelephoneAirtel(e.target.value)}
+                                                helperText={erreurNonValidNumeroAirtel}
+                                            />
+                                            <span>Montant à payer : {montant}</span>
+                                            <div className='flex-row'>
+                                                <button className='btn btn-success grow'>Retrait</button>
+                                                <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </Modal>
+                                <Modal
+                                    open={openOrangeMoney}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <header className='text-info' style={{ marginTop: '-2%' }}>
+                                            Veuillez saisir votre numéro de téléphone Orange
+                                        </header>
+                                        <div className='body-mvola'>
+                                            <TextField
+                                                type='text'
+                                                value={telephoneOrange}
+                                                onChange={(e) => setTelephoneOrange(e.target.value)}
+                                                helperText={erreurNonValidNumeroOrange}
+                                            />
+                                            <span>Montant à payer : {montant}</span>
+                                            <div className='flex-row'>
+                                                <button className='btn btn-success grow'>Retrait</button>
+                                                <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </Modal>
+                                <Modal
+                                    open={openCarteBancaire}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <header className='text-info' style={{ marginTop: '-2%' }}>
+                                            Veuillez saisir le numéro de votre compte bancaire
+                                        </header>
+                                        <div className='body-mvola'>
+                                            <TextField
+                                                type='text'
+                                                value={compteBancaire}
+                                                onChange={(e) => setCompteBancaire(e.target.value)}
+                                                helperText={erreurNonValidNumeroBancaire}
+                                            />
+                                            <span>Montant à payer : {montant}</span>
+                                            <div className='flex-row'>
+                                                <button className='btn btn-success grow'>Retrait</button>
+                                                <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </Modal>
                             </div>
                         </div>
                     </div>
-                    <Form onSubmit={AcheterBillet}>
-                        <div className='formulaire-ventes-passager flex-box'>
-                            <TextField
-                                type='number'
-                                placeholder='numéro passager'
-                                value={idP}
-                                sx={{ margin: '6px' }}
-                                onChange={(e) => setIdP(e.target.value)}
-                                aria-readonly
-                            />
-                            <TextField
-                                type='text'
-                                placeholder='nom passager'
-                                value={nom}
-                                onChange={(e) => setIdP(e.target.value)}
-                                sx={{ margin: '6px' }}
-                            />
-                            <TextField
-                                type='number'
-                                placeholder='montant'
-                                value={prix}
-                                onChange={(e) => setMontant(e.target.value)}
-                                sx={{ margin: '6px' }}
-                            />
-                            <TextField
-                                type='date'
-                                size='small'
-                                value={dateTransaction}
-                                onChange={(e) => setDateTransaction(e.target.value)}
-                                sx={{ margin: '6px' }}
-                            />
-                            <TextField
-                                type='text'
-                                value={modePaiement}
-                                onChange={(e) => setModePaiement(e.target.value)}
-                                placeholder='mode du paiement'
-                                sx={{ margin: '6px', display: AfficherPaiement? 'none': 'block' }}
-                                aria-readonly
-                            />
-                            <div className='flex'>
-                                <button className='btn btn-info grow' style={{ margin: "6px", display: displayBtnAcheter }}>Acheter maintenant</button>
-                                <span style={{ marginTop: "10px" }}>{erreurMessageChamp}</span>
-                            </div>
-                        </div>
-                    </Form>
-                    <div className='flex'>
-                        <button className='btn btn-success grow' style={{ margin: "6px" }} onClick={() => Afficher()}>Mode paiement</button>
-                        <button className='btn btn-secondary grow' style={{ margin: "6px" }}>Pas maintenant</button>
-                    </div>
-                    <div className='flex-box mode-paiement' style={{ marginTop: PaiemenMode, transition: 'margin-top 1s' }}>
-                        <Image src={MVola} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalMVola()} />
-                        <Image src={AirtelMoney} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalAirterl()} />
-                        <Image src={OrangeMoney} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenModalOrange()} />
-                        <Image src={bancaire} width={180} height={120} style={{ margin: "10px" }} className='img-paiement grow' onClick={() => handleOpenCarteBancaire()} />
-                    </div>
-                    <Modal
-                        open={open}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <header className='text-info' style={{ marginTop: '-2%' }}>
-                                Veuillez saisir votre numéro de téléphone Telma
-                            </header>
-                            <div className='body-mvola'>
-                                <TextField
-                                    type='text'
-                                    value={telephoneTelma}
-                                    onChange={(e) => setTelephoneTelma(e.target.value)}
-                                    helperText={erreurNonValidNumeroTelma}
-                                />
-                                <span>Montant à payer : {montant}</span><br></br>
-                                <div className='flex-row'>
-                                    <button className='btn btn-success grow'>Retrait</button>
-                                    <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
-                                </div>
-                            </div>
-                        </Box>
-                    </Modal>
-                    <Modal
-                        open={openAirtelMoney}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <header className='text-info' style={{ marginTop: '-2%' }}>
-                                Veuillez saisir votre numéro de téléphone Airtel
-                            </header>
-                            <div className='body-mvola'>
-                                <TextField
-                                    type='text'
-                                    value={telephoneAirtel}
-                                    onChange={(e) => setTelephoneAirtel(e.target.value)}
-                                    helperText={erreurNonValidNumeroAirtel}
-                                />
-                                <span>Montant à payer : {montant}</span>
-                                <div className='flex-row'>
-                                    <button className='btn btn-success grow'>Retrait</button>
-                                    <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
-                                </div>
-                            </div>
-                        </Box>
-                    </Modal>
-                    <Modal
-                        open={openOrangeMoney}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <header className='text-info' style={{ marginTop: '-2%' }}>
-                                Veuillez saisir votre numéro de téléphone Orange
-                            </header>
-                            <div className='body-mvola'>
-                                <TextField
-                                    type='text'
-                                    value={telephoneOrange}
-                                    onChange={(e) => setTelephoneOrange(e.target.value)}
-                                    helperText={erreurNonValidNumeroOrange}
-                                />
-                                <span>Montant à payer : {montant}</span>
-                                <div className='flex-row'>
-                                    <button className='btn btn-success grow'>Retrait</button>
-                                    <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
-                                </div>
-                            </div>
-                        </Box>
-                    </Modal>
-                    <Modal
-                        open={openCarteBancaire}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <header className='text-info' style={{ marginTop: '-2%' }}>
-                                Veuillez saisir le numéro de votre compte bancaire
-                            </header>
-                            <div className='body-mvola'>
-                                <TextField
-                                    type='text'
-                                    value={compteBancaire}
-                                    onChange={(e) => setCompteBancaire(e.target.value)}
-                                    helperText={erreurNonValidNumeroBancaire}
-                                />
-                                <span>Montant à payer : {montant}</span>
-                                <div className='flex-row'>
-                                    <button className='btn btn-success grow'>Retrait</button>
-                                    <button className='btn btn-danger grow' style={{ float: 'right' }} onClick={() => handleClose()}>Non</button>
-                                </div>
-                            </div>
-                        </Box>
-                    </Modal>
-                </div>
-            </div>
-        </div>
+                )
+            }
+        </>
     )
 }
 const style = {

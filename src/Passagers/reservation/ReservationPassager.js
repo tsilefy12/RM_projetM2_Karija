@@ -8,9 +8,13 @@ import MenuPassager from '../MenuPassager/MenuPassager';
 import { Form, Image } from 'react-bootstrap';
 import logoImage from '../../images/Air-Mad.jpeg'
 import photo from '../../images/images (4).jpg'
+import { name } from '../Name';
+import { useNavigate } from 'react-router';
+
 
 function ReservationPassager() {
     // const [donneResultat, setDonneResultat] = useState([]);
+    const navigate = useNavigate();
     const [numavion, setNumAvion] = useState("");
     const [numvol, setNumVol] = useState("'");
     const [datedep, setDateDep] = useState("");
@@ -163,7 +167,10 @@ function ReservationPassager() {
     }
 
     return (
-        <div className='reservation-passager'>
+       <>
+        {
+            (name.length == 0) ? navigate('/') : (
+                <div className='reservation-passager'>
             <MenuPassager />
             <div className='passager-resa'>
                 <div className='afficher-rechercher-vol'>
@@ -328,6 +335,9 @@ function ReservationPassager() {
                 </Box>
             </Modal>
         </div>
+            )
+        }
+       </>
     )
 }
 const style = {

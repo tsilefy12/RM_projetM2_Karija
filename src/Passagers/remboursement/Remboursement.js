@@ -4,8 +4,11 @@ import '../remboursement/Remboursement.css'
 import { TextField } from '@mui/material'
 import axios from 'axios';
 import { Form } from 'react-bootstrap';
+import { name } from '../Name';
+import { useNavigate } from 'react-router';
 
 function Remboursement() {
+  const navigate =useNavigate();
   const [nompass, setNomPass] = useState("");
   const [mailadresse, setMailAdresse] = useState("");
   const [piecejustificative, setPieaceJustificative] = useState("");
@@ -107,11 +110,14 @@ function Remboursement() {
     }
   }
   return (
-    <div className='flex remboursement'>
+    <>
+      {
+         (name.length == 0) ? navigate('/') : (
+          <div className='flex remboursement'>
       <MenuPassager />
       <div className='remboursement-contenue'>
         <header className='text text-success' style={{ marginLeft: '20px', fontSize: '1.5em' }}>
-          DEMANDE DE REMBOURSEMENT
+          DEMANDE DE REMBOURSEMENT 
         </header>
         <Form onSubmit={rembourser}>
           <div className='flex-box'>
@@ -196,7 +202,7 @@ function Remboursement() {
                           <td>{item.modeRemboursement}</td>
                           <td>{item.pieceJustificative}</td>
                           <td>{item.dateDemandeRemboursement.split('T')[0]}</td>
-                          <td>{item.verification}</td>
+                          <td style={{color: (item.verification=="Non validé")? 'red':'green'}}>{item.verification}</td>
                         </tr>
                       ))
                     )
@@ -217,6 +223,9 @@ function Remboursement() {
         </div>
       </div>
     </div>
+         )
+      }
+    </>
   )
 }
 

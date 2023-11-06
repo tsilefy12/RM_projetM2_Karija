@@ -34,13 +34,16 @@ function Inscription() {
   const verifyNumero = () =>{
     const numtelephone = /^(038|034|032|033)\d{7}$/;
           const validerNumeTelephone = numtelephone.test(telephonepassager);
-          if (!validerNumeTelephone) {
+          if (selectPays =="Autres") {
+            setMessagePhone("")
+          }
+          else if (!validerNumeTelephone) {
             const msg6 = (<label className='text text-danger'>Numéro du téléphone est invalide</label>);
             setMessagePhone(msg6);
-          } else {
+          }
+           else {
             const msg7 = (<label className='text-success'>Ok</label>);
             setMessagePhone(msg7);
-            response();
           }
   }
   const inscriptionPassager = async (e) => {
@@ -57,12 +60,14 @@ function Inscription() {
         if (!valider) {
           const msg4 = (<label className='text text-danger'>Adresse mail non valide</label>);
           setMessageEmail(msg4);
+          setMessage(msg4);
         } else if (selectPays == "Madagascar") {
           const numtelephone = /^(038|034|032|033)\d{7}$/;
           const validerNumeTelephone = numtelephone.test(telephonepassager);
           if (!validerNumeTelephone) {
             const msg6 = (<label className='text text-danger'>Numéro du téléphone est invalide</label>);
             setMessagePhone(msg6);
+            setMessage(msg6);
           } else {
             const msg7 = (<label className='text-success'>Ok</label>);
             setMessagePhone(msg7);
@@ -70,6 +75,7 @@ function Inscription() {
           }
         }
         else if (selectPays == "Autres") {
+          setMessagePhone("");
           response();
         }
       } catch (error) {

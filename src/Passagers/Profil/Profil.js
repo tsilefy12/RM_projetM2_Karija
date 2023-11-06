@@ -7,8 +7,11 @@ import sky from '../../images/images (3).jpg'
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai'
 import { TextField } from '@mui/material'
 import axios from 'axios'
+import { name } from '../Name'
+import { useNavigate } from 'react-router'
 
 function Profil() {
+  const navigate = useNavigate();
   const [donne, setDonne] = useState([]);
   const [mailaka, setMailaka] = useState("");
   const [contact, setContact] = useState("");
@@ -21,12 +24,17 @@ function Profil() {
   const [donneMail, setDonneMail] = useState([]);
   const [donnePhone, setDonnePhone] = useState([]);
   const [donneAdresse, setDonneAdresse] = useState([]);
+  const [message, setMessage] = useState("");
 
+  
+  const compteM= name[0];
+ 
   useEffect(() =>{
     afficher();
+   
   })
   const afficher = async () =>{
-    await axios.get(`http://localhost:5077/api/Passagers`).then(({data}) =>{
+    await axios.get(`http://localhost:5077/api/Passagers?Email=${compteM}`).then(({data}) =>{
       setDonne(data)
     })
     donne.map((e) =>(
@@ -62,7 +70,11 @@ function Profil() {
     await axios.post(`http://localhost:5077/api/Passagers/modification-profil-passager/${id}`,
     formData, {headers:{'Content-Type': 'application/json'}}
     ).then(({data}) =>{
-      console.log("message ", data);
+      const msg = (<label className='text-success'>{data}</label>);
+      setMessage(msg);
+      setTimeout(() => {
+        setMessage("")
+      }, 5000);
     })
     afficher();
     setEditAdresse("")
@@ -85,13 +97,17 @@ function Profil() {
       setEditAdresse(a.adressepassager);
     })
   }
-
   const showBtn = (inputEditAdresse != "" || inputEditTelephone !="" || inputModif !="") ? 'block': 'none';
   return (
-    <div className='profil'>
+    <>
+      {
+        
+        (name.length == "") ? navigate('/') :(
+          <div className='profil'>
       <MenuPassager />
       <div className='tewt'>
       <div className='profil-contenu'>
+      
         <div className='Photo-profil'>
           <Image src={photo} className='sary-profil' />
           <span style={{cursor: 'pointer'}}>
@@ -156,13 +172,17 @@ function Profil() {
           onChange={(e) =>setEditAdresse(e.target.value)}
         />
         <button className='btn btn-primary' style={{marginTop: '10px', display: showBtn}}>Modifier</button>
-        
+        <label>{message}</label>
         </div>
         </Form>
         <Image src={sky} width={360} height={195} style={{float: 'right'}}/>
       </div>
       </div>
     </div>
+        )
+      }
+    </>
+    
   )
 }
 

@@ -5,9 +5,12 @@ import { TextField, InputAdornment } from '@mui/material'
 import * as AiIcons from "react-icons/ai"
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios'
+import { name } from '../Name'
 import { Form } from 'react-bootstrap'
+import { useNavigate } from 'react-router'
 
 function DemandeAnnulation() {
+    const navigate = useNavigate();
     const [recherche, setRecherche] = useState("");
     const [nom, setNom] = useState("");
     const [phone, setPhone] = useState("");
@@ -132,7 +135,10 @@ function DemandeAnnulation() {
         setRecherche("");
     }
     return (
-        <div className='demande-menu-annulation'>
+       <>
+        {
+         (name.length == 0) ? navigate('/') : (
+            <div className='demande-menu-annulation'>
             <MenuPassager />
             <div className='demande-annulation'>
                 <header>
@@ -256,6 +262,9 @@ function DemandeAnnulation() {
                 <span style={{ margin: '20px' }}>{msg5}</span>
             </div>
         </div>
+         )
+       }
+       </>
     )
 }
 

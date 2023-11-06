@@ -4,6 +4,7 @@ import '../RemboursementPassager/RemboursementPassager.css'
 import axios from 'axios';
 import { TextField, InputAdornment, Dialog, DialogTitle, DialogContentText, DialogActions, Button } from '@mui/material';
 import { AiFillEdit, AiFillQuestionCircle, AiOutlineSearch, AiTwotoneDelete } from 'react-icons/ai';
+import { Form } from 'react-bootstrap';
 
 function RemboursementPassager() {
   const [donneRemboursementP, setDonneRembourseP] = useState([]);
@@ -11,6 +12,8 @@ function RemboursementPassager() {
   const [message, setMessage] = useState("");
   const [open, setOpenDialog] = useState(false);
   const [mailaka, setMailaka] = useState("");
+  const [editMail, setEditMail] = useState("");
+  const [Id, setId] = useState("");
 
   useEffect(() => {
     verifier();
@@ -21,16 +24,19 @@ function RemboursementPassager() {
     })
   }
   const rechercherRemboursement = async () => {
-    await axios.get(`http://localhost:5077/api/Remboursement/recherche-remboursement/${recherche}`).then(({ data }) => {
+    if (recherche!="") {
+      await axios.get(`http://localhost:5077/api/Remboursement/recherche-remboursement/${recherche}`).then(({ data }) => {
       if (data == "Vous n'avez pas encore effectué la demande de remboursement.") {
         const msg = (<label className='text-danger'>{data}</label>);
         setMessage(msg);
+        setDonneRembourseP("");
       } else {
         setDonneRembourseP(data);
         const ok = (<label className='text-success'>Il y a {data.length} résultat trouvé</label>)
         setMessage(ok)
       }
     })
+    }
   }
   const verifier = () => {
     if (recherche == "") {
@@ -54,11 +60,42 @@ function RemboursementPassager() {
     setOpenDialog(true);
     setMailaka(e);
   }
+  const edit = async (mailadresse) =>{
+   await axios.post(`http://localhost:5077/api/Remboursement/edit-remboursement/${mailadresse}`).then(({data}) =>{
+    setEditMail(data);
+   })
+   setId(mailadresse);
+  }
+  const modif = async (e) =>{
+    e.preventDefault();
+    if (editMail=="") {
+      
+    } else {
+      const formData = new FormData();
+      formData.append("mailAdresse", "string");
+      formData.append("nomPass", "string");
+      formData.append("modeRemboursement", "string");
+      formData.append("pieceJustificative", "string");
+      formData.append("telephoneRemboursement", 0);
+      formData.append("dateDemandeRemboursement", "2023-11-05T14:18:26.962Z");
+      formData.append("verification", editMail);
+      await axios.post(`http://localhost:5077/api/Remboursement/modifier-validation/${Id}`
+      ,formData, {headers :{'Content-Type': 'application/json'}}).then(({data}) =>{
+      const messmodif = (<label className='text-success'>{data}</label>);
+      setMessage(messmodif);
+    })
+    setEditMail("");
+    affichageRemboursement();
+    setTimeout(() => {
+      setMessage("")
+    }, 15000);
+  }
+  }
   return (
     <div className='remboursement-affichage'>
       <Menu />
       <div className='afficher-remboursement'>
-        <header style={{ marginLeft: '20px' }}>
+        <header style={{ marginLeft: '20px' }} className='entete-remboursement'>
           <TextField
             type='text'
             placeholder='rechercher...'
@@ -74,8 +111,21 @@ function RemboursementPassager() {
               }
             }
           />
-          <label style={{ marginLeft: '20px' }}>{message}</label>
+         
+          <Form onSubmit={modif}>
+          <div className='input-valid-button'>
+          <TextField 
+            type='text'
+            placeholder='validation'
+            value={editMail}
+            onChange={(e) =>setEditMail(e.target.value)}
+            />
+          <button className='btn btn-primary'>Valider</button>
+          
+          </div>
+          </Form>
         </header>
+        <label style={{ marginLeft: '20px' }}>{message}</label>
         <div className='tous-affichage-remboursement'>
           {
             donneRemboursementP.length > 0 && (
@@ -89,7 +139,7 @@ function RemboursementPassager() {
                   <label>Date de demande : {item.dateDemandeRemboursement.split('T')[0]}</label>
                   <label>Validation: {item.verification}</label>
                   <div className='actions-buttons-remboursement'>
-                    <AiFillEdit size={20} style={{ marginRight: '10px' }} />
+                    <AiFillEdit size={20} style={{ marginRight: '10px', cursor: 'pointer' }} onClick={() =>edit(item.mailAdresse)}/>
                     <AiTwotoneDelete size={20} onClick={() => deleteRem(item.mailAdresse)} style={{ cursor: 'pointer' }} />
                   </div>
                 </div>

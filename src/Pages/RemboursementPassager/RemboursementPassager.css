@@ -39,6 +39,17 @@
     display: flex;
     flex-wrap: wrap;
 }
+.entete-remboursement{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.input-valid-button{
+    width: 330px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 @media (max-width: 768px){
     .remboursement-affichage{
         /* border: 1px solid red; */
@@ -47,5 +58,19 @@
         display: flex;
         flex-direction: row;
         margin-left: -4%;
+    }
+    .entete-remboursement{
+        display: flex;
+        flex-direction: column;
+    }
+    .input-valid-button{
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 6px;
+    }
+    .input-valid-button button{
+        margin-top: 10px;
     }
 }

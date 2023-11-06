@@ -68,7 +68,7 @@ function MenuPassager() {
         <div className='personne'>
           <span style={{cursor: 'pointer'}}>Message</span>
           <span style={{cursor: 'pointer'}}>Compte</span>
-          <span style={{cursor: 'pointer'}}>Deconnexion</span>
+          <Link to={'/'} style={{cursor: 'pointer', textDecoration: 'none'}}>Deconnexion</Link>
         </div>
       </div>
     </>
