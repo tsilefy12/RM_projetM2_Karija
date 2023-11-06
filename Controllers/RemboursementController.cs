@@ -213,6 +213,63 @@ namespace apiWebCore.Controllers
                 throw;
             }
         }
+        [Route("edit-remboursement/{Mail}")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(string Mail){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string edit = "SELECT verification FROM remboursement WHERE mailadresse ='"+Mail+"'";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var commandEdit = new NpgsqlCommand(edit, connexion);
+
+                var read = await commandEdit.ExecuteReaderAsync();
+                var verify ="";
+                if (await read.ReadAsync())
+                {
+                    verify = read.GetString(read.GetOrdinal("verification"));
+                }
+                return Ok(verify);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("erreur :"+e.Message);
+            }
+        }
+        [Route("modifier-validation/{Mail}")]
+        [HttpPost]
+        public async Task<IActionResult> Modifier([FromBody] Remboursement  remboursement, string Mail){
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                string modif = "UPDATE remboursement SET verification =@Verification WHERE mailadresse='"+Mail+"'";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+
+                using var cmd = new NpgsqlCommand(modif, connexion);
+
+                cmd.Parameters.AddWithValue("Verification", remboursement.Verification);
+
+                await cmd.ExecuteNonQueryAsync();
+
+                return Ok("La mise à jour de la vérification est effectuée");
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+                
+                return Ok("Erreur :"+e.Message);
+            }
+        }
     }
 }
        
