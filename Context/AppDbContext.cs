@@ -22,6 +22,8 @@ namespace PostgreSQLAPI.Models
         public DbSet<VenteBillet> Ventes { get; set; }
         public DbSet<Annulation> Annulations { get; set; }
         public DbSet<Remboursement> Remboursements { get; set; }
+        public DbSet<Actif> Actifs {get; set; }
+        public DbSet<Revenue> Revenues {get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
@@ -33,6 +35,7 @@ namespace PostgreSQLAPI.Models
             .Property(v => v.HeureDepart)
             .HasColumnType("time");
             modelBuilder.Entity<Annulation>().Property(d => d.HeureVoyage).HasColumnType("time");
+            modelBuilder.Entity<Revenue>().HasNoKey();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -28,5 +28,8 @@ namespace apiWebCore.Models
 
         [Column("password")]
         public string Password { get; set; } = null!;
+
+        [Column("typeclient")]
+        public string TypeClient {get; set; } = null!;
     }
 }

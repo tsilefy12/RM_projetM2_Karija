@@ -43,21 +43,15 @@ namespace apiWebCore.Controllers
                     while (await reader.ReadAsync())
                     {
 
-                        int id = reader.GetInt32(reader.GetOrdinal("id"));
-                        string nompassager = reader.GetString(reader.GetOrdinal("nompassager"));
-                        string adreseepassager = reader.GetString(reader.GetOrdinal("adressepassager"));
-                        long telephone = reader.GetInt64(reader.GetOrdinal("telephone"));
-                        string email = reader.GetString(reader.GetOrdinal("email"));
-                        string password = reader.GetString(reader.GetOrdinal("password"));
-
                         var passagers = new Passager
                         {
-                            IdPassager = id,
-                            NomPassager = nompassager,
-                            Adressepassager = adreseepassager,
-                            Telephone = telephone,
-                            Email = email,
-                            Password = password,
+                            IdPassager = reader.GetInt32(reader.GetOrdinal("id")),
+                            NomPassager = reader.GetString(reader.GetOrdinal("nompassager")),
+                            Adressepassager = reader.GetString(reader.GetOrdinal("adressepassager")),
+                            Telephone = reader.GetInt64(reader.GetOrdinal("telephone")),
+                            Email = reader.GetString(reader.GetOrdinal("email")),
+                            Password = reader.GetString(reader.GetOrdinal("password")),
+                            TypeClient = reader.GetString(reader.GetOrdinal("typeclient")),
                         };
                         listPassagers.Add(passagers);
                     }
@@ -100,8 +94,8 @@ namespace apiWebCore.Controllers
                 }
                 else
                 {
-                    string inscriptionPassager = "INSERT INTO passager(nompassager, adressepassager, telephone, email, password)" +
-                    "VALUES(@NomPassager, @AdressePassager, @Telephone, @Email, @Password)";
+                    string inscriptionPassager = "INSERT INTO passager(nompassager, adressepassager, telephone, email, password, typeclient)" +
+                    "VALUES(@NomPassager, @AdressePassager, @Telephone, @Email, @Password, 'client')";
                     using var command = new NpgsqlCommand(inscriptionPassager, connexiondb);
                     string mdp = passager.Password;
 
@@ -114,6 +108,7 @@ namespace apiWebCore.Controllers
                     command.Parameters.AddWithValue("Telephone", passager.Telephone);
                     command.Parameters.AddWithValue("Email", passager.Email);
                     command.Parameters.AddWithValue("Password", encodedData);
+                    // command.Parameters.AddWithValue("typeClient", passager.TypeClient);
 
                     await command.ExecuteNonQueryAsync();
 
@@ -274,7 +269,7 @@ namespace apiWebCore.Controllers
 
             try
             {
-                string selectMailPassword = "SELECT email, password FROM passager WHERE email = '" + mail + "'";
+                string selectMailPassword = "SELECT email, password, typeclient FROM passager WHERE email = '" + mail + "'";
                 using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexiondb.Open();
                 using var commandsql = new NpgsqlCommand(selectMailPassword, connexiondb);
@@ -297,6 +292,7 @@ namespace apiWebCore.Controllers
                     {
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Password = result,
+                        TypeClient = reader.GetString(reader.GetOrdinal("typeclient"))
                     };
                     liste.Add(log);
                 }

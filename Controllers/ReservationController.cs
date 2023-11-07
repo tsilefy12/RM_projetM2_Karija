@@ -27,23 +27,64 @@ namespace apiWebCore.Controllers
 
             try
             {
-
-                string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, libelle, datereservation)" +
-                "VALUES(@VolId, @PassagerId, @TarificationId, @Libelle, @DateReservation)";
-
+                string selectTarif = "SELECT nombreplacedispotarif FROM tarification WHERE id ='" + reservation.TarificationId + "'";
                 using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexiondb.Open();
-                using var commandsql = new NpgsqlCommand(reserverVol, connexiondb);
+                using var cmd = new NpgsqlCommand(selectTarif, connexiondb);
+                var readT = await cmd.ExecuteReaderAsync();
+                var tar = 0;
+                if (await readT.ReadAsync())
+                {
+                    int x = readT.GetInt32(readT.GetOrdinal("nombreplacedispotarif"));
+                    tar = x;
+                }
+                string selectCapaciteVol = "SELECT capacitemax FROM vol WHERE id ='"+reservation.VolId+"'";
+                using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connection.Open();
+                using var cmdVol = new NpgsqlCommand(selectCapaciteVol, connection);
+                var readCv = await cmdVol.ExecuteReaderAsync();
+                var Cap = 0;
+                if (await readCv.ReadAsync())
+                {
+                    int c= readCv.GetInt32(readCv.GetOrdinal("capacitemax"));
+                    Cap = c;
+                }
+                Console.WriteLine(tar);
+                if (tar == 0)
+                {
+                    return Ok("Aucune place disponible avec ce tarif");
+                }else if(Cap == 0){
+                    return Ok("Aucune place disponible dans ce vol");
+                }
+                else
+                {
+                    var calcul = tar - 1;
+                    var calcul2 = Cap -1;
+                    string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, libelle, datereservation)" +
+                "VALUES(@VolId, @PassagerId, @TarificationId, @Libelle, @DateReservation)";
+                using var con = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                con.Open();
+                using var commandsql = new NpgsqlCommand(reserverVol, con);
 
-                commandsql.Parameters.AddWithValue("VolId", reservation.VolId);
-                commandsql.Parameters.AddWithValue("PassagerId", reservation.PassagerId);
-                commandsql.Parameters.AddWithValue("TarificationId", reservation.TarificationId);
-                commandsql.Parameters.AddWithValue("Libelle", reservation.Libelle);
-                commandsql.Parameters.AddWithValue("DateReservation", reservation.DateReservation);
+                    commandsql.Parameters.AddWithValue("VolId", reservation.VolId);
+                    commandsql.Parameters.AddWithValue("PassagerId", reservation.PassagerId);
+                    commandsql.Parameters.AddWithValue("TarificationId", reservation.TarificationId);
+                    commandsql.Parameters.AddWithValue("Libelle", reservation.Libelle);
+                    commandsql.Parameters.AddWithValue("DateReservation", reservation.DateReservation);
 
-                await commandsql.ExecuteNonQueryAsync();
+                    await commandsql.ExecuteNonQueryAsync();
 
-                return Ok("Votre réservation est effectuée");
+                    string update = "UPDATE tarification SET nombreplacedispotarif='"+calcul+"' WHERE id='"+reservation.TarificationId+"'";
+                    using var cmdUpdate = new NpgsqlCommand(update, con);
+                    await cmdUpdate.ExecuteNonQueryAsync();
+
+                    string modifVol = "UPDATE vol SET capacitemax='"+calcul2+"' WHERE id ='"+reservation.VolId+"'";
+                    using var cmdUpdateVol = new NpgsqlCommand(modifVol, con);
+                    await cmdUpdateVol.ExecuteNonQueryAsync();
+
+                    return Ok("Votre réservation est effectuée");
+                }
+
             }
             catch (Npgsql.NpgsqlException erreur)
             {
@@ -112,7 +153,7 @@ namespace apiWebCore.Controllers
                         TypeTarif = reader.GetString(reader.GetOrdinal("type")),
                     };
                     resultatRecherche.Tarifs.Add(tarif);
-                   continue;
+                    continue;
                 }
                 return Ok(resultatRecherche);
             }
@@ -132,7 +173,7 @@ namespace apiWebCore.Controllers
 
                 string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol," +
                     "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
-                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid AND vol.numerovol like '%"+NumeroVol+"%'";
+                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid AND vol.numerovol like '%" + NumeroVol + "%'";
 
                 using var commandsql = new NpgsqlCommand(selectresa, connexion);
                 using var reader = await commandsql.ExecuteReaderAsync();
@@ -258,7 +299,7 @@ namespace apiWebCore.Controllers
 
                     return Ok("La réservation du passager ayant le numéro '" + IdP + "' est supprimée.");
                 }
-                return Ok("Attentio, vous avez rencontré un problème avec la suppression!");
+                return Ok("Attention, vous avez rencontré un problème avec la suppression!");
             }
             catch (Npgsql.NpgsqlException e)
             {

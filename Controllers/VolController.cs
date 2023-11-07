@@ -137,17 +137,43 @@ namespace apiWebCore.Controllers
 
             try
             {
-                string supprimerVol = "DELETE FROM vol WHERE id=@Id";
+                string selectId = "SELECT vol.id FROM vol, reservation WHERE vol.id=reservation.volid AND vol.id=" + id;
                 using var dbC = new AppDbContext();
-                using var connexionDb = new NpgsqlConnection(dbC.Database.GetConnectionString());
-                connexionDb.Open();
-                using var command = new NpgsqlCommand(supprimerVol, connexionDb);
-                command.Parameters.AddWithValue("Id", id);
+                using var connex = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                connex.Open();
+                using var cmd = new NpgsqlCommand(selectId, connex);
+                var readId = await cmd.ExecuteReaderAsync();
+                var idv = 0;
+                while (await readId.ReadAsync())
+                {
+                    int idV = readId.GetInt32(readId.GetOrdinal("id"));
+                    idv = idV;
+                }
 
-                await command.ExecuteNonQueryAsync();
-                var e = new Npgsql.NpgsqlException();
+                Console.WriteLine(idv);
+                if (idv == 0)
+                {
+                    string supprimerVol = "DELETE FROM vol WHERE id=@Id";
+                    using var connexionDb = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                    connexionDb.Open();
+                    using var command = new NpgsqlCommand(supprimerVol, connexionDb);
+                    command.Parameters.AddWithValue("Id", id);
 
-                return Ok("Vous avez supprimé un vol.");
+                    await command.ExecuteNonQueryAsync();
+                    return Ok("Vous avez supprimé un vol.");
+                }else{
+                    string supp = "DELETE FROM reservation WHERE volid="+idv;
+                    string supprimerVol = "DELETE FROM vol WHERE id="+idv;
+                    using var cnn = new NpgsqlConnection(dbC.Database.GetConnectionString());
+                    cnn.Open();
+                    using var cmdsql = new NpgsqlCommand(supp, cnn);
+                    await cmdsql.ExecuteNonQueryAsync();
+                    using var command = new NpgsqlCommand(supprimerVol, cnn);
+                    await command.ExecuteNonQueryAsync();
+                    
+                    return Ok("Vous avez supprimé un vol déjà réservé");
+                }
+
             }
             catch (Npgsql.NpgsqlException e)
             {
@@ -167,7 +193,7 @@ namespace apiWebCore.Controllers
             try
             {
                 var lieu1 = recherche.ToLower();
-                string rechercheVol = "SELECT * FROM vol WHERE lieudepart ILIKE  @LieuDepart OR lieuarrivee ILIKE  @LieuArrivee OR numerovol ='"+recherche+"'";
+                string rechercheVol = "SELECT * FROM vol WHERE lieudepart ILIKE  @LieuDepart OR lieuarrivee ILIKE  @LieuArrivee OR numerovol ='" + recherche + "'";
                 using var dbC = new AppDbContext();
                 using var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString());
                 connexiondb.Open();
