@@ -122,7 +122,14 @@ function ReservationPassager() {
             await axios.post(`http://localhost:5077/api/Reservation/reserver-vol`,
                 formData, { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
                     console.log(data);
-                    setMessageValidation(<label className='text-success'>{data}</label>)
+                    if (data=="Aucune place disponible avec ce tarif") {
+                       setMessageValidation(<label className='text-danger'>{data}</label>)
+                    }else if (data=="Aucune place disponible dans ce vol") {
+                        setMessageValidation(<label className='text-danger'>{data}</label>)
+                    }
+                    else{
+                        setMessageValidation(<label className='text-success'>{data}</label>)
+                    }
                 })
         }
     }

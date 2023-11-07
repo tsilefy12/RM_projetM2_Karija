@@ -107,7 +107,6 @@ function Profil() {
       <MenuPassager />
       <div className='tewt'>
       <div className='profil-contenu'>
-      
         <div className='Photo-profil'>
           <Image src={photo} className='sary-profil' />
           <span style={{cursor: 'pointer'}}>

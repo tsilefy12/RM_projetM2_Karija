@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Nav, Navbar, Container, Image } from 'react-bootstrap';
-import { Link,useLocation  } from 'react-router-dom';
+import { Link,useLocation, useNavigate  } from 'react-router-dom';
 import '../MenuPassager/MenuPassager.css'
 import '../reservation/ReservationPassager.css'
 import photo from '../../icons/IMG_20210322_075139.jpg'
+import { name } from '../Name';
 import { AiFillAccountBook, AiFillBank, AiFillBook, AiFillCompass, AiFillContacts, AiFillDelete, AiFillProfile } from 'react-icons/ai';
+import axios from 'axios';
 
 function MenuPassager() {
   const isMenuActive = true; 
   const location = useLocation();
+  const [idMail, setIdMail] = useState("");
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
+    afficher();
     const activePage = location.pathname;
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {
@@ -22,6 +28,27 @@ function MenuPassager() {
       }
     });
   }, [location.pathname]);
+
+  const afficher = async () =>{
+    const mailaka = name[0];
+    if (mailaka=="") {
+       navigate('/')
+    } else {
+      await axios.get(`http://localhost:5077/api/Actif?mailaconnecte=${mailaka}`).then(({data}) =>{
+      setIdMail(data);
+    })
+    } 
+  }
+  const deconnecter = async () =>{
+    await axios.delete(`http://localhost:5077/api/Actif/deconnecter?mail=${idMail}`).then(({data}) =>{
+        const ms = (<label>{data}</label>);
+        setMessage(ms);
+    })
+    setTimeout(() => {
+      setMessage("");
+      navigate('/');
+    }, 7000);
+  }
   return (
     <>
       <div className='tout-menu-passager'>
@@ -66,9 +93,9 @@ function MenuPassager() {
           </Navbar>
         </div>
         <div className='personne'>
-          <span style={{cursor: 'pointer'}}>Message</span>
-          <span style={{cursor: 'pointer'}}>Compte</span>
-          <Link to={'/'} style={{cursor: 'pointer', textDecoration: 'none'}}>Deconnexion</Link>
+        <label style={{color: 'lightblue'}}>{message}</label>
+        <Link style={{textDecoration: 'none', cursor: 'none'}}>Bienvenue {idMail}, Vous êtes connecté</Link>
+          <Link onClick={() =>deconnecter()} style={{textDecoration: 'none'}}>Deconnexion</Link>
         </div>
       </div>
     </>

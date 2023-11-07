@@ -11,11 +11,13 @@ function Login() {
   const [mail, setMail] = useState("");
   const [motdepasse, setMotDePasse] = useState("");
   const [emailadresse, setEmailAdresse] = useState("");
+  const [typeCli, setTypeCli] = useState();
   const [pwd, setPwd] = useState("");
   const [erreurMessage, setErreurMessage] = useState("");
-  const [count, setCount] = useState(0);
-  // const [donneLogin, setDonneLogin] = useState([]);
- 
+  const [mailconnecte, setMailConnecte] = useState("");
+  const [message, setMessage] = useState("");
+
+
   const authentification = async () => {
     if (mail === "" || pwd === "") {
       const vide = (<label className='text-danger'>Veuillez saisir vos informations</label>);
@@ -31,34 +33,50 @@ function Login() {
           const invalid = (<label className='text-danger'>Votre adresse mail est incorrect</label>);
           setErreurMessage(invalid);
           setTimeout(() => {
-             setErreurMessage("");
+            setErreurMessage("");
           }, 15000);
         } else {
           data.map((item) => {
             setMotDePasse(item.password);
             setEmailAdresse(item.email);
+            setTypeCli(item.typeClient)
           })
         }
+
         if (mail == emailadresse && motdepasse == pwd) {
-          name.push(emailadresse);
-          const ok = (<div className='roule'>
-           <label className='text-success'>Chargement encours...</label>
-           <div className='load'></div>
-           </div>);
-          setErreurMessage(ok);
-          setTimeout(() => {
-           navigate('/MenuPassager')
-           setErreurMessage("");
-          }, 7000);
-       } else {
-         const mdpIncorrect = (<label className='text-danger'>Mot de passe incorrect</label>);
-         setErreurMessage(mdpIncorrect);
-       }
-    })}
+          if (typeCli == 'client') {
+            name.push(emailadresse);
+            setMailConnecte(emailadresse);
+            const formData = new FormData();
+            formData.append("mailConnecte", emailadresse);
+            axios.post(`http://localhost:5077/api/Actif/ajout-actif`, formData,
+              { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
+                setMessage(data);
+              })
+            const ok = (<div className='roule'>
+              <label className='text-success'>Chargement encours...</label>
+              <div className='load'></div>
+            </div>);
+            setErreurMessage(ok);
+            setTimeout(() => {
+              navigate('/profil')
+              setErreurMessage("");
+            }, 7000);
+          } else {
+            navigate('/menu');
+          }
+
+        } else {
+          const mdpIncorrect = (<label className='text-danger'>Mot de passe incorrect</label>);
+          setErreurMessage(mdpIncorrect);
+        }
+      })
     }
-   
+  }
+
   return (
-    <div className='tous'>
+    <div className='tous text-center'>
+      <label style={{ marginTop: '5%', color: 'green' }}>{message}</label>
       <div className='login-formulaire grow'>
         <TextField
           type='text'

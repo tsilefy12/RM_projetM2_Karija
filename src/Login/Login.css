@@ -20,7 +20,7 @@ body{
     width: 25vw;
     position: fixed;
     left: 35%;
-    top: 25%;
+    top: 20%;
     box-shadow: 5px 10px 18px #e7e2e2;
     padding: 20px;
     background-color: rgb(255, 254, 253);
@@ -59,6 +59,6 @@ body{
     .login-formulaire{
         width: 300px;
         position: fixed;
-        left: 8%;
+        left: 18%;
     }
 }

@@ -14,6 +14,7 @@ function Inscription() {
   const [messageMail, setMessageEmail] = useState("");
   const [messagePhone, setMessagePhone] = useState("");
   const [selectPays, setSelectPays] = useState("");
+  const [typeClient, setTypeClient] = useState('client');
 
   useEffect(() => {
     validationEmail();
@@ -91,6 +92,7 @@ function Inscription() {
     formData.append("telephone", telephonepassager);
     formData.append("email", emailPassager);
     formData.append("password", password);
+    formData.append("typeclient", typeClient);
     await axios.post(`http://localhost:5077/api/Passagers/inscription-passagers`, formData, { headers: { 'Content-Type': 'application/json' } }).then(({data}) =>{
       const msg2 = (<label className='text-success'>{data}</label>)
       setMessage(msg2);
