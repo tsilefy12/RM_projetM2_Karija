@@ -82,10 +82,6 @@ function MenuPassager() {
                     <AiFillProfile style={{marginTop: '-6px'}} size={25}/><label className='link-menu'style={{marginLeft: '4px', 
                     cursor: 'pointer'}}>PROFIL</label>
                     </Link>
-                    <Link to={'/'} className='menu-item-passager'>
-                      <AiFillContacts style={{marginTop: '-6px'}} size={25}/><label className='link-menu'style={{marginLeft: '4px', 
-                      cursor: 'pointer'}}>CONTACT</label>
-                    </Link>
                   </div>
                 </Nav>
               </Navbar.Collapse>
@@ -94,7 +90,7 @@ function MenuPassager() {
         </div>
         <div className='personne'>
         <label style={{color: 'lightblue'}}>{message}</label>
-        <Link style={{textDecoration: 'none', cursor: 'none'}}>Bienvenue {idMail}, Vous êtes connecté</Link>
+        <Link style={{textDecoration: 'none', cursor: 'none'}} className='bienvenue'>Bienvenue {idMail}, Vous êtes connecté</Link>
           <Link onClick={() =>deconnecter()} style={{textDecoration: 'none'}}>Deconnexion</Link>
         </div>
       </div>

@@ -33,7 +33,7 @@
 }
 
 .table th {
-    background-color: #07af6f;
+    background-color: #424444;
     color: white;
 }
 
@@ -48,7 +48,7 @@ body {
 }
 
 .card {
-    border: 1px solid green;
+    border: 1px solid rgb(56, 58, 56);
     width: auto;
     height: 70vh;
 }

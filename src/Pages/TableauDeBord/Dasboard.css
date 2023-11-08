@@ -1,0 +1,28 @@
+.dasboard{
+    /* border: 1px solid blue; */
+    width: 100vw;
+    position:  fixed;
+    left: 0;
+}
+.chart{
+    border: 1px solid red;
+    width: auto;
+    height: 99.5vh;
+    margin-left: 7%;
+}
+.header-chart{
+    border: 1px solid orange;
+    width: 70vw;
+    height: 8vh;
+    margin: 2%;
+}
+.contenue-titre-chart{
+    margin: 6px;
+}
+@media (max-width: 768px){
+    .chart{
+        width: 79vw;
+        height: 100vh;
+        margin-left: 20%;
+    }
+}

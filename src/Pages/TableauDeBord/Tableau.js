@@ -1,15 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Menu from '../../Menu/Menu'
+import './Dasboard.css'
 
-export default class Tableau extends Component {
-  render() {
-    return (
-      <div>
+function Tableau() {
+  return (
+    <div className='dasboard'>
         <Menu/>
-        <div>
-        Tableau
+        <div className='chart'>
+         <header className='header-chart'>
+          <h1 className='contenue-titre-chart'>Titre</h1>
+         </header>
         </div>
       </div>
-    )
-  }
+  )
 }
+
+export default Tableau

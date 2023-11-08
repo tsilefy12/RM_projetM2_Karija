@@ -91,6 +91,9 @@
     .link-menu{
         display: none;
     }
+    .bienvenue{
+        display: none;
+    }
 }
 .menu-item-passager:is(:link, :active, :visited){
     color: white;
