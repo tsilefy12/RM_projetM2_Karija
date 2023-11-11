@@ -49,15 +49,29 @@ namespace apiWebCore.Controllers
                     int c= readCv.GetInt32(readCv.GetOrdinal("capacitemax"));
                     Cap = c;
                 }
-                Console.WriteLine(tar);
+                string daty = "SELECT vol.datedepart, reservation.volid FROM vol, reservation WHERE vol.id=reservation.volid AND reservation.volid ='"+reservation.VolId+"'";
+                using var condate = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                condate.Open();
+                using var cmddate = new NpgsqlCommand(daty, condate);
+                var readdate = await cmddate.ExecuteReaderAsync();
+                var datee ="";
+                var idv = 0;
+                if (await readdate.ReadAsync())
+                {
+                    DateTime datyy = readdate.GetDateTime(readdate.GetOrdinal("datedepart"));
+                    datee=datyy.ToString();  int vid = readdate.GetInt32(readdate.GetOrdinal("volid"));
+                     idv = vid;
+                }
+                Console.WriteLine(datee);
+                Console.WriteLine(idv);
                 if (tar == 0)
                 {
                     return Ok("Aucune place disponible avec ce tarif");
                 }else if(Cap == 0){
                     return Ok("Aucune place disponible dans ce vol");
-                }
-                else
-                {
+                }else if (datee !="" && idv == reservation.VolId){
+                    return Ok("Vous avez déjà fait une réservation à la même date du vol");
+                }else{
                     var calcul = tar - 1;
                     var calcul2 = Cap -1;
                     string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, libelle, datereservation)" +
@@ -94,10 +108,10 @@ namespace apiWebCore.Controllers
         }
         public class ReservationData
         {
-            public List<Passager> Passagers { get; set; }
-            public List<Reservation> Reservations { get; set; }
-            public List<Vol> Vols { get; set; }
-            public List<Tarif> Tarifs { get; set; }
+            public List<Passager> Passagers { get; set; } = null!;
+            public List<Reservation> Reservations { get; set; } = null!;
+            public List<Vol> Vols { get; set; } = null!;
+            public List<Tarif> Tarifs { get; set; } = null!;
         }
 
         [Route("afficher-toutes")]

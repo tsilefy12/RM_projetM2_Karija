@@ -90,7 +90,7 @@ namespace apiWebCore.Controllers
             {
 
                 string demandePrevue = "insert into prevision(passagerid, demandeprevue, dateprevue, commentaire)" +
-                " values(@PassagerId, @DemandePrevue, @DatePrevue, @Commentaire);";
+                " values(@PassagerId, @DemandePrevue, @DatePrevue, 'inconnue')";
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -99,7 +99,6 @@ namespace apiWebCore.Controllers
                 commandsql.Parameters.AddWithValue("PassagerId", demande.IdPassager);
                 commandsql.Parameters.AddWithValue("DemandePrevue", demande.DemandePrevue);
                 commandsql.Parameters.AddWithValue("Dateprevue", demande.DatePrevue);
-                commandsql.Parameters.AddWithValue("Commentaire", demande.Commentaire);
 
                 await commandsql.ExecuteNonQueryAsync();
 
@@ -107,15 +106,7 @@ namespace apiWebCore.Controllers
             }
             catch (Npgsql.NpgsqlException erreur)
             {
-
-                if (erreur.SqlState == "23503")
-                {
-                    return BadRequest("Erreur inconnue");
-                }
-                else
-                {
                     return BadRequest("Une erreur s'est produite lors de la requête : " + erreur.Message);
-                }
             }
         }
         [Route("supprimer-demande/{IdPrevision}")]

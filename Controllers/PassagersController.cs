@@ -269,7 +269,7 @@ namespace apiWebCore.Controllers
 
             try
             {
-                string selectMailPassword = "SELECT email, password, typeclient FROM passager WHERE email = '" + mail + "'";
+                string selectMailPassword = "SELECT email, password, typeclient, id FROM passager WHERE email = '" + mail + "'";
                 using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexiondb.Open();
                 using var commandsql = new NpgsqlCommand(selectMailPassword, connexiondb);
@@ -292,7 +292,8 @@ namespace apiWebCore.Controllers
                     {
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Password = result,
-                        TypeClient = reader.GetString(reader.GetOrdinal("typeclient"))
+                        TypeClient = reader.GetString(reader.GetOrdinal("typeclient")),
+                        IdPassager = reader.GetInt32(reader.GetOrdinal("id")),
                     };
                     liste.Add(log);
                 }

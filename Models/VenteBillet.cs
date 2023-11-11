@@ -14,6 +14,9 @@ namespace apiWebCore.Models
         [Column("id")]
         public int IdVente { get; set; }
 
+        [Column("numerov")]
+        public string Numerov { get; set; } = null!;
+
         [ForeignKey("passagerid")]
         public int PassagerId { get; set; }
 

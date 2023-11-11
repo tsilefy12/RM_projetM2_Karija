@@ -41,10 +41,10 @@ namespace apiWebCore.Models
     }
     public class ResultatRecherche
 {
-    public List<Passager> Passagers { get; set; }
-    public List<Reservation> Reservations { get; set; }
-    public List<Vol> Vols { get; set; }
-    public List<Tarif> Tarifs { get; set; }
+    public List<Passager> Passagers { get; set; } = null!;
+    public List<Reservation> Reservations { get; set; } = null!;
+    public List<Vol> Vols { get; set; } = null!;
+    public List<Tarif> Tarifs { get; set; } = null!;
 }
 
 }

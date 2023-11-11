@@ -39,7 +39,8 @@ namespace apiWebCore.Controllers
                         Montant = reader.GetDouble(reader.GetOrdinal("montant")),
                         DateTransaction = reader.GetDateTime(reader.GetOrdinal("datetransaction")),
                         StatutPaiement = reader.GetString(reader.GetOrdinal("statutpaiement")),
-                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement"))
+                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement")),
+                        Numerov = reader.GetString(reader.GetOrdinal("numerov")),
 
                     };
                     listes.Add(ventes);
@@ -61,9 +62,28 @@ namespace apiWebCore.Controllers
                 return BadRequest(ModelState);
             }
             try{
-
-                string achatbillet = "INSERT INTO vente_billet(passagerid, montant, datetransaction, statutpaiement, modepaiement)"+
-                "VALUES(@PassagerId, @Montant, @DateTransaction, @Statutpaiement, @ModePaiement)";
+                string daty = "SELECT vol.datedepart, vente_billet.numerov FROM vol, vente_billet WHERE vol.numerovol=vente_billet.numerov AND vente_billet.numerov ='"+vente.Numerov+"'";
+                using var condate = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                condate.Open();
+                using var cmddate = new NpgsqlCommand(daty, condate);
+                var readdate = await cmddate.ExecuteReaderAsync();
+                var datee ="";
+                var idv = "";
+                if (await readdate.ReadAsync())
+                {
+                    DateTime datyy = readdate.GetDateTime(readdate.GetOrdinal("datedepart"));
+                    datee=datyy.ToString();  
+                    string vid = readdate.GetString(readdate.GetOrdinal("numerov"));
+                     idv = vid;
+                }
+                Console.WriteLine(datee);
+                Console.WriteLine(idv);
+                if (datee!="" && idv == vente.Numerov)
+                {
+                    return Ok("Vous avez déjà acheté un billet pour cette date du vol");
+                }
+                string achatbillet = "INSERT INTO vente_billet(passagerid, montant, datetransaction, statutpaiement, modepaiement, numerov)"+
+                "VALUES(@PassagerId, @Montant, @DateTransaction, @Statutpaiement, @ModePaiement, @Numerov)";
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -74,6 +94,7 @@ namespace apiWebCore.Controllers
                 commandsql.Parameters.AddWithValue("DateTransaction", vente.DateTransaction);
                 commandsql.Parameters.AddWithValue("Statutpaiement", vente.StatutPaiement);
                 commandsql.Parameters.AddWithValue("ModePaiement", vente.ModePaiement);
+                commandsql.Parameters.AddWithValue("Numerov", vente.Numerov);
 
                 await commandsql.ExecuteNonQueryAsync();
 
@@ -181,7 +202,8 @@ namespace apiWebCore.Controllers
                         Montant = reader.GetDouble(reader.GetOrdinal("montant")),
                         DateTransaction = reader.GetDateTime(reader.GetOrdinal("datetransaction")),
                         StatutPaiement = reader.GetString(reader.GetOrdinal("statutpaiement")),
-                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement"))
+                        ModePaiement = reader.GetString(reader.GetOrdinal("modepaiement")),
+                        Numerov = reader.GetString(reader.GetOrdinal("numerov"))
 
                     };
                     listes.Add(ventes);
