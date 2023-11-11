@@ -16,6 +16,7 @@ function Login() {
   const [erreurMessage, setErreurMessage] = useState("");
   const [mailconnecte, setMailConnecte] = useState("");
   const [message, setMessage] = useState("");
+  const [id, setId] = useState("");
 
 
   const authentification = async () => {
@@ -39,13 +40,15 @@ function Login() {
           data.map((item) => {
             setMotDePasse(item.password);
             setEmailAdresse(item.email);
-            setTypeCli(item.typeClient)
+            setTypeCli(item.typeClient);
+            setId(item.idPassager);
           })
         }
 
         if (mail == emailadresse && motdepasse == pwd) {
           if (typeCli == 'client') {
             name.push(emailadresse);
+            name.push(id);
             setMailConnecte(emailadresse);
             const formData = new FormData();
             formData.append("mailConnecte", emailadresse);
@@ -61,7 +64,7 @@ function Login() {
             setTimeout(() => {
               navigate('/profil')
               setErreurMessage("");
-            }, 7000);
+            }, 5000);
           } else {
             navigate('/menu');
           }
@@ -77,7 +80,7 @@ function Login() {
   return (
     <div className='tous text-center'>
       <label style={{ marginTop: '5%', color: 'green' }}>{message}</label>
-      <div className='login-formulaire grow'>
+      <div className='login-formulaire'>
         <TextField
           type='text'
           placeholder='email'

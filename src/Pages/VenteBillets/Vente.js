@@ -103,6 +103,7 @@ function Vente() {
                     <label>Numéro passger : {item.passagerId}</label>
                     <label>Nom du propriétaire : {item.statutPaiement}</label>
                     <label>Mode paiement : {item.modePaiement}</label>
+                    <label>Numéro vol : {item.numerov}</label>
                   </div>
                   <div className='card-footer footer-vente'>
                     <Image src={logoTicket} width={130} height={35}></Image>

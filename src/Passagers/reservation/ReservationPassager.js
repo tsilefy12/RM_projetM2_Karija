@@ -38,7 +38,7 @@ function ReservationPassager() {
     const [nombre, setNombre] = useState(0);
     const [openModal, setOpenModal] = useState(false)
 
-
+    
 
     useEffect(() => {
         resultatAfficher();
@@ -126,6 +126,8 @@ function ReservationPassager() {
                        setMessageValidation(<label className='text-danger'>{data}</label>)
                     }else if (data=="Aucune place disponible dans ce vol") {
                         setMessageValidation(<label className='text-danger'>{data}</label>)
+                    }else if (data=="Vous avez déjà fait une réservation à la même date") {
+                        setMessageValidation(<label className='text-danger'>{data}</label>)
                     }
                     else{
                         setMessageValidation(<label className='text-success'>{data}</label>)
@@ -138,6 +140,7 @@ function ReservationPassager() {
         await axios.get(`http://localhost:5077/api/Tarif/select-id`).then(({ data }) => {
             setDonneId(data);
         })
+        setPid(name[1]);
     }
 
     const selectTypePrix = async () => {

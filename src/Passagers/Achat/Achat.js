@@ -47,6 +47,8 @@ function Achat() {
     const [erreurNonValidNumeroBancaire, setErreurNonValidNumeroBancaire] = useState("");
     const [erreurMessageChamp, setErreurMessageChamp] = useState("");
 
+     const datyF = new Date(datyDep);
+     const dateFormat = datyF.toLocaleDateString('en-Us');
     const displayBtnAcheter = (modePaiement == "") ? 'none' : 'block';
     useEffect(() => {
         validationinput();
@@ -205,15 +207,19 @@ function Achat() {
         formData.append("dateTransaction", dateTransaction);
         formData.append("statutPaiement", nom);
         formData.append("modePaiement", modePaiement);
+        formData.append("numerov", numV);
         if (idP == "" || montant == "" || dateTransaction == "" || nom == "" || modePaiement == "") {
             const msg = (<label className='text text-danger'>Les champs sont obligatoires</label>);
             setErreurMessageChamp(msg);
         } else {
             await axios.post(`http://localhost:5077/api/Vente/achat-du-billet`, formData,
                 { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
-                    console.log("message :", data);
-                    const msg2 = (<label className='text text-success'>{data}</label>)
-                    setErreurMessageChamp(data);
+                    if (data == "Vous avez déjà acheté un billet pour cette date du vol") {
+                        setErreurMessageChamp(<label className='text-danger'>{data}</label>)
+                    } else {
+                        const msg2 = (<label className='text-success'>{data}</label>)
+                        setErreurMessageChamp(data);
+                    }
                 })
         }
     }
@@ -272,7 +278,7 @@ function Achat() {
                                             </div>
                                             <div className='flex-row' style={{ marginTop: '10px' }}>
                                                 <label>La date de départ :</label>
-                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{datyDep}</span>
+                                                <span className='text text-info' style={{ marginLeft: '4px' }}>{dateFormat}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -293,6 +299,14 @@ function Achat() {
                                 </div>
                                 <Form onSubmit={AcheterBillet}>
                                     <div className='formulaire-ventes-passager flex-box'>
+                                    <TextField
+                                            type='text'
+                                            placeholder='numéro vol'
+                                            value={numV}
+                                            sx={{ margin: '6px' }}
+                                            onChange={(e) => setNumV(e.target.value)}
+                                            aria-readonly
+                                        />
                                         <TextField
                                             type='number'
                                             placeholder='numéro passager'

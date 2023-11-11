@@ -62,7 +62,7 @@ function Remboursement() {
       setDateRemboursement("")
     }
     else {
-      await axios.get(`http://localhost:5077/api/Remboursement/verifier-information/${text}`).then(({ data }) => {
+      await axios.get(`http://localhost:5077/api/Remboursement/verifier-information/${textVerification}`).then(({ data }) => {
         if (data == 0 && text != "") {
           const messageNontrouve = (<label className='text-danger'>Vous n'avaz pas encore demandé l'annulation de votre voyage</label>);
           setErreurMessage(messageNontrouve);

@@ -52,15 +52,15 @@ function DemandeAnnulation() {
             } else {
                 const donne = data[0];
 
-                const name = donne.passager.nomPassager;
-                const telephone = donne.passager.telephone;
-                const mailaka = donne.passager.email;
-                const dateV = donne.vol.dateDepart;
-                const heure = donne.vol.heureDepart;
-                const numv = donne.vol.numeroVol;
-                const modeP = donne.venteBillet.modePaiement;
-                const datetran = donne.venteBillet.dateTransaction;
-                const vola = donne.venteBillet.montant;
+                const name = data[0].passager.nomPassager;
+                const telephone = data[0].passager.telephone;
+                const mailaka = data[0].passager.email;
+                const dateV = data[0].vol.dateDepart;
+                const heure = data[0].vol.heureDepart;
+                const numv = data[0].vol.numeroVol;
+                const modeP = data[0].venteBillet.modePaiement;
+                const datetran = data[0].venteBillet.dateTransaction;
+                const vola = data[0].venteBillet.montant;
 
                 setNom(name);
                 setPhone(telephone);

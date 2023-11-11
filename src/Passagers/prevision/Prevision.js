@@ -16,7 +16,7 @@ function Prevision() {
   const [idP, setIdP] = useState("");
   const [demandePrevue, setDemandePrevue] = useState("");
   const [datePrevue, setDatePrevue] = useState("");
-  const [commentaire, setCommentaire] = useState("");
+  const [commentaire, setCommentaire] = useState("inconnue");
   const [messagePrevue, setMessagePrevue] = useState("");
 
   const [id, setId] = useState("");
@@ -26,6 +26,7 @@ function Prevision() {
   const [datee, setDate] = useState("");
   const [demandepre, setDemandePre] = useState("");
   const [avisResponsable, setAvisResponsable] = useState("");
+  const [verify, setVerify] = useState("");
 
   useEffect(() => {
     verifierInput();
@@ -38,7 +39,7 @@ function Prevision() {
     formData.append("datePrevue", datePrevue);
     formData.append("commentaire", commentaire);
 
-    if (idP === "" || demandePrevue === "" || datePrevue == "" || commentaire === "") {
+    if (idP === "" || demandePrevue === "" || datePrevue == "") {
       const message = (<label className='text-danger'>Les champs sont obligatoires</label>);
       setMessagePrevue(message);
     } else {
@@ -95,6 +96,7 @@ function Prevision() {
       setDate("");
       setDemandePre("");
       setPhone("");
+      setVerify(name);
     } else {
       RechercherDemande();
     }
@@ -102,7 +104,7 @@ function Prevision() {
   return (
     <>
       {
-        (name.length == 0) ? navigate('/') : (
+        (verify == 0) ? navigate('/') : (
           <div className='prevision'>
             <MenuPassager />
             <div className='contenue-prevision'>
@@ -126,7 +128,7 @@ function Prevision() {
                       sx={{ margin: '15px' }}
                       className='frm-prevue'
                       value={commentaire}
-                      onChange={(e) => setCommentaire(e.target.value)}
+                      aria-readonly
                     />
                     <TextField
                       type='date'
