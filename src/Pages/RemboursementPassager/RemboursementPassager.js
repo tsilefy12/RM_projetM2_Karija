@@ -114,13 +114,17 @@ function RemboursementPassager() {
          
           <Form onSubmit={modif}>
           <div className='input-valid-button'>
-          <TextField 
-            type='text'
-            placeholder='validation'
+            <select
+            className='form-control'
             value={editMail}
             onChange={(e) =>setEditMail(e.target.value)}
-            />
-          <button className='btn btn-primary'>Valider</button>
+            sx={{ margin: '20px'}}
+            type='text'
+          >
+            <option value='Oui'>Oui</option>
+            <option value='Non validé'>Non validé</option>
+          </select>
+          <button className='btn btn-primary' style={{marginLeft: '10px'}}>Valider</button>
           
           </div>
           </Form>

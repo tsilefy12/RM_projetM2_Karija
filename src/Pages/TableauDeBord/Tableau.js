@@ -48,20 +48,20 @@ function Tableau() {
       <Menu />
       <div className='chart'>
         <header className='header-chart'>
-          <h1 className='contenue-titre-chart'>DASHBOARD</h1>
+          <label className='contenue-titre-chart'>DASHBOARD</label>
         </header>
         <div className='donne-charts'>
 
           <div className="card passager-actif bg-info grow">
             <div className="card-body passager-actif-body">
-              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>UTILISATEURS ACTIF.</p>
+              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>UTILISATEURS ACTIFS.</p>
               <span style={{ fontSize: '2em', fontFamily: 'Times new roman' }}>{actifPassager.length}</span>
             </div>
           </div>
 
           <div className="card passager-actif bg-red grow">
             <div className="card-body passager-actif-body">
-              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>TOTAL DES REVENUES</p>
+              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>TOTAL DES REVENUS</p>
               {
                 total.length > 0 && (
                   total.map((t) => (
@@ -74,14 +74,14 @@ function Tableau() {
 
           <div className="card passager-actif bg-success grow">
             <div className="card-body passager-actif-body">
-              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>DEMANDE PREVUE.</p>
+              <p style={{ fontSize: '1.1em', fontFamily: 'Times new roman' }}>DEMANDE DE LA PREVISION.</p>
               <span style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>{damandeprevue.length}</span>
             </div>
           </div>
           <div className='line-charts'>
             <PieChart width={400} height={400}>
-              <Pie data={donne} dataKey="NombrePassager" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="gray" />
-              <Pie data={donne} dataKey="Tarif" nameKey="name" cx="50%" cy="50%" innerRadius={90} outerRadius={120} fill="#800000" />
+              <Pie data={donne} dataKey="NombrePassager" label="Test" nameKey="Test" cx="50%" cy="50%" outerRadius={80} fill="gray" />
+              <Pie data={donne} dataKey="Tarif" label="Test" aria-label="Test" nameKey="name" cx="50%" cy="50%" innerRadius={90} outerRadius={120} fill="#800000" />
               <Tooltip />
               <Legend />
             </PieChart>

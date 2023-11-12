@@ -18,7 +18,7 @@ function Login() {
   const [message, setMessage] = useState("");
   const [id, setId] = useState("");
 
-
+ 
   const authentification = async () => {
     if (mail === "" || pwd === "") {
       const vide = (<label className='text-danger'>Veuillez saisir vos informations</label>);
@@ -43,35 +43,32 @@ function Login() {
             setTypeCli(item.typeClient);
             setId(item.idPassager);
           })
-        }
-
-        if (mail == emailadresse && motdepasse == pwd) {
-          if (typeCli == 'client') {
-            name.push(emailadresse);
-            name.push(id);
-            setMailConnecte(emailadresse);
-            const formData = new FormData();
-            formData.append("mailConnecte", emailadresse);
-            axios.post(`http://localhost:5077/api/Actif/ajout-actif`, formData,
-              { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
-                setMessage(data);
-              })
-            const ok = (<div className='roule'>
-              <label className='text-success'>Chargement encours...</label>
-              <div className='load'></div>
-            </div>);
-            setErreurMessage(ok);
-            setTimeout(() => {
-              navigate('/profil')
-              setErreurMessage("");
-            }, 5000);
-          } else {
-            navigate('/menu');
-          }
-
-        } else {
-          const mdpIncorrect = (<label className='text-danger'>Mot de passe incorrect</label>);
-          setErreurMessage(mdpIncorrect);
+          if (mail == emailadresse && motdepasse == pwd) {
+            if (typeCli == 'client') {
+              name.push(emailadresse);
+              name.push(id);
+              setMailConnecte(emailadresse);
+              const formData = new FormData();
+              formData.append("mailConnecte", emailadresse);
+              axios.post(`http://localhost:5077/api/Actif/ajout-actif`, formData,
+                { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
+                  setMessage(data);
+                })
+              const ok = (<div className='roule'>
+                <label className='text-success'>Chargement encours...</label>
+                <div className='load'></div>
+              </div>);
+              setErreurMessage(ok);
+              setTimeout(() => {
+                navigate('/profil')
+                setErreurMessage("");
+              }, 5000);
+            } else {
+              navigate('/menu');
+            } } else {
+              const mdpIncorrect = (<label className='text-danger'>Mot de passe incorrect</label>);
+              setErreurMessage(mdpIncorrect);
+            }
         }
       })
     }

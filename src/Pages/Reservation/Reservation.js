@@ -19,6 +19,8 @@ function Reservation() {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] =  useState(false);
   const [idSupp, setIdSupp] = useState("");
+  const [lieuDepart, setLieuDepart] = useState("");
+  const [lieuAr, setLiueAr] = useState("");
 
   useEffect(() => {
     verificationRechercherResa();
@@ -46,6 +48,10 @@ function Reservation() {
         if (secondeElement[0] && secondeElement[0].numeroVol) {
           const numero = secondeElement.map(v => v.numeroVol);
           setNumeroVol(numero);
+          const liued = secondeElement.map(ld =>ld.lieuDepart);
+          setLieuDepart(liued);
+          const lieuA = secondeElement.map(la =>la.lieuArrivee);
+          setLiueAr(lieuA);
         }
 
         const troisiemeElement = tableauDonnees[3];
@@ -161,6 +167,8 @@ function Reservation() {
                     <th>Email</th>
                     <th>Téléphone</th>
                     <th>Numéro vol</th>
+                    <th>Lieu depart</th>
+                    <th>Lieu d'arrivéé</th>
                     <th>Prix</th>
                     <th>Action</th>
                   </tr>
@@ -174,8 +182,11 @@ function Reservation() {
                       <td>{email[index]}</td>
                       <td>{phone[index]}</td>
                       <td>{numVol[index]}</td>
+                      <td>{lieuDepart[index]}</td>
+                      <td>{lieuAr[index]}</td>
                       <td>{montant[index]}</td>
                       <td>
+                     
                         <AiFillDelete size={20} color='red'
                           onClick={() => deleted(idP[index])}
                           style={{ cursor: 'pointer' }} />

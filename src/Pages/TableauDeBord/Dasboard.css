@@ -21,9 +21,10 @@
     margin-top: -2%;
 }
 .contenue-titre-chart{
-    margin-left: 6%;
+    margin-left: 3%;
     margin-top: 2%;
     color: lightblue;
+    font-size: 1.3em;
 }
 .donne-charts{
     display: flex;

@@ -56,6 +56,7 @@ function Profil() {
   }
   const modifier = async (e) =>{
     e.preventDefault();
+    console.log(" id ", id)
     const formData = new FormData();
     const mail = inputModif !="" ? inputModif : mailaka;
     const phone = inputEditTelephone !="" ? inputEditTelephone : contact;
@@ -66,7 +67,8 @@ function Profil() {
     formData.append("telephone", phone);
     formData.append("email", mail);
     formData.append("password", "string");
-
+    formData.append("typeclient", "string");
+ 
     await axios.post(`http://localhost:5077/api/Passagers/modification-profil-passager/${id}`,
     formData, {headers:{'Content-Type': 'application/json'}}
     ).then(({data}) =>{
