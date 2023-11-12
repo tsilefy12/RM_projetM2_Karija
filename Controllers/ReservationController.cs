@@ -49,27 +49,33 @@ namespace apiWebCore.Controllers
                     int c= readCv.GetInt32(readCv.GetOrdinal("capacitemax"));
                     Cap = c;
                 }
-                string daty = "SELECT vol.datedepart, reservation.volid FROM vol, reservation WHERE vol.id=reservation.volid AND reservation.volid ='"+reservation.VolId+"'";
+                string daty = "SELECT vol.datedepart, reservation.volid, reservation.passagerid FROM vol, reservation, passager WHERE vol.id=reservation.volid AND passager.id=reservation.passagerid AND "+
+                " reservation.volid ='"+reservation.VolId+"' AND reservation.passagerid='"+reservation.PassagerId+"'";
                 using var condate = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 condate.Open();
                 using var cmddate = new NpgsqlCommand(daty, condate);
                 var readdate = await cmddate.ExecuteReaderAsync();
                 var datee ="";
                 var idv = 0;
+                var i=0;
                 if (await readdate.ReadAsync())
                 {
                     DateTime datyy = readdate.GetDateTime(readdate.GetOrdinal("datedepart"));
-                    datee=datyy.ToString();  int vid = readdate.GetInt32(readdate.GetOrdinal("volid"));
-                     idv = vid;
+                    datee=datyy.ToString();  
+                    int vid = readdate.GetInt32(readdate.GetOrdinal("volid"));
+                    idv = vid;
+                    int idd = readdate.GetInt32(readdate.GetOrdinal("passagerid"));
+                    i=idd;
                 }
                 Console.WriteLine(datee);
                 Console.WriteLine(idv);
+                Console.WriteLine(i);
                 if (tar == 0)
                 {
                     return Ok("Aucune place disponible avec ce tarif");
                 }else if(Cap == 0){
                     return Ok("Aucune place disponible dans ce vol");
-                }else if (datee !="" && idv == reservation.VolId){
+                }else if (datee !="" && idv == reservation.VolId && i==reservation.PassagerId){
                     return Ok("Vous avez déjà fait une réservation à la même date du vol");
                 }else{
                     var calcul = tar - 1;
