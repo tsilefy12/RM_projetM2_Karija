@@ -112,5 +112,37 @@ namespace apiWebCore.Controllers
                 return Ok("erreur :" + e.Message);
             }
         }
+        [Route("tous-actifs")]
+         [HttpGet]
+        public async Task<IActionResult> Actif()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string selectMail = "SELECT mailconnecte FROM actif";
+                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                connexion.Open();
+                using var cmd = new NpgsqlCommand(selectMail, connexion);
+                var reader = await cmd.ExecuteReaderAsync();
+                var mail = new List<Actif>();
+                while (await reader.ReadAsync())
+                {
+                    var l = new Actif{
+                        MailConnecte = reader.GetString(reader.GetOrdinal("mailconnecte")),
+                    };
+                    mail.Add(l);
+                    continue;
+                }
+                return Ok(mail);
+            }
+            catch (Npgsql.NpgsqlException e)
+            {
+
+                return Ok("erreur " + e.Message);
+            }
+        }
     }
 }

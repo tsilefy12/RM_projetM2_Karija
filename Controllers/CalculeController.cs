@@ -49,6 +49,7 @@ namespace apiWebCore.Controllers
                         NombrePassager = reader.GetFieldValue<int>(reader.GetOrdinal("NombrePassager")),
                     };
                     results.Add(liste);
+                    continue;
                 }
 
                 string jsonResult = System.Text.Json.JsonSerializer.Serialize(results);
