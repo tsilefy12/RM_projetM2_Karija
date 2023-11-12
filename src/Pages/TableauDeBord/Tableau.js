@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Menu from '../../Menu/Menu'
 import './Dasboard.css'
-import { Tooltip, Legend, Line, LineChart, XAxis, CartesianGrid, YAxis } from 'recharts';
+import { Tooltip, Legend, Line, LineChart, XAxis, CartesianGrid, YAxis, PieChart, Pie } from 'recharts';
 import axios from 'axios'
 function Tableau() {
   const [donne, setDonne] = useState([]);
@@ -38,8 +38,8 @@ function Tableau() {
       setTotal(data);
     })
   }
-  const demandePrevue = async () =>{
-    await axios.get(`http://localhost:5077/api/DemandePrevue`).then(({data}) =>{
+  const demandePrevue = async () => {
+    await axios.get(`http://localhost:5077/api/DemandePrevue`).then(({ data }) => {
       setDemmandeP(data);
     })
   }
@@ -61,11 +61,11 @@ function Tableau() {
 
           <div className="card passager-actif bg-red grow">
             <div className="card-body passager-actif-body">
-            <p style={{fontSize: '1.3em', fontFamily: 'Times new roman'}}>TOTAL DES REVENUES</p>
+              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>TOTAL DES REVENUES</p>
               {
                 total.length > 0 && (
                   total.map((t) => (
-                   <span style={{fontSize: '2em', fontFamily: 'Times new roman'}}>{t.tarif} Ariary</span>
+                    <span style={{ fontSize: '2em', fontFamily: 'Times new roman' }}>{t.tarif} Ariary</span>
                   ))
                 )
               }
@@ -74,20 +74,17 @@ function Tableau() {
 
           <div className="card passager-actif bg-success grow">
             <div className="card-body passager-actif-body">
-              <p style={{fontSize: '1.3em', fontFamily: 'Times new roman'}}>DEMANDE PREVUE.</p>
-              <span style={{fontSize: '1.3em', fontFamily: 'Times new roman'}}>{damandeprevue.length}</span>
+              <p style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>DEMANDE PREVUE.</p>
+              <span style={{ fontSize: '1.3em', fontFamily: 'Times new roman' }}>{damandeprevue.length}</span>
             </div>
           </div>
           <div className='line-charts'>
-            <LineChart width={1170} height={400} data={donne} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+            <PieChart width={400} height={400}>
+              <Pie data={donne} dataKey="NombrePassager" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="gray" />
+              <Pie data={donne} dataKey="Tarif" nameKey="name" cx="50%" cy="50%" innerRadius={90} outerRadius={120} fill="#800000" />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="NombrePassager" stroke="gray" />
-              <Line type="monotone" dataKey="Tarif" stroke="#800000" />
-            </LineChart>
+            </PieChart>
           </div>
         </div>
 
