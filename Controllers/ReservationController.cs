@@ -129,9 +129,10 @@ namespace apiWebCore.Controllers
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 await connexion.OpenAsync();
 
-                string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol," +
-                    "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
-                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid";
+                string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol,"+
+                " vol.lieudepart, vol.lieuarrivee," +
+                "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
+                " vol.id=reservation.volid AND tarification.id=reservation.tarificationid";
 
                 using var commandsql = new NpgsqlCommand(selectresa, connexion);
                 using var reader = await commandsql.ExecuteReaderAsync();
@@ -164,6 +165,8 @@ namespace apiWebCore.Controllers
                     var vol = new Vol
                     {
                         NumeroVol = reader.GetString(reader.GetOrdinal("numerovol")),
+                        LieuDepart = reader.GetString(reader.GetOrdinal("lieudepart")),
+                        LieuArrivee = reader.GetString(reader.GetOrdinal("lieuarrivee")),
                     };
                     resultatRecherche.Vols.Add(vol);
 

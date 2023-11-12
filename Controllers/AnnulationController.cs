@@ -212,9 +212,9 @@ namespace apiWebCore.Controllers
                 return Ok("Erreur : " + erreur.Message);
             }
         }
-        [Route("vue-annulation")]
+        [Route("vue-annulation/{Mail}")]
         [HttpGet]
-        public async Task<IActionResult> VueAnnulation(string mail)
+        public async Task<IActionResult> VueAnnulation(string Mail)
         {
             if (!ModelState.IsValid)
             {
@@ -225,7 +225,7 @@ namespace apiWebCore.Controllers
             try
             {
 
-                string select = "SELECT * FROM annulation WHERE mailaka = '" + mail + "'";
+                string select = "SELECT * FROM annulation WHERE mailaka = '" + Mail + "'";
 
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -233,7 +233,7 @@ namespace apiWebCore.Controllers
 
                 var reader = await commandsql.ExecuteReaderAsync();
                 var ListAnnulationVue = new List<Annulation>();
-                while (await reader.ReadAsync())
+                if (await reader.ReadAsync())
                 {
 
                     string nom = reader.GetString(reader.GetOrdinal("nomp"));

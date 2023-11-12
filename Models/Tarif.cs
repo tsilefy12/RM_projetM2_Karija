@@ -19,10 +19,13 @@ namespace apiWebCore.Models
         [Column("type")]
         public string TypeTarif { get; set; } = null!;
 
-        [Column("nombreplacedispotarif")]
-        public int NombrePlaceDispoTarif {get; set; }
-
         [Column("statut")]
         public string Statut { get; set; } = null!;
+
+        [Column("lieudep")]
+        public string LieuDep { get; set; } = null!;
+
+        [Column("lieuar")]
+        public string LieuAr { get; set; } = null!;
     }
 }
