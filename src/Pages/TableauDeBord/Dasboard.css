@@ -5,24 +5,75 @@
     left: 0;
 }
 .chart{
-    border: 1px solid red;
+    /* border: 1px solid red; */
     width: auto;
     height: 99.5vh;
     margin-left: 7%;
+    overflow-y: auto;
 }
 .header-chart{
-    border: 1px solid orange;
-    width: 70vw;
-    height: 8vh;
-    margin: 2%;
+    border: none;
+    width: 92.8vw;
+    height: 10vh;
+    margin-bottom: 2%;
+    box-shadow: 5px 5px 5px #888888;
+    background-color: #ffffff;
+    margin-top: -2%;
 }
 .contenue-titre-chart{
-    margin: 6px;
+    margin-left: 6%;
+    margin-top: 2%;
+    color: lightblue;
 }
+.donne-charts{
+    display: flex;
+    flex-wrap: wrap;
+}
+.passager-actif {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-left: 6%;
+    width: 300px;
+    height: 20vh;
+    box-shadow: 5px 5px 5px #888888;
+  }
+  
+  .passager-actif-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .passager-actif-body {
+    height: auto;
+  }
+  
+  .passager.actif-footer {
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    height: auto;
+  }
+  .line-charts{
+    margin-top: 2%;
+    margin-left: 1%;
+  }
+
 @media (max-width: 768px){
     .chart{
         width: 79vw;
         height: 100vh;
         margin-left: 20%;
     }
+    .passager-actif {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-top: 6%;
+        width: 300px;
+        height: 20vh;
+      }
+      
 }
