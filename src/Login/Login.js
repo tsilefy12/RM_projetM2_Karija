@@ -62,7 +62,7 @@ function Login() {
               setTimeout(() => {
                 navigate('/profil')
                 setErreurMessage("");
-              }, 5000);
+              }, 3000);
             } else {
               navigate('/menu');
             } } else {
