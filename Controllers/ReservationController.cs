@@ -27,17 +27,17 @@ namespace apiWebCore.Controllers
 
             try
             {
-                string selectTarif = "SELECT nombreplacedispotarif FROM tarification WHERE id ='" + reservation.TarificationId + "'";
-                using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
-                connexiondb.Open();
-                using var cmd = new NpgsqlCommand(selectTarif, connexiondb);
-                var readT = await cmd.ExecuteReaderAsync();
-                var tar = 0;
-                if (await readT.ReadAsync())
-                {
-                    int x = readT.GetInt32(readT.GetOrdinal("nombreplacedispotarif"));
-                    tar = x;
-                }
+                // string selectTarif = "SELECT nombreplacedispotarif FROM tarification WHERE id ='" + reservation.TarificationId + "'";
+                // using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
+                // connexiondb.Open();
+                // using var cmd = new NpgsqlCommand(selectTarif, connexiondb);
+                // var readT = await cmd.ExecuteReaderAsync();
+                // var tar = 0;
+                // if (await readT.ReadAsync())
+                // {
+                //     int x = readT.GetInt32(readT.GetOrdinal("nombreplacedispotarif"));
+                //     tar = x;
+                // }
                 string selectCapaciteVol = "SELECT capacitemax FROM vol WHERE id ='"+reservation.VolId+"'";
                 using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connection.Open();
@@ -69,16 +69,11 @@ namespace apiWebCore.Controllers
                 }
                 Console.WriteLine(datee);
                 Console.WriteLine(idv);
-                Console.WriteLine(i);
-                if (tar == 0)
-                {
-                    return Ok("Aucune place disponible avec ce tarif");
-                }else if(Cap == 0){
+                Console.WriteLine(i); if(Cap == 0){
                     return Ok("Aucune place disponible dans ce vol");
                 }else if (datee !="" && idv == reservation.VolId && i==reservation.PassagerId){
                     return Ok("Vous avez déjà fait une réservation à la même date du vol");
                 }else{
-                    var calcul = tar - 1;
                     var calcul2 = Cap -1;
                     string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, libelle, datereservation)" +
                 "VALUES(@VolId, @PassagerId, @TarificationId, @Libelle, @DateReservation)";
@@ -93,10 +88,6 @@ namespace apiWebCore.Controllers
                     commandsql.Parameters.AddWithValue("DateReservation", reservation.DateReservation);
 
                     await commandsql.ExecuteNonQueryAsync();
-
-                    string update = "UPDATE tarification SET nombreplacedispotarif='"+calcul+"' WHERE id='"+reservation.TarificationId+"'";
-                    using var cmdUpdate = new NpgsqlCommand(update, con);
-                    await cmdUpdate.ExecuteNonQueryAsync();
 
                     string modifVol = "UPDATE vol SET capacitemax='"+calcul2+"' WHERE id ='"+reservation.VolId+"'";
                     using var cmdUpdateVol = new NpgsqlCommand(modifVol, con);
