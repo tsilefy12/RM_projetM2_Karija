@@ -38,3 +38,5 @@ C:\wamp64\www\projetM2\apiWebCore\bin\Debug\net6.0\Microsoft.Extensions.Dependen
 C:\wamp64\www\projetM2\apiWebCore\bin\Debug\net6.0\Npgsql.dll
 C:\wamp64\www\projetM2\apiWebCore\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\wamp64\www\projetM2\apiWebCore\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
+C:\wamp64\www\projetM2\apiWebCore\bin\Debug\net6.0\spa.proxy.json
+C:\wamp64\www\projetM2\apiWebCore\obj\Debug\net6.0\spa.proxy.json

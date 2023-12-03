@@ -1,5 +1,6 @@
 ﻿using apiWebCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace PostgreSQLAPI.Models
 {
@@ -24,6 +25,7 @@ namespace PostgreSQLAPI.Models
         public DbSet<Remboursement> Remboursements { get; set; }
         public DbSet<Actif> Actifs {get; set; }
         public DbSet<Revenue> Revenues {get; set; }
+        public DbSet<Itineraire> Itineraires {get; set;}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);

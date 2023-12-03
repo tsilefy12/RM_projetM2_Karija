@@ -27,17 +27,7 @@ namespace apiWebCore.Controllers
 
             try
             {
-                // string selectTarif = "SELECT nombreplacedispotarif FROM tarification WHERE id ='" + reservation.TarificationId + "'";
-                // using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
-                // connexiondb.Open();
-                // using var cmd = new NpgsqlCommand(selectTarif, connexiondb);
-                // var readT = await cmd.ExecuteReaderAsync();
-                // var tar = 0;
-                // if (await readT.ReadAsync())
-                // {
-                //     int x = readT.GetInt32(readT.GetOrdinal("nombreplacedispotarif"));
-                //     tar = x;
-                // }
+               
                 string selectCapaciteVol = "SELECT capacitemax FROM vol WHERE id ='"+reservation.VolId+"'";
                 using var connection = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connection.Open();
@@ -49,8 +39,7 @@ namespace apiWebCore.Controllers
                     int c= readCv.GetInt32(readCv.GetOrdinal("capacitemax"));
                     Cap = c;
                 }
-                string daty = "SELECT vol.datedepart, reservation.volid, reservation.passagerid FROM vol, reservation, passager WHERE vol.id=reservation.volid AND passager.id=reservation.passagerid AND "+
-                " reservation.volid ='"+reservation.VolId+"' AND reservation.passagerid='"+reservation.PassagerId+"'";
+                string daty = "SELECT datereservation, passagerid, volid FROM reservation WHERE passagerid = '"+reservation.PassagerId+"'";
                 using var condate = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 condate.Open();
                 using var cmddate = new NpgsqlCommand(daty, condate);
@@ -58,25 +47,37 @@ namespace apiWebCore.Controllers
                 var datee ="";
                 var idv = 0;
                 var i=0;
-                if (await readdate.ReadAsync())
+                var dt = reservation.DateReservation.ToString();
+                while (await readdate.ReadAsync())
                 {
-                    DateTime datyy = readdate.GetDateTime(readdate.GetOrdinal("datedepart"));
+                    DateTime datyy = readdate.GetDateTime(readdate.GetOrdinal("datereservation"));
                     datee=datyy.ToString();  
                     int vid = readdate.GetInt32(readdate.GetOrdinal("volid"));
                     idv = vid;
                     int idd = readdate.GetInt32(readdate.GetOrdinal("passagerid"));
                     i=idd;
+
+                    Console.WriteLine("daty alaina :" +datee);
+                    Console.WriteLine("daty ampidirina :" +dt);
+                    if (datee == dt  && idv == reservation.VolId && i==reservation.PassagerId){
+                        return Ok("Vous avez déjà fait une réservation à la même date du vol");
+                    }
+
+                    continue;
                 }
-                Console.WriteLine(datee);
+               
                 Console.WriteLine(idv);
-                Console.WriteLine(i); if(Cap == 0){
+                Console.WriteLine(i); 
+                var nombre = reservation.NombrePlace;
+                var calcul2 = Cap - nombre;
+                if(Cap == 0){
                     return Ok("Aucune place disponible dans ce vol");
-                }else if (datee !="" && idv == reservation.VolId && i==reservation.PassagerId){
-                    return Ok("Vous avez déjà fait une réservation à la même date du vol");
-                }else{
-                    var calcul2 = Cap -1;
-                    string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, libelle, datereservation)" +
-                "VALUES(@VolId, @PassagerId, @TarificationId, @Libelle, @DateReservation)";
+                } else if(calcul2 < 0){
+                    return Ok("Nombre de place est insuffisante");
+                }
+                else{
+                    string reserverVol = "INSERT INTO reservation(volid, passagerid, tarificationid, nombreplace, datereservation)" +
+                "VALUES(@VolId, @PassagerId, @TarificationId, @NombrePlace, @DateReservation)";
                 using var con = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 con.Open();
                 using var commandsql = new NpgsqlCommand(reserverVol, con);
@@ -84,7 +85,7 @@ namespace apiWebCore.Controllers
                     commandsql.Parameters.AddWithValue("VolId", reservation.VolId);
                     commandsql.Parameters.AddWithValue("PassagerId", reservation.PassagerId);
                     commandsql.Parameters.AddWithValue("TarificationId", reservation.TarificationId);
-                    commandsql.Parameters.AddWithValue("Libelle", reservation.Libelle);
+                    commandsql.Parameters.AddWithValue("NombrePlace", reservation.NombrePlace);
                     commandsql.Parameters.AddWithValue("DateReservation", reservation.DateReservation);
 
                     await commandsql.ExecuteNonQueryAsync();
@@ -111,133 +112,6 @@ namespace apiWebCore.Controllers
             public List<Tarif> Tarifs { get; set; } = null!;
         }
 
-        [Route("afficher-toutes")]
-        [HttpGet]
-        public async Task<IActionResult> afficher()
-        {
-            try
-            {
-                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
-                await connexion.OpenAsync();
-
-                string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol,"+
-                " vol.lieudepart, vol.lieuarrivee," +
-                "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
-                " vol.id=reservation.volid AND tarification.id=reservation.tarificationid";
-
-                using var commandsql = new NpgsqlCommand(selectresa, connexion);
-                using var reader = await commandsql.ExecuteReaderAsync();
-                var resultatRecherche = new ResultatRecherche
-                {
-                    Passagers = new List<Passager>(),
-                    Reservations = new List<Reservation>(),
-                    Vols = new List<Vol>(),
-                    Tarifs = new List<Tarif>()
-                };
-
-                while (await reader.ReadAsync())
-                {
-                    var passager = new Passager
-                    {
-                        IdPassager = reader.GetInt32(reader.GetOrdinal("id")),
-                        NomPassager = reader.GetString(reader.GetOrdinal("nompassager")),
-                        Telephone = reader.GetInt64(reader.GetOrdinal("telephone")),
-                        Email = reader.GetString(reader.GetOrdinal("email")),
-                    };
-                    resultatRecherche.Passagers.Add(passager);
-
-                    var reservation = new Reservation
-                    {
-                        PassagerId = reader.GetInt32(reader.GetOrdinal("passagerid")),
-                        DateReservation = reader.GetDateTime(reader.GetOrdinal("datereservation")),
-                    };
-                    resultatRecherche.Reservations.Add(reservation);
-
-                    var vol = new Vol
-                    {
-                        NumeroVol = reader.GetString(reader.GetOrdinal("numerovol")),
-                        LieuDepart = reader.GetString(reader.GetOrdinal("lieudepart")),
-                        LieuArrivee = reader.GetString(reader.GetOrdinal("lieuarrivee")),
-                    };
-                    resultatRecherche.Vols.Add(vol);
-
-                    var tarif = new Tarif
-                    {
-                        Prix = reader.GetDouble(reader.GetOrdinal("prix")),
-                        TypeTarif = reader.GetString(reader.GetOrdinal("type")),
-                    };
-                    resultatRecherche.Tarifs.Add(tarif);
-                    continue;
-                }
-                return Ok(resultatRecherche);
-            }
-            catch (Npgsql.NpgsqlException e)
-            {
-                return StatusCode(500, "Erreur interne du serveur" + e.Message);
-            }
-        }
-        [Route("recherche-reservation/{NumeroVol}")]
-        [HttpGet]
-        public async Task<IActionResult> Recherche(string NumeroVol)
-        {
-            try
-            {
-                using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
-                await connexion.OpenAsync();
-
-                string selectresa = "SELECT passager.id,reservation.passagerid, passager.nompassager, passager.telephone, passager.email, reservation.datereservation, vol.numerovol," +
-                    "tarification.prix, tarification.type FROM passager, reservation, vol, tarification WHERE passager.id=reservation.passagerid AND " +
-                    " vol.id=reservation.volid AND tarification.id=reservation.tarificationid AND vol.numerovol like '%" + NumeroVol + "%'";
-
-                using var commandsql = new NpgsqlCommand(selectresa, connexion);
-                using var reader = await commandsql.ExecuteReaderAsync();
-                var resultatRecherche = new ResultatRecherche
-                {
-                    Passagers = new List<Passager>(),
-                    Reservations = new List<Reservation>(),
-                    Vols = new List<Vol>(),
-                    Tarifs = new List<Tarif>()
-                };
-
-                while (await reader.ReadAsync())
-                {
-                    var passager = new Passager
-                    {
-                        IdPassager = reader.GetInt32(reader.GetOrdinal("id")),
-                        NomPassager = reader.GetString(reader.GetOrdinal("nompassager")),
-                        Telephone = reader.GetInt64(reader.GetOrdinal("telephone")),
-                        Email = reader.GetString(reader.GetOrdinal("email")),
-                    };
-                    resultatRecherche.Passagers.Add(passager);
-
-                    var reservation = new Reservation
-                    {
-                        PassagerId = reader.GetInt32(reader.GetOrdinal("passagerid")),
-                        DateReservation = reader.GetDateTime(reader.GetOrdinal("datereservation")),
-                    };
-                    resultatRecherche.Reservations.Add(reservation);
-
-                    var vol = new Vol
-                    {
-                        NumeroVol = reader.GetString(reader.GetOrdinal("numerovol")),
-                    };
-                    resultatRecherche.Vols.Add(vol);
-
-                    var tarif = new Tarif
-                    {
-                        Prix = reader.GetDouble(reader.GetOrdinal("prix")),
-                        TypeTarif = reader.GetString(reader.GetOrdinal("type")),
-                    };
-                    resultatRecherche.Tarifs.Add(tarif);
-                }
-
-                return Ok(resultatRecherche);
-            }
-            catch (Npgsql.NpgsqlException e)
-            {
-                return StatusCode(500, "Erreur interne du serveur" + e.Message);
-            }
-        }
         [Route("vider-reservation")]
         [HttpDelete]
         public async Task<IActionResult> Vider(int num)
@@ -308,12 +182,9 @@ namespace apiWebCore.Controllers
                 using var commandsql = new NpgsqlCommand(supprimer, connexion);
 
                 var test = await commandsql.ExecuteNonQueryAsync();
-                if (test == 1)
-                {
 
-                    return Ok("La réservation du passager ayant le numéro '" + IdP + "' est supprimée.");
-                }
-                return Ok("Attention, vous avez rencontré un problème avec la suppression!");
+                return Ok("La réservation du passager ayant le numéro '" + IdP + "' est supprimée.");
+                
             }
             catch (Npgsql.NpgsqlException e)
             {

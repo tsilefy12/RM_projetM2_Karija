@@ -18,12 +18,15 @@ namespace apiWebCore.Models
         [JsonIgnore]
        public Avion? Avion { get; set; }
 
-        [Column("numerovol")]
-        public string NumeroVol { get; set; } = null!;
+        [Column("itinerairesid")]
+        public int IdItineraire { get; set; } 
 
         [Column("datedepart")]
         [DataType(DataType.Date)]
         public DateTime DateDepart { get; set; }
+        
+        [Column("datearrivee")]
+        public DateTime DateArrivee { get; set; }
 
         // [DataType(DataType.Time)]
         // [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
@@ -32,12 +35,6 @@ namespace apiWebCore.Models
 
         [Column("capacitemax")]
         public int CapaciteMax { get; set; }
-
-        [Column("lieudepart")]
-        public string LieuDepart { get; set; } = null!;
-
-        [Column("lieuarrivee")]
-        public string LieuArrivee { get; set; } = null!;
 
     }
     public class HeureDepartModel

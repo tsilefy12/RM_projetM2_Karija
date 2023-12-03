@@ -304,7 +304,7 @@ namespace apiWebCore.Controllers
                     string nom = reader.GetString(reader.GetOrdinal("nompassager"));
                     string mail = reader.GetString(reader.GetOrdinal("email"));
                     long phone = reader.GetInt64(reader.GetOrdinal("telephone"));
-                    string numvol = reader.GetString(reader.GetOrdinal("numerovol"));
+                    int numvol = reader.GetInt32(reader.GetOrdinal("id"));
                     DateTime dateDe = reader.GetDateTime(reader.GetOrdinal("datedepart"));
                     TimeSpan heure = reader.GetTimeSpan(reader.GetOrdinal("heuredepart"));
                     string modepaye = reader.GetString(reader.GetOrdinal("modepaiement"));
@@ -328,7 +328,7 @@ namespace apiWebCore.Controllers
                     ListVB.Add(vb);
 
                     var vols = new Vol{
-                        NumeroVol = numvol,
+                        Id = numvol,
                         DateDepart = dateDe,
                         HeureDepart = heure,
                         

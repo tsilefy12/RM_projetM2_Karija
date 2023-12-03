@@ -15,7 +15,7 @@ namespace apiWebCore.Models
         public int IdVente { get; set; }
 
         [Column("numerov")]
-        public string Numerov { get; set; } = null!;
+        public int Numerov { get; set; }
 
         [ForeignKey("passagerid")]
         public int PassagerId { get; set; }
@@ -26,10 +26,10 @@ namespace apiWebCore.Models
         [Column("datetransaction")]
         public DateTime DateTransaction { get; set; }
 
-        [Column("statutpaiement")]
-        public string StatutPaiement {get; set; } = null!;
-
         [Column("modepaiement")]
         public string ModePaiement { get; set; } = null!;
+
+        [Column("nombrebillet")]
+        public int NombreBillet { get; set; }
     }
 }

@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "",
+"RedirectUrl": "",
+"LaunchCommand": "",
+"WorkingDirectory": "C:\\wamp64\\www\\projetM2\\apiWebCore",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

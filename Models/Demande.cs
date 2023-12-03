@@ -20,14 +20,20 @@ namespace apiWebCore.Models
         [JsonIgnore]
         public Passager? Passager { get; set; }
 
-        [Column("demandeprevue")]
-        public string DemandePrevue { get; set; } = null!;
+        [Column("avisreponsable")]
+        public string AvisResponsable { get; set; } = null!;
 
         [Column("dateprevue")]
         public DateTime DatePrevue { get; set; }
 
-        [Column("commentaire")]
-        public string Commentaire { get; set; } = null!;
+        [Column("datedemande")]
+        public DateTime DateDemande { get; set; }
+
+        [Column("itinerairesid")]
+        public int ItinerairesId { get; set; }
+
+        [Column("typetarif")]
+        public string TypeTarif { get; set; } = null!;
     }
 
 }

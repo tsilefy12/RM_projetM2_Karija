@@ -32,8 +32,8 @@ namespace apiWebCore.Models
         [JsonIgnore]
         public Tarif? Tarif { get; set; }
 
-        [Column("libelle")]
-        public string Libelle { get; set; } = null!;
+        [Column("nombreplace")]
+        public int NombrePlace { get; set; }
 
         [Column("datereservation")]
         public DateTime DateReservation { get; set; }

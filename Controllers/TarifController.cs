@@ -32,18 +32,14 @@ namespace apiWebCore.Controllers
                 string description = reader.GetString(reader.GetOrdinal("description"));
                 double prix = reader.GetDouble(reader.GetOrdinal("prix"));
                 string typetarif = reader.GetString(reader.GetOrdinal("type"));
-                string statut = reader.GetString(reader.GetOrdinal("statut"));
-                string LD = reader.GetString(reader.GetOrdinal("lieudep"));
-                string LA = reader.GetString(reader.GetOrdinal("lieuar"));
+                int statut = reader.GetInt32(reader.GetOrdinal("itinerairesid"));
                 var tarifs = new Tarif
                 {
                     Id = id,
                     Description = description,
                     Prix = prix,
                     TypeTarif = typetarif,
-                    Statut = statut,
-                    LieuDep = LD,
-                    LieuAr = LA,
+                    ItinerairesId = statut,
                 };
                 ListTousTarifs.Add(tarifs);
                 continue;
@@ -59,8 +55,8 @@ namespace apiWebCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            string ajoutTarif = "insert into tarification(description, prix, type, statut, lieudep, lieuar)" +
-            "values(@Description, @Prix, @Type, @Statut, @LieuD, @LieuAr)";
+            string ajoutTarif = "insert into tarification(description, prix, type, itinerairesid)" +
+            "values(@Description, @Prix, @Type, @ItinerairesId)";
 
             using var dbC = new AppDbContext();
             using var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString());
@@ -72,9 +68,7 @@ namespace apiWebCore.Controllers
                 command.Parameters.AddWithValue("Description", tarif.Description);
                 command.Parameters.AddWithValue("Prix", tarif.Prix);
                 command.Parameters.AddWithValue("Type", tarif.TypeTarif);
-                command.Parameters.AddWithValue("Statut", tarif.Statut);
-                command.Parameters.AddWithValue("LieuD", tarif.LieuDep);
-                command.Parameters.AddWithValue("LieuAr", tarif.LieuAr);
+                command.Parameters.AddWithValue("ItinerairesId", tarif.ItinerairesId);
 
                 var test = await command.ExecuteNonQueryAsync();
 
@@ -111,14 +105,14 @@ namespace apiWebCore.Controllers
                     string description = reader.GetString(reader.GetOrdinal("description"));
                     double prix = reader.GetDouble(reader.GetOrdinal("prix"));
                     string typetarif = reader.GetString(reader.GetOrdinal("type"));
-                     string statut = reader.GetString(reader.GetOrdinal("statut"));
+                    int statut = reader.GetInt32(reader.GetOrdinal("itinerairesid"));
                     var tarifsEdit = new Tarif
                     {
                         Id = id,
                         Description = description,
                         Prix = prix,
                         TypeTarif = typetarif,
-                        Statut = statut,
+                        ItinerairesId = statut,
                     };
                     ListEdit.Add(tarifsEdit);
                 }
@@ -138,7 +132,7 @@ namespace apiWebCore.Controllers
 
                 try
                 {
-                    string modificationTarif = "update tarification set prix=@Prix, statut=@Statut, description=@Description"+
+                    string modificationTarif = "update tarification set prix=@Prix, itinerairesid=@ItinerairesId, description=@Description"+
                     " where id =@Id";
                     using var dbc = new AppDbContext();
                     using var connexiondb = new NpgsqlConnection(dbc.Database.GetConnectionString());
@@ -147,7 +141,7 @@ namespace apiWebCore.Controllers
 
                     commandsql.Parameters.AddWithValue("Id", Id); ;
                     commandsql.Parameters.AddWithValue("Prix", tarif.Prix);
-                    commandsql.Parameters.AddWithValue("Statut", tarif.Statut);
+                    commandsql.Parameters.AddWithValue("ItinerairesId", tarif.ItinerairesId);
                     commandsql.Parameters.AddWithValue("Description", tarif.Description);
 
                     await commandsql.ExecuteNonQueryAsync();
@@ -193,7 +187,7 @@ namespace apiWebCore.Controllers
             else
             {
                 var text = search.ToLower();
-                string edit = "select * from tarification where description like '%"+text+"%' or statut like '%"+text+"%' or type like '%"+text+"%'";
+                string edit = "select * from tarification where description like '%"+text+"%' or type like '%"+text+"%'";
                 using var dbc = new AppDbContext();
                 using var connexion = new NpgsqlConnection(dbc.Database.GetConnectionString());
                 connexion.Open();
@@ -207,14 +201,14 @@ namespace apiWebCore.Controllers
                     string description = reader.GetString(reader.GetOrdinal("description"));
                     double prix = reader.GetDouble(reader.GetOrdinal("prix"));
                     string typetarif = reader.GetString(reader.GetOrdinal("type"));
-                     string statut = reader.GetString(reader.GetOrdinal("statut"));
+                    int statut = reader.GetInt32(reader.GetOrdinal("itinerairesid"));
                     var tarifsEdit = new Tarif
                     {
                         Id = id,
                         Description = description,
                         Prix = prix,
                         TypeTarif = typetarif,
-                        Statut = statut,
+                        ItinerairesId = statut,
                     };
                     ListEdit.Add(tarifsEdit);
                 }
@@ -279,40 +273,6 @@ namespace apiWebCore.Controllers
             }
             return Ok(ListTousTarifs);
         }
-        [Route("selectLieu")]
-        [HttpGet]
-        public async Task<IActionResult> SelectLieu(){
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                string select = "SELECT vol.lieudepart, vol.lieuarrivee FROM vol GROUP BY lieudepart, lieuarrivee";
-                using var dbC = new AppDbContext();
-                using var connexion = new NpgsqlConnection(dbC.Database.GetConnectionString());
-                connexion.Open();
-                using var cmd = new NpgsqlCommand(select, connexion);
-
-                var read = await cmd.ExecuteReaderAsync();
-                var listeLieu = new List<Vol>();
-                while (await read.ReadAsync())
-                {
-                    var listeL = new Vol{
-                        LieuDepart = read.GetString(read.GetOrdinal("lieudepart")),
-                        LieuArrivee = read.GetString(read.GetOrdinal("lieuarrivee")),
-                    };
-                    listeLieu.Add(listeL);
-                    continue;
-                }
-                return Ok(listeLieu);
-            }
-            catch (Npgsql.NpgsqlException e)
-            {
-                
-                return Ok("erreur :"+e.Message);
-            }
-        }
+       
     }
 }
