@@ -1,56 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from './Login/Login';
-import Inscription from './Pages/Page_Inscription/Inscription';
-import Avion from './Pages/Avion/Avion';
-import Tarification from './Pages/Tarification/Tarification';
-import Reservation from './Pages/Reservation/Reservation';
-import Vente from './Pages/VenteBillets/Vente';
-import Tableau from './Pages/TableauDeBord/Tableau';
-import Vols from './Pages/Vols/Vols';
 import Menu from './Menu/Menu';
-import EditVol from './Pages/Vols/EditVol';
-import MenuPassager from './Passagers/MenuPassager/MenuPassager';
-import Achat from './Passagers/Achat/Achat';
-import ReservationPassager from './Passagers/reservation/ReservationPassager';
-import Accueil from './Passagers/accueil/Accueil';
-import PageAccueil from './Pages/Accueil/PageAccueil';
-import DemandeAnnulation from './Passagers/demandeAnnulation/DemandeAnnulation';
-import Prevision from './Passagers/prevision/Prevision';
-import Remboursement from './Passagers/remboursement/Remboursement';
-import DemandePrevion from './Pages/DemandePrevision/DemandePrevion';
-import Annulation from './Pages/Annulation/Annulation';
-import Profil from './Passagers/Profil/Profil';
-import RemboursementPassager from './Pages/RemboursementPassager/RemboursementPassager';
+import Dashboard from './Pages/Dashboard/Dashboard';
+import Itineraire from './Pages/Itineraires/Itineraire';
+import Avion from './Pages/Avion/Avion';
+import Vol from './Pages/Vol/Vol';
+import Reservation from './Pages/Reservation/Reservation';
+import Tarification from './Pages/Tarification/Tarification';
+import PaiementBillet from './Pages/PaiementBillet/PaiementBillet';
+import Demande from './Pages/Demande/Demande';
 import Revenu from './Pages/Revenu/Revenu';
+import tachyons from 'tachyons'
+
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path={'/'} element={<Login />} />
-          <Route path='/inscription' element={<Inscription />} />
-          <Route path='/avion' element={<Avion />} />
-          <Route path={'/menu'} element={<Tableau/>} />
-          <Route path='/tarification' element={<Tarification />} />
-          <Route path='/reservation' element={<Reservation />} />
-          <Route path='/venteBillet' element={<Vente />} />
-          <Route path='/tableauDeBord' element={<Tableau />} />
-          <Route path='/vols' element={<Vols />} />
-          <Route path='/api/Vol/edit-vol/:Id' element={ <EditVol/>} />
-          <Route path='/MenuPassager' element={<Accueil/>} />
-          <Route path='/reservation-passager' element={<ReservationPassager/>}/>
-          <Route path='/Achat-billet' element={<Achat/>} />
-          <Route path='/demande-annulation' element={<DemandeAnnulation/>} />
-          <Route path='/prevision' element={<Prevision/>} />
-          <Route path='/remboursement' element={<Remboursement/>} />
-          <Route path='/demande-prevision' element={<DemandePrevion/>} />
-          <Route path='/annulation' element={<Annulation/>} />
-          <Route path='/profil' element={<Profil/>} />
-          <Route path='/remboursement-passager' element={<RemboursementPassager/>} />
-          <Route path='/revenus' element={<Revenu/>} />
+          <Route path='/' element={<Menu/>} />
+          <Route path='/dashboard' element={<Dashboard/>} />
+          <Route path='/itineraires' element={<Itineraire/>} />
+          <Route path='/avion' element={<Avion/>} />
+          <Route path='/vol' element={<Vol/>} />
+          <Route path='/reservation' element={<Reservation/>} />
+          <Route path='/tarification' element={<Tarification/>} />
+          <Route path='/paiement-billet' element={<PaiementBillet/>} />
+          <Route path='/demande' element={<Demande/>} />
+          <Route path='/revenu' element={<Revenu/>} />
         </Routes>
       </Router>
     </>

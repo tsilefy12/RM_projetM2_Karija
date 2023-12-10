@@ -1,15 +1,13 @@
 import React from 'react'
 import Menu from '../../Menu/Menu'
 
-function Revenu() {
+function Dashboard() {
   return (
     <div>
-        <Menu/>
-        <div>
-        Revenu
-        </div>
+    <Menu />
+     <div>dashboard</div>
     </div>
   )
 }
 
-export default Revenu
+export default Dashboard

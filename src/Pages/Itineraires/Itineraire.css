@@ -1,0 +1,39 @@
+.itineraires{
+    /* border: 1px solid red; */
+    height: 80vh;
+    margin: 15px;
+}
+.header-itineraire{
+    /* border: 1px solid orange; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+}
+.tableau-itineraire{
+    margin: 10px;
+}
+.table th{
+    background-color: #800000;
+    color: white;
+    text-align: center;
+}
+.table td{
+    text-align: center;
+}
+.formulaire-itineraire{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2%;
+}
+.formulaire-itineraire .form-group{
+    margin: 10px;
+}
+.label-itineraire{
+    margin-right: 6px;
+    font-size: 1.2em;
+}
+.affichage-itineraire{
+    background-color: rgb(240, 240, 240);
+    padding: 2px;
+}

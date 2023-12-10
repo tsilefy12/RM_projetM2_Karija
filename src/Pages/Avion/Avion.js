@@ -1,403 +1,306 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import '../Avion/Avion.css'
-import { Form } from 'react-bootstrap'
-import * as AiIcons from "react-icons/ai"
-import axios from 'axios'
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import Menu from '../../Menu/Menu'
+import './Avion.css'
+import { Dialog, DialogActions, DialogContentText, DialogTitle, FormLabel, InputAdornment, TextField } from '@mui/material'
+import Table from 'react-bootstrap/Table';
+import * as AiIcons from '@mui/icons-material'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { Button, Form } from 'react-bootstrap';
+
 function Avion() {
-
-  //fenêtr modal
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  //variable pour les données
-  const [a, setA] = useState("");
-  const [numeroAvion, setNumeroAvion] = useState("");
-  const [modeleAvion, setModelAvion] = useState("");
-  const [capacite, setCapacite] = useState("");
   const [donneAvion, setDonneAvion] = useState([]);
-  let [message, setMessage] = useState("");
-  const [messageSupprimmer, setMessageSupprimer] = useState("");
-  let [erreurMessageAPI, setErreurMessageAPI] = useState("");
-  //input edit
-  let [inputRecherche, setInputRecherche] = useState("");
-
-  const [inputEditNumeroAvion, setInputEditNumeroAvion] = useState("");
-  const [inputEditModelAvion, setInputEditModelAvion] = useState("");
-  const [inputEditCapacite, setInputEditCapacite] = useState(0);
-  let [donneEditAvion, setDonneEditAvion] = useState([]);
-  const [idEdite, setIdEdite] = useState("");
+  const [rechercherInput, setRechercherInput] = useState("");
+  const [numeroAvion, setNumeroAvion] = useState("");
+  const [modelAvion, setModelAvion] = useState("");
+  const [capacite, setCapacite] = useState("");
+  const [messageAvion, setMessageAvion] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [a, setA] = useState("");
+  const [afficherEditAvion, setAfficherEditAvion] = useState(false);
+  const [editModel, setEditModel] = useState("");
+  const [editCapacite, setEditCapacite] = useState("");
+  const [IdEdit, setIdEdit] = useState("");
+  const [messageEditAvion, setMessageEditAvion] = useState("");
 
   useEffect(() => {
-    Affichage();
-    verificationInput();
-  });
+    AfficherAvion();
+    VerificationRechercheAvion();
+  })
 
-  //fonction pour afficher toutes les données via api/avio
-  const affichageAvion = async () => {
-    await axios.get(`http://localhost:5077/api/avion`).then(({ data }) => {
-      (
-        setDonneAvion(data)
-      )
-    },
-    ).catch(error => {
-      setErreurMessageAPI(error);
-    });
+  const AfficherAvion = async () => {
+    await axios.get(`http://localhost:5077/api/Avion`).then(({ data }) => (
+      setDonneAvion(data)
+    ))
   }
 
-  //fonction recherche d'avion
-  const RechercheAvion = async () => {
-    await axios.get(`http://localhost:5077/api/Avion/recherche-avion/${inputRecherche}`).then(({ data }) => {
-      setDonneAvion(data);
-    })
+  const rechercherAvion = async () => {
+    await axios.get(`http://localhost:5077/api/Avion/recherche-avion/${rechercherInput}`).then(({ data }) => (
+      setDonneAvion(data)
+    ))
   }
-  //fonction pour afficher toutes les données ou données de la recherche
-
-  const Affichage = () => {
-    if (inputRecherche === "") {
-      affichageAvion();
+  const VerificationRechercheAvion = () => {
+    if (rechercherInput === "") {
+      AfficherAvion();
     } else {
-      RechercheAvion();
+      rechercherAvion();
     }
   }
-  //Ajout d'un avion function
-  const AjouteAvion = async (e) => {
+
+  const ajoutAvion = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-
-    formData.append('numeroAvion', numeroAvion);
-    formData.append('modelAvion', modeleAvion);
-    formData.append('capacite', capacite);
-
-    if (numeroAvion === "" || modeleAvion === "" || capacite === "") {
-      let erroMessageInput = (<label style={{ color: 'red' }}>Champ obliagtoire</label>)
-      setMessage(erroMessageInput);
+    formData.append("numeroAvion", numeroAvion);
+    formData.append("modelAvion", modelAvion);
+    formData.append("capacite", capacite);
+    if (numeroAvion === "" || modelAvion === "" || capacite === "") {
+      setMessageAvion(<label className='text-danger'>Tous les champs sont obligatoires</label>);
+      setTimeout(() => {
+        setMessageAvion("");
+      }, 10000);
     } else {
-      let successMessageInput = (<label style={{ color: 'green' }}>Ok</label>)
-      setMessage(successMessageInput);
-      await axios.post(`http://localhost:5077/api/Avion/Ajout-avion`, formData,
-        { headers: { 'Content-Type': 'application/json' }, }).then(({ data }) => {
-          console.log("message", data);
-          ResetChamps();
+      try {
+        await axios.post('http://localhost:5077/api/Avion/Ajout-avion', formData, { headers: { 'Content-Type': 'application/json' } }).then(({ data }) => {
+          setMessageAvion(<label className='text-success'>{data}</label>)
+          setTimeout(() => {
+            setMessageAvion("");
+          }, 10000);
         })
-      console.log("test");
+        AfficherAvion();
+        setNumeroAvion("");
+        setModelAvion("");
+        setCapacite("");
+      } catch (error) {
+        throw (error);
+      }
+    }
+  }
+  const supprimerAvion = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5077/api/Avion/suppression-avion/${id}`).then(({ data }) => {
+        setMessageAvion(<label className='text-danger'>{data}</label>);
+        setTimeout(() => {
+          setMessageAvion("");
+        }, 10000);
+      })
+      setOpenDialog(false)
+      AfficherAvion();
+    } catch (error) {
+      throw (error)
     }
   }
 
-  //fonction reset(vider les champs après une action)
-  const ResetChamps = () => {
-    setNumeroAvion("");
-    setModelAvion("");
-    setCapacite("");
-  }
-
-  //validation des formulaires
-
-  const verificationInput = () => {
-    if (numeroAvion === "" || modeleAvion === "" || capacite === "") {
-      let erroMessageInput = (<label style={{ color: 'red' }}>Champ obligatoire</label>)
-      setMessage(erroMessageInput);
-    } else {
-      let successMessageInput = (<label style={{ color: 'green' }}>Ok</label>)
-      setMessage(successMessageInput);
-    }
-  }
-  //fonction pour supprimer un avion
-  const SupprimerAvion = (id) => {
-    axios.delete(`http://localhost:5077/api/Avion/suppression-avion/${id}`).then(({ data }) => {
-      const msg = (<label className='text-success'>{data}</label>);
-      setMessageSupprimer(msg);
-    })
-    setOpenDialog(false);
-    affichageAvion();
-  }
-  //fonction edit avion
-  const EditAvion = async (id) => {
-    await axios.get(`http://localhost:5077/api/Avion/edit-avion/${id}`).then(({ data }) => {
-      setDonneEditAvion(data);
-      setInputEditNumeroAvion(data.numeroAvion);
-      setInputEditModelAvion(data.modelAvion);
-      setInputEditCapacite(data.capacite);
-    });
-    handleOpen();
-    setIdEdite(id);
-  }
-
-  //fonction pour la modification avion
-  const modificationAvion = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('NumeroAvion', idEdite);
-    formData.append('modelAvion', inputEditModelAvion);
-    formData.append('capacite', inputEditCapacite);
-
-    await axios.post(`http://localhost:5077/api/Avion/modification-avion/${idEdite}`,
-      formData, {
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-    }).then(({ data }) => {
-      const messageModif = (<label className='text-success'>{data}</label>);
-      setMessageSupprimer(messageModif);
-      setIdEdite('');
-      setInputEditModelAvion('');
-      setInputEditCapacite('');
-      handleClose();
-    }).catch(error => {
-      console.error('Error:', error);
-    });
-  }
-  const test = (b) => {
+  const ConfirmeSuppression = (x) => {
     setOpenDialog(true);
-    setA(b);
+    setA(x)
   }
-  const Annuler = () => {
-    setOpenDialog(false);
-    affichageAvion();
-  }
-  return (
-    <div className="rehetra">
-      <Menu />
-      <div className='tout-avion'>
-        <div className='entête'>
-          <header className='header-avion'>
-            <h1 className='text text-info'>GESTION<sub style={{ fontSize: '1em' }}>AVION</sub></h1>
-          </header>
-        </div>
-        <div className='contenue'>
-          <div className='formulaire-avion'>
-            <Form onSubmit={AjouteAvion} className='from'>
-              <div className='form-group'>
-                <div className='TextField'>
-                  <TextField
-                    label="Numéro d'avion"
-                    placeholder="saisir le nuémero d'avion"
-                    type='text'
-                    value={numeroAvion}
-                    onChange={(e) => { setNumeroAvion(e.target.value) }}
-                    autoComplete='off'
-                    sx={{
-                      label: {
-                        color: 'darkgrey', fontSize: '1em',
-                        marginTop: '-8px'
-                      }, zIndex: 0
-                    }}
-                    className='test'
-                  />
-                </div>
-                <div className='TextField'>
-                  <TextField
-                    label="Modèle de l'avion"
-                    placeholder='saisir son modèle'
-                    type='text'
-                    autoComplete='off'
-                    value={modeleAvion}
-                    onChange={(e) => { setModelAvion(e.target.value) }}
-                    sx={{
-                      label: {
-                        color: 'darkgrey', fontSize: '1em',
-                        marginTop: '-8px'
-                      }, zIndex: 0
-                    }}
-                    className='test'
 
-                  />
-                </div>
-                <div className='TextField'>
-                  <TextField
-                    label="Capacité"
-                    type='number'
-                    value={capacite}
-                    onChange={(e) => { setCapacite(e.target.value) }}
-                    inputProps={{ min: 0 }}
-                    sx={{
-                      label: {
-                        color: 'darkgrey', fontSize: '1em',
-                        marginTop: '-8px'
-                      }, zIndex: 0
-                    }}
-                    helperText={message}
-                    className='test'
-                  />
-                </div>
-                <div className='TextField'>
-                  <button className='btn btn-success grow'><AiIcons.AiFillHdd />
-                    ENREGISTRER</button>
-                </div>
+  const editAvion = async (id) => {
+    setIdEdit(id)
+    try {
+      await axios.post(`http://localhost:5077/api/Avion/edit-avion/${id}`).then(({ data }) => {
+        const resultat = [data]
+        resultat.map(item =>{
+          setEditModel(item.modelAvion);
+          setEditCapacite(item.capacite)
+        })
+      })
+    } catch (error) {
+      throw (error)
+    }
+    setAfficherEditAvion(true)
+  }
+
+  const modifierAvion = async (e) =>{
+    console.log("id edit : ", IdEdit);
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("id", IdEdit)
+    formData.append("numeroAvion", "string")
+    formData.append("modelAvion", editModel)
+    formData.append("capacite", editCapacite)
+
+    try {
+        await axios.post(`http://localhost:5077/api/Avion/modification-avion/${IdEdit}`
+        ,formData, {headers:{'Content-Type': 'application/json'}}
+        ).then(({data}) =>{
+          setMessageEditAvion(<label className='text-success' style={{fontSize: '1.2em'}}>{data}</label>)
+        })
+        AfficherAvion();
+        setTimeout(() => {
+          setAfficherEditAvion(false);
+          setMessageEditAvion("");
+        }, 7000);
+    } catch (error) {
+        throw(error)
+    }
+  }
+
+  return (
+    <div>
+      <Menu />
+      <div className='avions'>
+        <div className='image-avion'>
+          <div className='formulaire-edit'
+            style={{
+              marginTop: !afficherEditAvion ? '-100%' : '0%',
+              transition: 'margin-top 1s', zIndex: !afficherEditAvion ? '-1' : '1'
+            }}>
+            <Form onSubmit={modifierAvion}>
+            <div className='edit-input-avion text-center'>
+              
+              <div className='form-group'>
+                <FormLabel className='text-primary' sx={{ margin: '6px' }}>Modèle d'un avion : </FormLabel>
+                <TextField
+                  type='text'
+                  placeholder="saisir le model de l'avion"
+                  value={editModel}
+                  onChange={(e) =>setEditModel(e.target.value)}
+                  size='small'
+                />
+              </div>
+              <div className='form-group'>
+                <FormLabel className='text-primary' sx={{ margin: '6px' }}>Capacité : </FormLabel>
+                <TextField
+                  type='number'
+                  placeholder='saisir la capacité'
+                  value={editCapacite}
+                  onChange={(e) =>setEditCapacite(e.target.value)}
+                  size='small'
+                />
+              </div><br></br><br></br>
+              <div className='form-group boutton-edit-avion'>
+                <button className='btn btn-primary'>ENREGISTRER</button>
+                <button className='btn btn-danger' onClick={() => setAfficherEditAvion(false)}>QUITTER</button>
+                <label>{messageEditAvion}</label>
+              </div>
+            </div>
+            </Form>
+          </div>
+        </div>
+        <div className='contenu-avion'>
+          <div className='formulaires-avion mt-2'>
+            <Form onSubmit={ajoutAvion}>
+              <div className='form-group mt-2' style={{ margin: '10px' }}>
+                <label style={{ margin: '6px' }} className='text-primary'>Numéro d'avion :</label>
+                <TextField
+                  type='text'
+                  placeholder="Entrez le numéro de serie de l'avion"
+                  value={numeroAvion}
+                  onChange={(e) => setNumeroAvion(e.target.value)}
+                  size='normal'
+                />
+              </div>
+              <div className='form-group mt-2' style={{ margin: '10px' }}>
+                <label style={{ margin: '6px' }} className='text-primary'>Modèle d'un avion :</label>
+                <TextField
+                  type='text'
+                  placeholder="Entrez le modele de l'avion"
+                  value={modelAvion}
+                  onChange={(e) => setModelAvion(e.target.value)}
+                  size='normal'
+                  sx={{ width: 'auto' }}
+                />
+              </div>
+              <div className='form-group mt-2' style={{ margin: '10px' }}>
+                <label style={{ margin: '6px' }} className='text-primary'>Capacité de l'avion :</label>
+                <TextField
+                  type='number'
+                  placeholder="Entrez la capacité"
+                  value={capacite}
+                  onChange={(e) => setCapacite(e.target.value)}
+                  size='normal'
+                  inputProps={{ min: 0 }}
+                />
+              </div>
+              <div className='flex' style={{
+                display: 'flex', flexDirection: 'row',
+                justifyContent: 'space-between', margin: '15px'
+              }}>
+                <button className='btn btn-primary'>ENREGISTRER</button>
+                <label style={{ margin: '10px' }}>{messageAvion}</label>
               </div>
             </Form>
           </div>
-          <div className='affichage-avion'>
-            <div className='card'>
-              <div className='card-header textHeader-Avion'>
-                <label className='text-liste-avions text-info'>Liste d'avion</label>
-                <label>{messageSupprimmer}</label>
-                <div className='recherche-avion'>
-                  <TextField
-                    type='text'
-                    placeholder='rechercher...'
-                    value={inputRecherche}
-                    onChange={(e) => (
-                      setInputRecherche(e.target.value)
-                    )}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='start'>
-                          <AiIcons.AiOutlineSearch></AiIcons.AiOutlineSearch>
-                        </InputAdornment>
-                      )
-                    }}
-                    size='normal'
-                  /></div>
-              </div>
-              <div className='card-body'>
-                <div className='tableau-avion'>
-                  <table className='table'>
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>NUMERO D'AVION</th>
-                        <th>MODE DE L'AVION</th>
-                        <th>CAPACITE</th>
-                        <th style={{ width: "80px" }}>OPERATIONS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        donneAvion.length > 0 && (
-                          donneAvion.map(item => (
-                            <tr key={item.id}>
-                              <td className='num-avion'>{item.id}</td>
-                              <td className='num-avion'>{item.numeroAvion}</td>
-                              <td className='model-avion'>{item.modelAvion}</td>
-                              <td className='capacite-avion'>{item.capacite}</td>
-                              <td className='operations-btn'>
-                                <AiIcons.AiFillEdit style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-                                  onClick={() => EditAvion(item.id)
-                                  }>
-                                </AiIcons.AiFillEdit>
-                                <button style={{ border: 'none', background: 'none' }} onClick={() => test(item.id)}>
-                                  <AiIcons.AiFillDelete style={{ color: 'red' }}>
-                                  </AiIcons.AiFillDelete>
-                                </button>
-                              </td>
-                            </tr>
-                          )))}
-                    </tbody>
-                  </table>
-                </div>
-                <Dialog
-                  open={openDialog}
-                  disablePortal={true}
-                  sx={dialog}
-                >
-                  <DialogTitle boxSizing={200} sx={{ color: 'red', textAlign: 'left', marginTop: '-6%' }}>Information</DialogTitle>
-                  <DialogContent>
-                    Vous êtes sûre <AiIcons.AiFillQuestionCircle size={50} />
-                  </DialogContent>
-                  <DialogActions sx={{ justifyContent: 'space-evenly' }} className='flex'>
-                    <button onClick={() => SupprimerAvion(a)} className='btn btn-primary'>Ok</button>
-                    <button onClick={() => Annuler()} className='btn btn-secondary'>Non</button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-              <div className='card-footer text-center'>
-                {
-                  (donneAvion.length === 0) ? (
-                    <span colSpan="4" style={{ color: 'red', textAlign: 'center' }}>
-                      Le tableau est vide : Peut être que le serveur de l'api ne pas
-                      encore activer ou 0 enregistrement dans la base de données.</span>
-                  ) :
-                    <span colSpan="4" style={{ textAlign: 'center' }} className='text-success'>
-                      Il y a {donneAvion.length} avion(s) enrégistrés dans la base de données des compagnies aériennes</span>
+
+          <div className='tableau-avion'>
+            <div style={{ boxShadow: '10px 0px 10px darkgray', marginBottom: '4px' }}>
+              <TextField
+                type='text'
+                placeholder='rechercher...'
+                value={rechercherInput}
+                onChange={(e) => setRechercherInput(e.target.value)}
+                size='small'
+                sx={{ marginBottom: '6px', width: '100%' }}
+                InputProps={
+                  {
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <AiIcons.SearchOutlined></AiIcons.SearchOutlined>
+                      </InputAdornment>
+                    )
+                  }
                 }
-              </div>
+              />
+            </div>
+            <div className='affichage-avion'>
+              <Table striped hover variant="darkgray" className='table '>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>NUMERO D'AVION</th>
+                    <th>MODELE DE L'AVION</th>
+                    <th>CAPACITE</th>
+                    <th>OPERATIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    donneAvion.length > 0 && (
+                      donneAvion.map(item => (
+                        <tr key={item.id}>
+                          <td>{item.id}</td>
+                          <td>{item.numeroAvion}</td>
+                          <td>{item.modelAvion}</td>
+                          <td>{item.capacite}</td>
+                          <td style={{ width: '200px' }}>
+                            <Link style={{ margin: '10px', textDecoration: 'none' }} onClick={() => editAvion(item.id)}>
+                              <AiIcons.Edit color='blue'></AiIcons.Edit>
+                            </Link>
+                            <Link style={{ textDecoration: 'none' }} onClick={() => ConfirmeSuppression(item.id)}>
+                              <AiIcons.Delete style={{ color: 'red' }}></AiIcons.Delete>
+                            </Link>
+                          </td>
+                        </tr>
+                      ))
+                    )
+                  }
+                </tbody>
+              </Table>
             </div>
           </div>
         </div>
-        {/* //fenêtre modal edit */}
-        <Modal
-          open={open}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        <Dialog
+          open={openDialog}
+          disablePortal={true}
+          sx={styleDialog}
         >
-          <Box sx={style}>
-            <Form onSubmit={modificationAvion}>
-              <div>
-                <div>
-                  <header>
-                    <h2 className='text text-center text-info' style={{ marginBottom: '6px' }}>MODIFICATION</h2>
-                  </header>
-                </div>
-                <div className='edite-avion-formulaire'>
-                  <label className='label-avion'>Numéro</label>
-                  <input
-                    type='text'
-                    className='form-control'
-                    autoComplete='off'
-                    value={inputEditNumeroAvion}
-                    onChange={(e) => setInputEditNumeroAvion(e.target.value)}
-                    readOnly
-                    style={{ backgroundColor: 'darkgrey' }}
-                  />
-                </div>
-                <div className='edite-avion-formulaire'>
-                  <label className='label-avion'>Model de l'avion</label>
-                  <input
-                    type='text'
-                    className='form-control'
-                    autoComplete='off'
-                    value={inputEditModelAvion}
-                    onChange={(e) => setInputEditModelAvion(e.target.value)}
-                  />
-                </div>
-                <div className='edite-avion-formulaire'>
-                  <label className='label-avion'>Capacité</label>
-                  <input
-                    type='number'
-                    min={0}
-                    className='form-control'
-                    autoComplete='off'
-                    value={inputEditCapacite}
-                    onChange={(e) => setInputEditCapacite(e.target.value)}
-                  />
-                </div>
-
-                <div className='boutton-avion-update'>
-                  <button className='btn btn-primary grow'>+ENREGISTRER</button>
-                  <span onClick={handleClose} className='btn btn-danger grow' style={{ cursor: 'pointer' }}>RETOUR</span>
-                </div>
-              </div>
-            </Form>
-          </Box>
-        </Modal>
+          <DialogTitle className='text-danger'>Informations</DialogTitle>
+          <DialogContentText sx={{ margin: '10px' }}>
+            Voulez-vous supprimer
+            <AiIcons.QuestionMark sx={{ fontSize: '3em' }}></AiIcons.QuestionMark>
+          </DialogContentText>
+          <DialogActions>
+            <Button onClick={() => supprimerAvion(a)} className='btn btn-secondary'>Ok</Button>
+            <Button onClick={() => setOpenDialog(false)} className='btn btn-danger'>Annuler</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   )
 }
-
-const style = {
-  position: 'absolute',
-  top: '35%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  height: 'auto',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  pt: 2,
-  px: 2,
-  pb: 3,
-  border: 'none',
-};
-const dialog = {
+const styleDialog = {
   top: -150,
 }
-
 export default Avion

@@ -1,15 +1,15 @@
 import React from 'react'
 import Menu from '../../Menu/Menu'
 
-function Revenu() {
+function Demande() {
   return (
     <div>
         <Menu/>
         <div>
-        Revenu
+        Demande
         </div>
     </div>
   )
 }
 
-export default Revenu
+export default Demande

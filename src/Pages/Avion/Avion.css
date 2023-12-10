@@ -1,134 +1,99 @@
-.tout-avion {
-    /* border: 1px solid rgb(7, 7, 7); */
-    display: flex;
-    flex-direction: column;
-    width: 88vw;
-    height: 100vh;
-    position: fixed;
-    left: 10%;
-}
-
-.form-group {
-    /* border: 1px solid yellow; */
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    margin-right: 30px;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
-    height: 10vh;
-}
-
-.card-body {
-    /* border: 1px solid brown; */
-    width: auto;
-    height: 55vh;
-    overflow: auto;
-    text-align: center;
-
-}
-
-.table th {
-    background-color: #424444;
-    color: white;
-}
-
-.table .operations-btn {
-    width: 113px;
-    display: flex;
-    justify-content: space-between;
-}
-
-body {
-    background-color: white;
-}
-
-.card {
-    border: 1px solid rgb(56, 58, 56);
-    width: auto;
-    height: 70vh;
-}
-
-.contenue {
-    /* border: 1px solid blue; */
-    display: flex;
-    flex-direction: column;
-    height: 50vh;
-}
-
-.TextField {
-    width: 100%;
-}
-
-.card-footer {
-    background-color: white;
-}
-
-.boutton-avion-update {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.affichage-avion {
+.avions{
     /* border: 1px solid red; */
-    width: 100%;
-
 }
-
-.textHeader-Avion {
+.image-avion{
+    /* border: 1px solid orange; */
+    height: 30vh;
+    background-image: url(/src/images/avion-vol-boeing-747-ciel-nuages.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-position-y: 37%;
+}
+.contenu-avion{
+    /* border: 1px solid blue; */
+    height: 50vh;
+    display: flex;
+    flex-wrap: wrap;
+}
+.header-avion{
+    margin-left: 30%;
+    background-color: white;
+    width: 25%;
+    margin-top: 3%;
+}
+.formulaires-avion{
+    /* border: 1px solid red; */
+    margin: 10px;
+    width: 30%;
+    background-color: rgb(245, 239, 239);
+}
+.formulaires-avion .form-group{
+    display: flex;
+    flex-direction: column;
+}
+.tableau-avion{
+    /* border: 1px solid black; */
+    width: 67%;
+    margin: 10px;
+    height: 45vh;
+}
+.affichage-avion{
+  height: 36vh;
+  overflow: auto;
+}
+.formulaire-edit{
+    border-bottom: 1px solid blue;
+    width: 100%;
+    height: 30vh;
+    background-color: white;
+    position: absolute;
+    left: 0;
+}
+.edit-input-avion{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5%;
+    position: absolute;
+    left: 20%;
+}
+.edit-input-avion .form-group{
+    margin: 10px;
+    margin-left: 2%;
+}
+.boutton-edit-avion{
+    /* border: 1px solid black; */
+    width: 40%;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+    margin-top: 20px;
 }
-
-.textHeader-Avion .text-liste-avions {
-    font-size: 1.5em;
-    margin-top: -0%;
-}
-
-@media (max-width: 888px) {
-    .tout-avion {
-        border: 1px solid red;
-        display: flex;
-        flex-direction: column;
-        width: 80vw;
-        height: 100vh;
-        position: fixed;
-        left: 20%;
-    }
-
-    .contenue {
-        /* border: 1px solid blue; */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group {
-        /* border: 1px solid yellow; */
-        display: flex;
-        flex-direction: column;
-        height: auto;
-    }
-
-    .TextField {
+@media (max-width: 992px) {
+    .formulaires-avion{
+        /* border: 1px solid red; */
+        margin: 10px;
         width: 100%;
-        /* border: 1px solid brown; */
-        margin: 6px;
     }
-
-    .TextField .test {
-        width: 90%;
+    .tableau-avion{
+        width: 100%;
+        margin: 10px;
     }
-
-    .textHeader-Avion {
+    .edit-input-avion {
         display: flex;
-        flex-direction: column;
-        width: 70vw;
-        height: auto;
+        flex-wrap: wrap;
+        position: fixed;
+        left: 0;
     }
-
+    .boutton-edit-avion{
+        /* border: 1px solid black; */
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: -6px;
+    }
+    .formulaire-edit{
+        height: 31vh;
+    }
 }
