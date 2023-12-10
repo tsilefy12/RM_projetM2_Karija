@@ -54,5 +54,4 @@ function Tarification() {
     </div>
   )
 }
-
 export default Tarification
