@@ -28,7 +28,7 @@ namespace PostgreSQLAPI.Models
         public DbSet<Itineraire> Itineraires {get; set;}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
+            // modelBuilder.Entity<Vol>().HasOne(v => v.Avion).WithMany().HasForeignKey(v => v.AvionId);
             modelBuilder.Entity<Demande>().HasOne(d => d.Passager).WithMany().HasForeignKey(p => p.IdPassager);
             modelBuilder.Entity<Reservation>().HasOne(a => a.Vol).WithMany().HasForeignKey(a => a.VolId);
             modelBuilder.Entity<Reservation>().HasOne(p => p.Passager).WithMany().HasForeignKey(p => p.PassagerId);

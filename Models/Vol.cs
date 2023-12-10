@@ -14,7 +14,7 @@ namespace apiWebCore.Models
         public int Id { get; set; }
 
         [Column("avionid")]
-        public int AvionId { get; set; }
+        public string AvionId { get; set; } = null!;
         [JsonIgnore]
        public Avion? Avion { get; set; }
 

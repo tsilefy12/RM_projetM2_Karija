@@ -136,7 +136,7 @@ namespace apiWebCore.Controllers
 
         //ceci est code pour affciher un avion qu'on veut éditer avant la modification
         [Route("edit-avion/{Id}")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Edit(int Id)
         {
             try
@@ -275,7 +275,7 @@ namespace apiWebCore.Controllers
             using var db = new AppDbContext();
             using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
 
-            string verifierAvion = "SELECT id FROM avion ORDER BY id";
+            string verifierAvion = "SELECT numavion FROM avion ORDER BY id";
             connexion.Open();
             using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
 
@@ -284,41 +284,36 @@ namespace apiWebCore.Controllers
             var numavion = new List<Avion>();
             while (await reader.ReadAsync())
             {
-                int numero = reader.GetInt32(reader.GetOrdinal("id"));
+                string numero = reader.GetString(reader.GetOrdinal("numavion"));
                 var num = new Avion
                 {
-                    Id = numero
+                    NumeroAvion = numero
                 };
                 numavion.Add(num);
                 continue;
             }
             return Ok(numavion);
         }
-        [Route("num-avion/{Id}")]
+        [Route("num-avion/{numeroavion}")]
         [HttpGet]
-        public async Task<IActionResult> Numero(int Id)
+        public async Task<IActionResult> Numero(string numeroavion)
         {
             using var db = new AppDbContext();
             using var connexion = new NpgsqlConnection(db.Database.GetConnectionString());
 
-            string verifierAvion = "SELECT capacite FROM avion where id ='" + Id + "'";
+            string verifierAvion = "SELECT capacite FROM avion where numavion ='" + numeroavion + "'";
             connexion.Open();
             using var cmdverify = new NpgsqlCommand(verifierAvion, connexion);
 
             var reader = await cmdverify.ExecuteReaderAsync();
 
-            var numavion = new List<Avion>();
-            while (await reader.ReadAsync())
+            var cap = 0;
+            if (await reader.ReadAsync())
             {
                 int capacite = reader.GetInt32(reader.GetOrdinal("capacite"));
-                var num = new Avion
-                {
-                    Capacite = capacite
-                };
-                numavion.Add(num);
-                continue;
+                cap = capacite;
             }
-            return Ok(numavion);
+            return Ok(cap);
         }
     }
 }

@@ -20,13 +20,16 @@ namespace apiWebCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            string selecVol = "SELECT * FROM vol";
+            string selecVol = "SELECT vol.id,vol.avionid,vol.heuredepart, vol.datedepart, vol.datearrivee, vol.capacitemax, itineraires.lieudepart, lieuarrivee, " +
+            " itineraires.lieuseparateur, itineraires.statut " +
+            " FROM vol, itineraires WHERE vol.itinerairesid=itineraires.id";
             using var dbC = new AppDbContext();
             using var connexionDB = new NpgsqlConnection(dbC.Database.GetConnectionString());
             connexionDB.Open();
             using var command = new NpgsqlCommand(selecVol, connexionDB);
             using var reader = await command.ExecuteReaderAsync();
-            List<Vol> ListVol = new List<Vol>();
+            var ListVol = new List<Vol>();
+            var ListItineraire = new List<Itineraire>();
 
             while (await reader.ReadAsync())
             {
@@ -34,18 +37,26 @@ namespace apiWebCore.Controllers
                 var vols = new Vol
                 {
                     Id = reader.GetInt32(reader.GetOrdinal("id")),
-                    AvionId = reader.GetInt32(reader.GetOrdinal("avionid")),
+                    AvionId = reader.GetString(reader.GetOrdinal("avionid")),
                     DateDepart = reader.GetDateTime(reader.GetOrdinal("datedepart")),
                     HeureDepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart")),
                     DateArrivee = reader.GetDateTime(reader.GetOrdinal("datearrivee")),
-                    IdItineraire = reader.GetInt32(reader.GetOrdinal("itinerairesid")),
                     CapaciteMax = reader.GetInt32(reader.GetOrdinal("capacitemax")),
-
                 };
                 ListVol.Add(vols);
+
+                var itineraires = new Itineraire
+                {
+                    LiueDepart = reader.GetString(reader.GetOrdinal("lieudepart")),
+                    LieuArrivee = reader.GetString(reader.GetOrdinal("lieuarrivee")),
+                    LieuSeparteur = reader.GetString(reader.GetOrdinal("lieuseparateur"))
+                };
+                ListItineraire.Add(itineraires);
                 continue;
             }
-            return Ok(ListVol);
+            var mergedList = ListVol.Zip(ListItineraire, (vol, itineraire) => new { Vol = vol, Itineraire = itineraire }).ToList();
+
+            return Ok(mergedList);
         }
         [Route("ajout-vol")]
         [HttpPost]
@@ -70,11 +81,11 @@ namespace apiWebCore.Controllers
 
             var read = await commandsql.ExecuteReaderAsync();
 
-            var idAvion = 0;
+            var idAvion = "";
             var daty = (2023 - 10 - 11).ToString();
             if (await read.ReadAsync())
             {
-                int id = read.GetInt32(read.GetOrdinal("avionid"));
+                string id = read.GetString(read.GetOrdinal("avionid"));
                 idAvion = id;
                 DateTime datee = read.GetDateTime(read.GetOrdinal("datedepart"));
                 daty = datee.ToString();
@@ -182,9 +193,9 @@ namespace apiWebCore.Controllers
                 return BadRequest("erreur :" + e.Message);
             }
         }
-       
+
         [Route("edit-vol/{Id}")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> EditVol(int Id)
         {
             if (!ModelState.IsValid)
@@ -209,12 +220,12 @@ namespace apiWebCore.Controllers
                     var volsResulat = new Vol
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("id")),
-                        AvionId = reader.GetInt32(reader.GetOrdinal("avionid")),
+                        AvionId = reader.GetString(reader.GetOrdinal("avionid")),
                         DateDepart = reader.GetDateTime(reader.GetOrdinal("datedepart")),
                         HeureDepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart")),
                         DateArrivee = reader.GetDateTime(reader.GetOrdinal("datearrivee")),
                         IdItineraire = reader.GetInt32(reader.GetOrdinal("itinerairesid")),
-                        CapaciteMax  = reader.GetInt32(reader.GetOrdinal("capacitemax")),
+                        CapaciteMax = reader.GetInt32(reader.GetOrdinal("capacitemax")),
 
                     };
                     ListEditVol.Add(volsResulat);
@@ -239,7 +250,7 @@ namespace apiWebCore.Controllers
             {
                 try
                 {
-                    string modification = "UPDATE vol SET datedepart=@DateDepart, heuredepart=@HeureDepart, datearrivee=@DateArrivee, itinerairesid=@Itinerairesid WHERE id = @Id";
+                    string modification = "UPDATE vol SET avionId=@AvionId, datedepart=@DateDepart, heuredepart=@HeureDepart, datearrivee=@DateArrivee, itinerairesid=@Itinerairesid WHERE id = @Id";
                     using (var dbC = new AppDbContext())
                     {
                         using var connexiondb = new NpgsqlConnection(dbC.Database.GetConnectionString());
@@ -261,7 +272,54 @@ namespace apiWebCore.Controllers
                     return Ok("Une erreur apparait : " + e.Message);
                 }
             }
+        }
+        [Route("rechercher-vol")]
+        [HttpGet]
+        public async Task<IActionResult> Recherche(string recherche)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var karoka = recherche.ToLower();
+            string selecVol = "SELECT vol.id,vol.avionid,vol.heuredepart, vol.datedepart, vol.datearrivee, vol.capacitemax, itineraires.lieudepart, lieuarrivee, " +
+            " itineraires.lieuseparateur, itineraires.statut " +
+            " FROM vol, itineraires WHERE vol.itinerairesid=itineraires.id AND itineraires.lieudepart ILIKE '%"+karoka+"%'";
+            using var dbC = new AppDbContext();
+            using var connexionDB = new NpgsqlConnection(dbC.Database.GetConnectionString());
+            connexionDB.Open();
+            using var command = new NpgsqlCommand(selecVol, connexionDB);
+            using var reader = await command.ExecuteReaderAsync();
+            var ListVol = new List<Vol>();
+            var ListItineraire = new List<Itineraire>();
+
+            while (await reader.ReadAsync())
+            {
+
+                var vols = new Vol
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                    AvionId = reader.GetString(reader.GetOrdinal("avionid")),
+                    DateDepart = reader.GetDateTime(reader.GetOrdinal("datedepart")),
+                    HeureDepart = reader.GetTimeSpan(reader.GetOrdinal("heuredepart")),
+                    DateArrivee = reader.GetDateTime(reader.GetOrdinal("datearrivee")),
+                    CapaciteMax = reader.GetInt32(reader.GetOrdinal("capacitemax")),
+                };
+                ListVol.Add(vols);
+
+                var itineraires = new Itineraire
+                {
+                    LiueDepart = reader.GetString(reader.GetOrdinal("lieudepart")),
+                    LieuArrivee = reader.GetString(reader.GetOrdinal("lieuarrivee")),
+                    LieuSeparteur = reader.GetString(reader.GetOrdinal("lieuseparateur"))
+                };
+                ListItineraire.Add(itineraires);
+                continue;
+            }
+            var mergedList = ListVol.Zip(ListItineraire, (vol, itineraire) => new { Vol = vol, Itineraire = itineraire }).ToList();
+
+            return Ok(mergedList);
         }
     }
 }
