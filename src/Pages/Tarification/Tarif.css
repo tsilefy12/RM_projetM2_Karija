@@ -19,6 +19,18 @@
     /* border: 1px solid black; */
     justify-content: center;
 }
+.liste-tous{
+    /* border: 1px solid red; */
+    display: flex;
+    overflow-x: scroll;
+    margin: 2px;
+}
+.liste-tarif{
+    border: 1px solid green;
+    min-width: 400px;
+    height: 50vh;
+    margin: 6px;
+}
 @media (max-width: 992px) {
     .formulaire-tarif-ajout{
         position: absolute;
@@ -26,5 +38,19 @@
     }
     .boutton-tarif{
         margin: 10%;
+    }
+    .liste-tous{
+        /* border: 1px solid red; */
+        display: flex;
+        flex-wrap: wrap;
+        overflow: auto;
+        height: 45vh;
+        margin: 2px;
+    }
+    .liste-tarif{
+        border: 1px solid green;
+        min-width: 400px;
+        height: 30vh;
+        margin-left: 35px;
     }
 }
